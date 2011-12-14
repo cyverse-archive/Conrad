@@ -3,10 +3,13 @@
   :dependencies [[org.clojure/clojure "1.2.1"]
                  [org.clojure/data.json "0.1.1"]
                  [org.clojure/tools.logging "0.2.3"]
+                 [org.clojure/java.jdbc]
+                 [org.iplantc/clojure-commons "1.1.0-SNAPSHOT"]
                  [compojure "0.6.5"]
                  [swank-clojure "1.3.1"]
                  [log4j/log4j "1.2.16"]
-                 [korma "0.2.1"]]
+                 [postgresql/postgresql "9.0-801.jdbc4"]
+                 [c3p0/c3p0 "0.9.1.2"]]
   :dev-dependencies [[lein-ring "0.4.5"]]
   :ring {:handler conrad.core/app}
   :repositories {"iplantCollaborative"
