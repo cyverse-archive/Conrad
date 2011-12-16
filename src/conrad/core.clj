@@ -1,7 +1,7 @@
 (ns conrad.core
   (:use [compojure.core]
         [ring.middleware keyword-params nested-params]
-        [conrad.categories]
+        [conrad.listings]
         [conrad.database])
   (:require [compojure.route :as route]
             [compojure.handler :as handler]))

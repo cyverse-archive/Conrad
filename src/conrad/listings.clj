@@ -1,4 +1,4 @@
-(ns conrad.categories
+(ns conrad.listings
   (:use [clojure.pprint]
         [clojure.data.json :only (json-str)]
         [conrad.database])
