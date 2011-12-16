@@ -84,7 +84,7 @@
    :deployed_components (app-deployed-component-listing app)
    :pipeline_eligibility (app-pipeline-eligibility app)})
 
-(defn- load-app [hid]
+(defn load-app [hid]
   (jdbc/with-query-results rs
     ["SELECT * FROM analysis_listing WHERE hid = ?" hid]
     (normalize-app-listing (first rs))))
