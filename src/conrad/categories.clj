@@ -46,11 +46,6 @@
 (defn- time-from-sql-timestamp [ts]
   (if (nil? ts) nil (.getTime ts)))
 
-(defn- assoc-if-not-nil [map key value & kvs]
-  (let [ret (if (nil? value) (dissoc map key) (assoc map key value))]
-    (if kvs
-      (recur ret (first kvs) (second kvs) (nnext kvs))
-      ret)))
 (defn- step-count-msg [id, adj]
   (str "analysis, " id ", has too " adj " steps for a pipeline"))
 
