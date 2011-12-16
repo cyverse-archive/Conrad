@@ -9,6 +9,7 @@
 (defroutes conrad-routes
   (GET "/" [] "Welcome to Conrad!\n")
   (GET "/get-app-groups" [] (get-public-categories))
+  (GET "/get-apps-in-group/:id" [id] (get-category-with-apps id))
   (route/not-found "Unrecognized service path.\n"))
 
 (defn site-handler [routes]
