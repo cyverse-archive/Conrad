@@ -1,6 +1,5 @@
 (ns conrad.listings
-  (:use [clojure.pprint]
-        [clojure.data.json :only (json-str)]
+  (:use [clojure.data.json :only (json-str)]
         [conrad.database])
   (:require [clojure.java.jdbc :as jdbc]))
 
