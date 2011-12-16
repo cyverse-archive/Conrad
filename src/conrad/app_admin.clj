@@ -1,7 +1,7 @@
 (ns conrad.app-admin
   (:use [clojure.data.json :only (json-str read-json)]
         [conrad.database]
-        [conrad.listings :only (load-app)])
+        [conrad.app-listings])
   (:require [clojure.java.jdbc :as jdbc]
 	    [clojure-commons.json :as cc-json])
   (:import [java.sql.Timestamp]))
