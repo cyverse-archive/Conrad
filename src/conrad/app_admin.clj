@@ -1,13 +1,10 @@
 (ns conrad.app-admin
-  (:use [clojure.data.json :only (json-str read-json)]
+  (:use [conrad.common]
         [conrad.database]
         [conrad.app-listings])
   (:require [clojure.java.jdbc :as jdbc]
 	    [clojure-commons.json :as cc-json])
   (:import [java.sql.Timestamp]))
-
-(defn- success-response [map]
-  (merge {:success true} map))
 
 (defn- load-transformation-activity [id]
   (jdbc/with-query-results rs
@@ -34,13 +31,14 @@
 (defn- update-app-info [app-info]
   (let [id (:id app-info)
         transformation-activity (load-transformation-activity id)
+        hid (:hid transformation-activity)
         integration-data-id (:integration_data_id transformation-activity)]
     (if (nil? transformation-activity)
       (throw (IllegalArgumentException. (str "app, " id ", not found"))))
     (update-transformation-activity app-info id)
     (update-integration-data integration-data-id app-info)
-    (success-response {:application (load-app (:hid transformation-activity))})))
+    (success-response {:application (load-app hid)})))
 
 (defn update-app [body]
   (jdbc/with-connection (db-connection)
-    (jdbc/transaction (json-str (update-app-info (cc-json/body->json body))))))
+    (jdbc/transaction (update-app-info (cc-json/body->json body)))))

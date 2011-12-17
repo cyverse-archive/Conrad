@@ -2,17 +2,28 @@
   (:use [compojure.core]
         [ring.middleware keyword-params nested-params]
         [conrad.app-admin]
+        [conrad.category-admin]
+        [conrad.common]
         [conrad.listings]
-        [conrad.database])
+        [conrad.database]
+        [clojure.data.json :only (json-str)])
   (:require [compojure.route :as route]
             [compojure.handler :as handler]))
 
+(defn- trap [f]
+  (try
+    (f)
+    (catch IllegalArgumentException e (failure-response e))
+    (catch IllegalStateException e (failure-response e))
+    (catch Throwable t (error-response t))))
+
 (defroutes conrad-routes
   (GET "/" [] "Welcome to Conrad!\n")
-  (GET "/get-app-groups" [] (get-public-categories))
-  (GET "/get-apps-in-group/:id" [id] (get-category-with-apps id))
-  (POST "/update-app" [:as {body :body}] (update-app body))
-  (route/not-found "Unrecognized service path.\n"))
+  (GET "/get-app-groups" [] (trap #(get-public-categories)))
+  (GET "/get-apps-in-group/:id" [id] (trap #(get-category-with-apps id)))
+  (POST "/update-app" [:as {body :body}] (trap #(update-app body)))
+  (POST "/rename-category" [:as {body :body}] (trap #(rename-category body)))
+  (route/not-found (unrecognized-path-response)))
 
 (defn site-handler [routes]
   (-> routes
