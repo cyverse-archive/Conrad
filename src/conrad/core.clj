@@ -23,6 +23,7 @@
   (GET "/get-apps-in-group/:id" [id] (trap #(get-category-with-apps id)))
   (POST "/update-app" [:as {body :body}] (trap #(update-app body)))
   (POST "/rename-category" [:as {body :body}] (trap #(rename-category body)))
+  (DELETE "/category/:id" [id] (trap #(delete-category id)))
   (route/not-found (unrecognized-path-response)))
 
 (defn site-handler [routes]

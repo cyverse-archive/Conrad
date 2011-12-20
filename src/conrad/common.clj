@@ -20,6 +20,4 @@
 
 (defn unrecognized-path-response []
   (let [msg "unrecognized service path"]
-    {:status 404
-     :body (json-str {:success false :reason msg})
-     :content-type json-content-type}))
+    (json-str {:success false :reason msg})))
