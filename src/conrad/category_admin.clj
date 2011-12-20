@@ -1,10 +1,15 @@
 (ns conrad.category-admin
   (:use [clojure.data.json :only (json-str)]
+        [clojure.pprint :only (pprint)]
         [conrad.common]
         [conrad.database]
         [conrad.app-listings])
   (:require [clojure.java.jdbc :as jdbc]
+            [clojure.tools.logging :as log]
 	    [clojure-commons.json :as cc-json]))
+
+(defn- pstr [obj]
+  (with-out-str (pprint obj)))
 
 (defn- extract-category-id [category-info]
   (let [id (:categoryId category-info)]
@@ -40,8 +45,10 @@
 (defn- count-apps-in-category [hid]
   (jdbc/with-query-results rs
     ["SELECT COUNT(*) AS count
-      FROM template_group_template
-      WHERE template_group_id = ?" hid]
+      FROM template_group_template tgt
+      JOIN transformation_activity a ON tgt.template_id = a.hid
+      WHERE tgt.template_group_id = ?
+      AND a.deleted IS FALSE" hid]
     (:count (first rs))))
 
 (defn- count-subcategories-in-category [hid]
@@ -58,16 +65,40 @@
     (throw (IllegalStateException.
             (str "category, " id ", contains subcategories")))))
 
-(defn- ensure-contiguous-subgroup-hids []
-  ;; TODO: implement me
-  )
+(defn- find-parent-category-hids [hid]
+  (jdbc/with-query-results rs
+    ["SELECT * FROM template_group_group
+      WHERE subgroup_id = ?" hid]
+    (doall (map #(:parent_group_id %) rs))))
+
+(defn- get-subcategory-ids [parent-hid]
+  (jdbc/with-query-results rs
+    ["SELECT * FROM template_group_group
+      WHERE parent_group_id = ?
+      ORDER BY hid" parent-hid]
+    (doall (map #(:subgroup_id %) rs))))
+
+(defn- update-subcategory-hid [parent-id subcategory-id hid]
+  (jdbc/update-values
+   :template_group_group
+   ["parent_group_id = ? AND subgroup_id = ?" parent-id subcategory-id]
+   {:hid hid}))
+
+(defn- ensure-contiguous-subcategory-hids-for-parent [parent-hid]
+  (doseq [x (map vector (get-subcategory-ids parent-hid) (iterate inc 0))]
+    (update-subcategory-hid parent-hid (first x) (last x))))
+
+(defn- ensure-contiguous-subcategory-hids [parent-hids]
+  (doseq [x parent-hids] (ensure-contiguous-subcategory-hids-for-parent x)))
 
 (defn- delete-category-with-id [id]
   (let [category (load-category id)
-        hid (:hid category)]
+        hid (:hid category)
+        parent-hids (find-parent-category-hids hid)]
     (ensure-empty id hid)
     (jdbc/delete-rows :template_group_group ["subgroup_id = ?" hid])
-    (ensure-contiguous-subgroup-hids)
+    (jdbc/delete-rows :template_group_template ["template_group_id = ?" hid])
+    (ensure-contiguous-subcategory-hids parent-hids)
     (jdbc/delete-rows :template_group ["hid = ?" hid])
     (success-response {:categoryId id})))
 

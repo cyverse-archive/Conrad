@@ -3,7 +3,7 @@
   :dependencies [[org.clojure/clojure "1.2.1"]
                  [org.clojure/data.json "0.1.1"]
                  [org.clojure/tools.logging "0.2.3"]
-                 [org.clojure/java.jdbc]
+                 [org.clojure/java.jdbc "0.1.0"]
                  [org.iplantc/clojure-commons "1.1.0-SNAPSHOT"]
                  [compojure "0.6.5"]
                  [swank-clojure "1.3.1"]
