@@ -23,6 +23,15 @@
       (throw (IllegalArgumentException. "category name not specified")))
     name))
 
+(defn- extract-category-description [category-info]
+  (get category-info :description ""))
+
+(defn- extract-parent-category-id [category-info]
+  (let [parent-category-id (:parentCategoryId category-info)]
+    (if (empty? parent-category-id)
+      (throw (IllegalArgumentException. "parent category ID not specified")))
+    parent-category-id))
+
 (defn- load-category [id]
   (jdbc/with-query-results rs
     ["SELECT * FROM template_group WHERE id = ?" id]
@@ -102,6 +111,24 @@
     (jdbc/delete-rows :template_group ["hid = ?" hid])
     (success-response {:categoryId id})))
 
+(defn- ensure-category-doesnt-exist [parent-id parent-hid name]
+  (jdbc/with-query-results rs
+    ["SELECT COUNT(*) AS count FROM template_group_group tgg
+      JOIN template_group tg ON tgg.subgroup_id = tg.hid
+      WHERE tgg.parent_group_id = ?
+      AND name = ?" parent-hid name]
+    (if (> (:count (first rs)) 0)
+      (throw (IllegalStateException.
+              (str "category, " parent-id ", already contains a subcategory "
+                   "named, \"" name "\""))))))
+
+(defn- create-new-category [category-info]
+  (let [parent-id (extract-parent-category-id category-info)
+        name (extract-category-name category-info)
+        description (extract-category-description category-info)
+        parent-category (load-category parent-id)]
+    (ensure-category-doesnt-exist parent-id (:hid parent-category) name)))
+
 (defn rename-category [body]
   (jdbc/with-connection (db-connection)
     (jdbc/transaction (update-category-name (cc-json/body->json body)))))
@@ -109,3 +136,7 @@
 (defn delete-category [id]
   (jdbc/with-connection (db-connection)
     (jdbc/transaction (delete-category-with-id id))))
+
+(defn create-category [body]
+  (jdbc/with-connection (db-connection)
+    (jdbc/transaction (create-new-category (cc-json/body->json body)))))
