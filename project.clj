@@ -1,6 +1,7 @@
 (defproject conrad "1.0.0-SNAPSHOT"
   :description "Back-End Services for the iPlant Administrative Console"
   :dependencies [[org.clojure/clojure "1.2.1"]
+                 [org.clojure/clojure-contrib "1.2.0"]
                  [org.clojure/data.json "0.1.1"]
                  [org.clojure/tools.logging "0.2.3"]
                  [org.clojure/java.jdbc "0.1.0"]
