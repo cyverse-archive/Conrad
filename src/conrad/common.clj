@@ -1,7 +1,8 @@
 (ns conrad.common
-  (:use [clojure.data.json :only (json-str)])
+  (:use [clojure.data.json :only (json-str)]
+        [clojure.contrib.string :only (upper-case)])
   (:require [clojure.tools.logging :as log])
-  (:import [java.util.UUID]))
+  (:import [java.util UUID]))
 
 (def json-content-type "application/json")
 
@@ -25,3 +26,6 @@
 (defn unrecognized-path-response []
   (let [msg "unrecognized service path"]
     (json-str {:success false :reason msg})))
+
+(defn uuid []
+  (upper-case (str (java.util.UUID/randomUUID))))

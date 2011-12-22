@@ -1,5 +1,6 @@
 (ns conrad.category-admin
-  (:use [clojure.data.json :only (json-str)]
+  (:use [clojure.contrib.datalog.util :only (keys-to-vals)]
+        [clojure.data.json :only (json-str)]
         [clojure.pprint :only (pprint)]
         [conrad.common]
         [conrad.database]
@@ -122,12 +123,42 @@
               (str "category, " parent-id ", already contains a subcategory "
                    "named, \"" name "\""))))))
 
+(defn- insert-category [args]
+  (let [vals (conj (vec (map #(get args %) [:id :name :description])) 0)]
+    (log/warn vals)
+    (jdbc/insert-values
+     :template_group
+     [:id :name :description :workspace_id] vals)))
+
+(defn- get-next-grouping-hid [parent-category-hid]
+  (jdbc/with-query-results rs
+    ["SELECT MAX(hid) + 1 AS next_hid FROM template_group_group
+      WHERE parent_group_id = ?" parent-category-hid]
+    (:next_hid (first rs))))
+
+(defn- group-category [parent-category-hid child-category-hid]
+  (let [grouping-hid (get-next-grouping-hid parent-category-hid)]
+    (jdbc/insert-values
+     :template_group_group
+     [:parent_group_id :subgroup_id :hid]
+     [parent-category-hid child-category-hid grouping-hid])))
+
+(defn- insert-and-group-category [args]
+  (insert-category args)
+  (let [category (load-category (:id args))]
+    (group-category (:parent-category-hid args) (:hid category))
+    (success-response {:categoryId (:id category)})))
+
 (defn- create-new-category [category-info]
   (let [parent-id (extract-parent-category-id category-info)
         name (extract-category-name category-info)
         description (extract-category-description category-info)
         parent-category (load-category parent-id)]
-    (ensure-category-doesnt-exist parent-id (:hid parent-category) name)))
+    (ensure-category-doesnt-exist parent-id (:hid parent-category) name)
+    (insert-and-group-category {:name name
+                                :description description
+                                :parent-category-hid (:hid parent-category)
+                                :id (uuid)})))
 
 (defn rename-category [body]
   (jdbc/with-connection (db-connection)
