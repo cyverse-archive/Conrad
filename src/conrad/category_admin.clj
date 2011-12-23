@@ -4,7 +4,8 @@
         [clojure.pprint :only (pprint)]
         [conrad.common]
         [conrad.database]
-        [conrad.app-listings])
+        [conrad.app-listings]
+        [conrad.category-listings])
   (:require [clojure.java.jdbc :as jdbc]
             [clojure.tools.logging :as log]
 	    [clojure-commons.json :as cc-json]))
@@ -123,6 +124,11 @@
               (str "category, " parent-id ", already contains a subcategory "
                    "named, \"" name "\""))))))
 
+(defn- ensure-category-doesnt-contain-apps [parent-id parent-hid]
+  (if (not= 0 (count-apps-in-category parent-hid))
+    (throw (IllegalStateException.
+            (str "category, " parent-id ", contains apps")))))
+
 (defn- insert-category [args]
   (let [vals (conj (vec (map #(get args %) [:id :name :description])) 0)]
     (log/warn vals)
@@ -132,7 +138,8 @@
 
 (defn- get-next-grouping-hid [parent-category-hid]
   (jdbc/with-query-results rs
-    ["SELECT MAX(hid) + 1 AS next_hid FROM template_group_group
+    ["SELECT COALESCE(MAX(hid) + 1, 0) AS next_hid
+      FROM template_group_group
       WHERE parent_group_id = ?" parent-category-hid]
     (:next_hid (first rs))))
 
@@ -147,7 +154,7 @@
   (insert-category args)
   (let [category (load-category (:id args))]
     (group-category (:parent-category-hid args) (:hid category))
-    (success-response {:categoryId (:id category)})))
+    (success-response {:category (list-category-with-apps (:id category))})))
 
 (defn- create-new-category [category-info]
   (let [parent-id (extract-parent-category-id category-info)
@@ -155,6 +162,7 @@
         description (extract-category-description category-info)
         parent-category (load-category parent-id)]
     (ensure-category-doesnt-exist parent-id (:hid parent-category) name)
+    (ensure-category-doesnt-contain-apps parent-id (:hid parent-category))
     (insert-and-group-category {:name name
                                 :description description
                                 :parent-category-hid (:hid parent-category)
