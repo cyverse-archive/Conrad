@@ -34,19 +34,10 @@
       (throw (IllegalArgumentException. "parent category ID not specified")))
     parent-category-id))
 
-(defn- load-category [id]
-  (jdbc/with-query-results rs
-    ["SELECT * FROM template_group WHERE id = ?" id]
-    (let [category (first rs)]
-      (if (nil? category)
-        (throw (IllegalArgumentException.
-                (str "category, " id ", does not exist"))))
-      category)))
-
 (defn- update-category-name [category-info]
   (let [id (extract-category-id category-info)
         name (extract-category-name category-info)
-        category (load-category id)
+        category (load-category-by-id id)
         hid (:hid category)]
     (jdbc/update-values
      :template_group ["hid = ?" hid]
@@ -103,7 +94,7 @@
   (doseq [x parent-hids] (ensure-contiguous-subcategory-hids-for-parent x)))
 
 (defn- delete-category-with-id [id]
-  (let [category (load-category id)
+  (let [category (load-category-by-id id)
         hid (:hid category)
         parent-hids (find-parent-category-hids hid)]
     (ensure-empty id hid)
@@ -152,7 +143,7 @@
 
 (defn- insert-and-group-category [args]
   (insert-category args)
-  (let [category (load-category (:id args))]
+  (let [category (load-category-by-id (:id args))]
     (group-category (:parent-category-hid args) (:hid category))
     (success-response {:category (list-category-with-apps (:id category))})))
 
@@ -160,7 +151,7 @@
   (let [parent-id (extract-parent-category-id category-info)
         name (extract-category-name category-info)
         description (extract-category-description category-info)
-        parent-category (load-category parent-id)]
+        parent-category (load-category-by-id parent-id)]
     (ensure-category-doesnt-exist parent-id (:hid parent-category) name)
     (ensure-category-doesnt-contain-apps parent-id (:hid parent-category))
     (insert-and-group-category {:name name

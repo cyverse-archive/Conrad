@@ -60,6 +60,15 @@
 (defn- marshal-category-without-apps [hid]
   (load-category hid #(dissoc % :hid :workspace_id)))
 
+(defn load-category-by-id [id]
+  (jdbc/with-query-results rs
+    ["SELECT * FROM template_group WHERE id = ?" id]
+    (let [category (first rs)]
+      (if (nil? category)
+        (throw (IllegalArgumentException.
+                (str "category, " id ", does not exist"))))
+      category)))
+
 (defn list-public-categories-without-apps []
   (let [hids (get-public-root-category-hids)]
     {:groups (map #(marshal-category-without-apps %) hids)}))

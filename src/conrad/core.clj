@@ -26,6 +26,7 @@
   (DELETE "/category/:id" [id] (trap #(delete-category id)))
   (PUT "/category" [:as {body :body}] (trap #(create-category body)))
   (DELETE "/app/:id" [id] (trap #(delete-app id)))
+  (POST "/move-app" [:as {body :body}] (trap #(move-app body)))
   (route/not-found (unrecognized-path-response)))
 
 (defn site-handler [routes]

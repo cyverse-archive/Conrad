@@ -27,5 +27,12 @@
   (let [msg "unrecognized service path"]
     (json-str {:success false :reason msg})))
 
+(defn extract-required-field [obj field-name]
+  (let [value (get obj field-name)]
+    (if (nil? value)
+      (throw (IllegalArgumentException.
+              (str "missing required field, " field-name ", in request"))))
+    value))
+
 (defn uuid []
   (upper-case (str (java.util.UUID/randomUUID))))
