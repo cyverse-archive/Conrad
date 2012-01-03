@@ -154,3 +154,19 @@
   (insert-category args)
   (let [category (load-category-by-id (:id args))]
     (group-category (:parent-category-hid args) (:hid category))))
+
+(defn get-app-ids-in-category [category-hid]
+  (jdbc/with-query-results rs
+    ["SELECT tgt.template_id
+      FROM template_group_template tgt
+      JOIN transformation_activity a ON tgt.template_id = a.hid
+      WHERE NOT a.deleted
+      AND template_group_id = ?" category-hid]
+    (doall (map #(:template_id %) rs))))
+
+(defn get-category-hid [id]
+  (jdbc/with-query-results rs
+    ["SELECT hid FROM template_group WHERE id = ?" id]
+    (if (empty? rs)
+      (throw (IllegalArgumentException. (str "app group " id " not found")))
+      (:hid (first rs)))))

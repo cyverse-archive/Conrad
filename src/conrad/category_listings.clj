@@ -1,18 +1,8 @@
 (ns conrad.category-listings
-  (:use [conrad.database]
-        [conrad.app-listings]
+  (:use [conrad.app-listings :only (load-app)]
         [conrad.category-crud])
   (:require [clojure.java.jdbc :as jdbc]
             [clojure.tools.logging :as log]))
-
-(defn- get-app-ids-in-category [category-hid]
-  (jdbc/with-query-results rs
-    ["SELECT tgt.template_id
-      FROM template_group_template tgt
-      JOIN transformation_activity a ON tgt.template_id = a.hid
-      WHERE NOT a.deleted
-      AND template_group_id = ?" category-hid]
-    (doall (map #(:template_id %) rs))))
 
 (defn- load-apps-in-categories [category-hids]
   (map #(load-app %)
@@ -26,13 +16,6 @@
   (let [category (load-category hid)
         apps (load-apps-in-categories (extract-category-hids category))]
     (dissoc (assoc category :templates apps) :groups)))
-
-(defn- get-category-hid [id]
-  (jdbc/with-query-results rs
-    ["SELECT hid FROM template_group WHERE id = ?" id]
-    (if (empty? rs)
-      (throw (IllegalArgumentException. (str "app group " id " not found")))
-      (:hid (first rs)))))
 
 (defn- marshal-category-without-apps [hid]
   (load-category hid #(dissoc % :hid :workspace_id)))

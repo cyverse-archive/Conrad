@@ -2,9 +2,8 @@
   (:use [clojure.contrib.datalog.util :only (keys-to-vals)]
         [clojure.data.json :only (json-str)]
         [conrad.common :only (success-response uuid)]
-        [conrad.database]
-        [conrad.app-listings]
-        [conrad.category-listings]
+        [conrad.category-listings :only (list-category-with-apps)]
+        [conrad.database :only (db-connection)]
         [conrad.category-crud])
   (:require [clojure.java.jdbc :as jdbc]
             [clojure.tools.logging :as log]
