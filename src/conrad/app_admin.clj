@@ -2,6 +2,7 @@
   (:use [conrad.common]
         [conrad.database]
         [conrad.app-listings]
+        [conrad.category-crud]
         [conrad.category-listings])
   (:require [clojure.java.jdbc :as jdbc]
 	    [clojure-commons.json :as cc-json])
