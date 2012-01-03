@@ -2,6 +2,7 @@
   (:use [conrad.common]
         [conrad.database]
         [conrad.app-listings]
+        [conrad.app-crud]
         [conrad.category-crud]
         [conrad.category-listings])
   (:require [clojure.java.jdbc :as jdbc]
@@ -9,11 +10,10 @@
   (:import [java.sql Timestamp Types]))
 
 (defn- load-transformation-activity [id]
-  (jdbc/with-query-results rs
-    ["SELECT * FROM transformation_activity WHERE id = ?" id]
-    (if (= 0 (count rs))
+  (let [transformation-activity (load-app-by-id id)]
+    (if (nil? transformation-activity)
       (throw (IllegalArgumentException. (str "app, " id ", not found"))))
-    (first rs)))
+    transformation-activity))
 
 (defn- sql-timestamp [time]
   (if (or (nil? time) (= 0 time)) nil (Timestamp. time)))
@@ -39,7 +39,7 @@
         integration-data-id (:integration_data_id transformation-activity)]
     (update-transformation-activity app-info id)
     (update-integration-data integration-data-id app-info)
-    (success-response {:application (load-app hid)})))
+    (success-response {:application (load-app-listing hid)})))
 
 (defn- mark-app-deleted [id]
   (let [transformation-activity (load-transformation-activity id)

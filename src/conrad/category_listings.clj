@@ -1,11 +1,11 @@
 (ns conrad.category-listings
-  (:use [conrad.app-listings :only (load-app)]
+  (:use [conrad.app-listings :only (load-app-listing)]
         [conrad.category-crud])
   (:require [clojure.java.jdbc :as jdbc]
             [clojure.tools.logging :as log]))
 
 (defn- load-apps-in-categories [category-hids]
-  (map #(load-app %)
+  (map #(load-app-listing %)
        (reduce concat (map #(get-app-ids-in-category %) category-hids))))
 
 (defn- extract-category-hids [category]

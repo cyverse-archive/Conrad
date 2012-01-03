@@ -1,7 +1,6 @@
 (ns conrad.app-listings
-  (:use [conrad.database])
-  (:require [clojure.java.jdbc :as jdbc]
-            [clojure.tools.logging :as log]))
+  (:use [conrad.app-crud :only (list-app load-deployed-components-for-app)])
+  (:require [clojure.tools.logging :as log]))
 
 (defn- step-count-msg [id, adj]
   (str "analysis, " id ", has too " adj " steps for a pipeline"))
@@ -23,11 +22,8 @@
    :attribution (:attribution dc)})
 
 (defn- app-deployed-component-listing [app]
-  (jdbc/with-query-results rs
-    ["SELECT * FROM deployed_component_listing
-      WHERE analysis_id = ?
-      ORDER BY execution_order" (:hid app)]
-    (doall (map #(normalize-deployed-component-listing %) rs))))
+  (map #(normalize-deployed-component-listing %)
+       (load-deployed-components-for-app (:hid app))))
 
 (defn- normalize-app-listing [app]
   {:id (:id app)
@@ -42,7 +38,5 @@
    :deployed_components (app-deployed-component-listing app)
    :pipeline_eligibility (app-pipeline-eligibility app)})
 
-(defn load-app [hid]
-  (jdbc/with-query-results rs
-    ["SELECT * FROM analysis_listing WHERE hid = ?" hid]
-    (normalize-app-listing (first rs))))
+(defn load-app-listing [hid]
+  (normalize-app-listing (list-app hid)))
