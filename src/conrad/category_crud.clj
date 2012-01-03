@@ -16,8 +16,10 @@
 
 (defn- count-templates [hid subcategories]
   (jdbc/with-query-results rs
-    ["SELECT COUNT(*) FROM template_group_template
-      WHERE template_group_id = ?" hid]
+    ["SELECT COUNT(*) FROM template_group_template tgt
+      JOIN transformation_activity a ON tgt.template_id = a.hid
+      WHERE NOT a.deleted
+      AND template_group_id = ?" hid]
     (+ (:count (first rs)) (reduce + (map #(:template_count %) subcategories)))))
 
 (defn load-category [hid & fs]

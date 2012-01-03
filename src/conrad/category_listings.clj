@@ -2,12 +2,16 @@
   (:use [conrad.database]
         [conrad.app-listings]
         [conrad.category-crud])
-  (:require [clojure.java.jdbc :as jdbc]))
+  (:require [clojure.java.jdbc :as jdbc]
+            [clojure.tools.logging :as log]))
 
 (defn- get-app-ids-in-category [category-hid]
   (jdbc/with-query-results rs
-    ["SELECT template_id FROM template_group_template
-      WHERE template_group_id = ?" category-hid]
+    ["SELECT tgt.template_id
+      FROM template_group_template tgt
+      JOIN transformation_activity a ON tgt.template_id = a.hid
+      WHERE NOT a.deleted
+      AND template_group_id = ?" category-hid]
     (doall (map #(:template_id %) rs))))
 
 (defn- load-apps-in-categories [category-hids]

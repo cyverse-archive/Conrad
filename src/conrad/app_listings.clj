@@ -1,6 +1,7 @@
 (ns conrad.app-listings
   (:use [conrad.database])
-  (:require [clojure.java.jdbc :as jdbc]))
+  (:require [clojure.java.jdbc :as jdbc]
+            [clojure.tools.logging :as log]))
 
 (defn- step-count-msg [id, adj]
   (str "analysis, " id ", has too " adj " steps for a pipeline"))
