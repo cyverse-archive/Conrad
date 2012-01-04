@@ -57,3 +57,10 @@
 (defn move-public-app [app-hid category-hid]
   (remove-public-categorizations app-hid)
   (categorize-app app-hid category-hid))
+
+(defn load-suggested-categories-for-app [app-hid]
+  (jdbc/with-query-results rs
+    ["SELECT tg.* FROM suggested_groups sg
+      JOIN template_group tg ON sg.template_group_id = tg.hid
+      WHERE sg.transformation_activity_id = ?" app-hid]
+    (doall (map #(dissoc % :hid) rs))))

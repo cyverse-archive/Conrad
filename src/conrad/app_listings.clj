@@ -1,5 +1,5 @@
 (ns conrad.app-listings
-  (:use [conrad.app-crud :only (list-app load-deployed-components-for-app)])
+  (:use [conrad.app-crud])
   (:require [clojure.tools.logging :as log]))
 
 (defn- step-count-msg [id, adj]
@@ -36,7 +36,8 @@
    :is_favorite false
    :wiki_url (:wikiurl app)
    :deployed_components (app-deployed-component-listing app)
-   :pipeline_eligibility (app-pipeline-eligibility app)})
+   :pipeline_eligibility (app-pipeline-eligibility app)
+   :suggested_categories (load-suggested-categories-for-app (:hid app))})
 
 (defn load-app-listing [hid]
   (normalize-app-listing (list-app hid)))
