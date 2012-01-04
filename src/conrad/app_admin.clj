@@ -41,6 +41,7 @@
         category (load-category-by-id category-id)
         app-hid (:hid transformation-activity)
         category-hid (:hid category)]
+    (ensure-category-doesnt-contain-subcategories category-id category-hid)
     (move-public-app app-hid category-hid)
     (success-response {:category (list-category-with-apps category-id)})))
 

@@ -1,8 +1,7 @@
 (ns conrad.category-listings
   (:use [conrad.app-listings :only (load-app-listing)]
         [conrad.category-crud])
-  (:require [clojure.java.jdbc :as jdbc]
-            [clojure.tools.logging :as log]))
+  (:require [clojure.tools.logging :as log]))
 
 (defn- load-apps-in-categories [category-hids]
   (map #(load-app-listing %)

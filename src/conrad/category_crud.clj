@@ -69,12 +69,18 @@
       WHERE subgroup_id = ?" hid]
     (doall (map #(:parent_group_id %) rs))))
 
-(defn- ensure-empty [id hid]
+(defn ensure-category-doesnt-contain-apps [id hid]
   (if (not= 0 (count-apps-in-category hid))
-    (throw (IllegalStateException. (str "category, " id ", contains apps"))))
+    (throw (IllegalStateException. (str "category, " id ", contains apps")))))
+
+(defn ensure-category-doesnt-contain-subcategories [id hid]
   (if (not= 0 (count-subcategories-in-category hid))
     (throw (IllegalStateException.
             (str "category, " id ", contains subcategories")))))
+
+(defn ensure-empty [id hid]
+  (ensure-category-doesnt-contain-apps id hid)
+  (ensure-category-doesnt-contain-subcategories id hid))
 
 (defn- get-subcategory-ids [parent-hid]
   (jdbc/with-query-results rs
@@ -112,11 +118,6 @@
       FROM template_group_group
       WHERE parent_group_id = ?" parent-category-hid]
     (:next_hid (first rs))))
-
-(defn- ensure-category-doesnt-contain-apps [parent-id parent-hid]
-  (if (not= 0 (count-apps-in-category parent-hid))
-    (throw (IllegalStateException.
-            (str "category, " parent-id ", contains apps")))))
 
 (defn- ensure-category-doesnt-exist [parent-id parent-hid name]
   (jdbc/with-query-results rs
