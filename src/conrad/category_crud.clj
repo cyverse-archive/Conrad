@@ -156,6 +156,7 @@
   (let [category (load-category-by-id id)
         hid (:hid category)]
     (ensure-empty id hid)
+    (remove-category-from-parents hid)
     (jdbc/delete-rows :template_group_template ["template_group_id = ?" hid])
     (jdbc/delete-rows :template_group ["hid = ?" hid])))
 
