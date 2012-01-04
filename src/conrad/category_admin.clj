@@ -2,7 +2,7 @@
   (:use [clojure.contrib.datalog.util :only (keys-to-vals)]
         [clojure.data.json :only (json-str)]
         [conrad.common :only (success-response uuid)]
-        [conrad.category-listings :only (list-category-with-apps)]
+        [conrad.category-listings]
         [conrad.database :only (db-connection)]
         [conrad.category-crud])
   (:require [clojure.java.jdbc :as jdbc]
@@ -51,6 +51,12 @@
                                 :id id})
     (success-response {:category (list-category-with-apps id)})))
 
+(defn- move-category* [category-info]
+  (let [id (extract-category-id category-info)
+        parent-id (extract-parent-category-id category-info)]
+    (move-subcategory parent-id id)
+    (success-response {:categories (list-public-categories-without-apps)})))
+
 (defn rename-category [body]
   (jdbc/with-connection (db-connection)
     (jdbc/transaction (rename-category* (cc-json/body->json body)))))
@@ -63,3 +69,7 @@
 (defn create-category [body]
   (jdbc/with-connection (db-connection)
     (jdbc/transaction (create-category* (cc-json/body->json body)))))
+
+(defn move-category [body]
+  (jdbc/with-connection (db-connection)
+    (jdbc/transaction (move-category* (cc-json/body->json body)))))

@@ -14,6 +14,15 @@
                 (str "category, " id ", does not exist"))))
       category)))
 
+(defn load-category-by-hid [hid]
+  (jdbc/with-query-results rs
+    ["SELECT * FROM template_group WHERE hid = ?" hid]
+    (let [category (first rs)]
+      (if (nil? category)
+        (throw (IllegalStateException.
+                (str "category with internal id, " hid ", does not exist"))))
+      category)))
+
 (defn- count-templates [hid subcategories]
   (jdbc/with-query-results rs
     ["SELECT COUNT(*) FROM template_group_template tgt
@@ -102,15 +111,22 @@
 (defn- ensure-contiguous-subcategory-hids [parent-hids]
   (doseq [x parent-hids] (ensure-contiguous-subcategory-hids-for-parent x)))
 
-(defn delete-category-with-id [id]
-  (let [category (load-category-by-id id)
-        hid (:hid category)
-        parent-hids (find-parent-category-hids hid)]
-    (ensure-empty id hid)
+(defn- is-descendent-of [possible-descendent-hid possible-ancestor-hid]
+  (jdbc/with-query-results rs
+    ["SELECT * FROM template_group_group
+      WHERE parent_group_id = ?" possible-ancestor-hid]
+    (some #(or (= (:subgroup_id %) possible-descendent-hid)
+              (is-descendent-of possible-descendent-hid (:subgroup_id %))) rs)))
+
+(defn- ensure-parent-not-descendent-of-child [parent child]
+  (if (is-descendent-of (:hid parent) (:hid child))
+    (throw (IllegalStateException.
+            (str (:id parent) " is a descendent of " (:id child))))))
+
+(defn- remove-category-from-parents [hid]
+  (let [parent-hids (find-parent-category-hids hid)]
     (jdbc/delete-rows :template_group_group ["subgroup_id = ?" hid])
-    (jdbc/delete-rows :template_group_template ["template_group_id = ?" hid])
-    (ensure-contiguous-subcategory-hids parent-hids)
-    (jdbc/delete-rows :template_group ["hid = ?" hid])))
+    (ensure-contiguous-subcategory-hids parent-hids)))
 
 (defn- get-next-grouping-hid [parent-category-hid]
   (jdbc/with-query-results rs
@@ -118,6 +134,30 @@
       FROM template_group_group
       WHERE parent_group_id = ?" parent-category-hid]
     (:next_hid (first rs))))
+
+(defn- group-category [parent-category-hid child-category-hid]
+  (let [grouping-hid (get-next-grouping-hid parent-category-hid)]
+    (jdbc/insert-values
+     :template_group_group
+     [:parent_group_id :subgroup_id :hid]
+     [parent-category-hid child-category-hid grouping-hid])))
+
+(defn move-subcategory [parent-id child-id]
+  (let [parent (load-category-by-id parent-id)
+        child (load-category-by-id child-id)
+        parent-hid (:hid parent)
+        child-hid (:hid child)]
+    (ensure-category-doesnt-contain-apps parent-id parent-hid)
+    (ensure-parent-not-descendent-of-child parent child)
+    (remove-category-from-parents child-hid)
+    (group-category parent-hid child-hid)))
+
+(defn delete-category-with-id [id]
+  (let [category (load-category-by-id id)
+        hid (:hid category)]
+    (ensure-empty id hid)
+    (jdbc/delete-rows :template_group_template ["template_group_id = ?" hid])
+    (jdbc/delete-rows :template_group ["hid = ?" hid])))
 
 (defn- ensure-category-doesnt-exist [parent-id parent-hid name]
   (jdbc/with-query-results rs
@@ -135,13 +175,6 @@
     (jdbc/insert-values
      :template_group
      [:id :name :description :workspace_id] vals)))
-
-(defn- group-category [parent-category-hid child-category-hid]
-  (let [grouping-hid (get-next-grouping-hid parent-category-hid)]
-    (jdbc/insert-values
-     :template_group_group
-     [:parent_group_id :subgroup_id :hid]
-     [parent-category-hid child-category-hid grouping-hid])))
 
 (defn validate-category-insertion [args]
   (let [parent-id (:parent-category-id args)
