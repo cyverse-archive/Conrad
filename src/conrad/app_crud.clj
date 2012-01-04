@@ -23,8 +23,13 @@
 (defn- sql-timestamp [time]
   (if (or (nil? time) (= 0 time)) nil (Timestamp. time)))
 
+(defn- convert-integration-date [app-update]
+  (assoc app-update
+    :integration_date (sql-timestamp (:integration_date app-update))))
+
 (defn update-transformation-activity [app-update id]
-  (jdbc/update-values :transformation_activity ["id = ?" id] app-update))
+  (jdbc/update-values :transformation_activity ["id = ?" id]
+                      (convert-integration-date app-update)))
 
 (defn update-integration-data [id integration-data-update]
   (jdbc/update-values :integration_data ["id = ?" id] integration-data-update))

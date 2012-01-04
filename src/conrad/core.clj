@@ -8,13 +8,15 @@
         [conrad.database]
         [clojure.data.json :only (json-str)])
   (:require [compojure.route :as route]
-            [compojure.handler :as handler]))
+            [compojure.handler :as handler])
+  (:import [java.sql SQLException]))
 
 (defn- trap [f]
   (try
     (f)
     (catch IllegalArgumentException e (failure-response e))
     (catch IllegalStateException e (failure-response e))
+    (catch SQLException e (do (log-next-exception e) (error-response e)))
     (catch Throwable t (error-response t))))
 
 (defroutes conrad-routes
