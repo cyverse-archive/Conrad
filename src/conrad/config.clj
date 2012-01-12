@@ -22,3 +22,5 @@
 (def db-user (req "conrad.db.user"))
 (def db-password (req "conrad.db.password"))
 (def db-max-idle-time (* (Integer/valueOf (req "conrad.db.max-idle-minutes")) 60))
+(def cas-server (req "conrad.cas.server"))
+(def server-name (req "conrad.server-name"))

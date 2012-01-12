@@ -27,6 +27,11 @@
   (let [msg "unrecognized service path"]
     (json-str {:success false :reason msg})))
 
+(defn unauthorized-response [url]
+  (log/warn (str "unauthorized request: " url))
+  {:status 401
+   :body (json-str {:success false :reason "UNAUTHORIZED"})})
+
 (defn extract-required-field [obj field-name]
   (let [value (get obj field-name)]
     (if (nil? value)

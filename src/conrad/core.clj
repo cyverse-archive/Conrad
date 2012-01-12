@@ -1,11 +1,12 @@
 (ns conrad.core
   (:use [compojure.core]
-        [ring.middleware keyword-params nested-params]
+        [ring.middleware keyword-params nested-params params]
         [conrad.app-admin]
         [conrad.category-admin]
         [conrad.common]
         [conrad.listings]
         [conrad.database]
+        [conrad.middleware.cas-proxy-auth :only (validate-cas-proxy-ticket)]
         [clojure.data.json :only (json-str)])
   (:require [compojure.route :as route]
             [compojure.handler :as handler])
@@ -34,8 +35,10 @@
 
 (defn site-handler [routes]
   (-> routes
+      validate-cas-proxy-ticket
       wrap-keyword-params
-      wrap-nested-params))
+      wrap-nested-params
+      wrap-params))
 
 (def app
   (site-handler conrad-routes))
