@@ -28,11 +28,23 @@ default, the file will look like this:
     
     # Expire connections after the specified number of minutes.
     conrad.db.max-idle-minutes=180
+    
+    # The settings to use for proxy authentication.
+    conrad.cas.server=https://cas-server-hostname/cas/
+    conrad.server-name=https://local-hostname
 
-Generally, the only settings that will have to be changed are the database
-connection settings.  Since the discovery environment currently always uses
-PostgreSQL, the vendor should never have to be changed.  The rest of the
-settings are fairly self-explanatory.
+Generally, the only database settings that will have to be changed are
+the database connection settings.  Since the discovery environment
+currently always uses PostgreSQL, the vendor should never have to be
+changed.  The rest of the database settings are fairly
+self-explanatory.
+
+The CAS settings deserve some explanation.  conrad.cas.server refers
+to the base URL of the CAS server.  This URL will be used when the
+services are validating CAS proxy tickets.  conrad.server-namne refers
+to the name on the server on which conrad is deployed.  Typically,
+this should be an HTTPS URL, but HTTP URLs are acceptable for testing
+when signed certificates are not available.
 
 The logging settings are stored in WEB-INF/classes/log4j.properties inside the
 WAR file.  By default, the file will look like this:
