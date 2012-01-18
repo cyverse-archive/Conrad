@@ -21,7 +21,8 @@
 
 (defn list-public-categories-without-apps []
   (let [hids (get-public-root-category-hids)]
-    {:groups (map #(marshal-category-without-apps %) hids)}))
+    {:groups (conj (map #(marshal-category-without-apps %) hids)
+                   (list-trash-category))}))
 
 (defn list-category-with-apps [category-id]
   (marshal-apps-in-category (get-category-hid category-id)))

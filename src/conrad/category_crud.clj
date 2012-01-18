@@ -3,6 +3,8 @@
         [conrad.app-listings])
   (:require [clojure.java.jdbc :as jdbc]))
 
+(def ^{:private true} trash-category-id "Trash")
+
 (declare load-category load-subcategories)
 
 (defn load-category-by-id [id]
@@ -177,6 +179,23 @@
      :template_group
      [:id :name :description :workspace_id] vals)))
 
+(defn- count-deleted-apps []
+  (jdbc/with-query-results rs
+    ["SELECT COUNT(*) AS count FROM transformation_activity a
+      WHERE a.deleted
+      AND EXISTS (
+          SELECT * FROM template_group_template tgt
+          WHERE a.hid = tgt.template_id)"]
+    (:count (first rs))))
+
+(defn- count-orphaned-apps []
+  (jdbc/with-query-results rs
+    ["SELECT COUNT(*) AS count FROM transformation_activity a
+      WHERE NOT EXISTS (
+          SELECT * FROM template_group_template tgt
+          WHERE a.hid = tgt.template_id)"]
+    (:count (first rs))))
+
 (defn validate-category-insertion [args]
   (let [parent-id (:parent-category-id args)
         parent-hid (:parent-category-hid args)
@@ -205,3 +224,11 @@
     (if (empty? rs)
       (throw (IllegalArgumentException. (str "app group " id " not found")))
       (:hid (first rs)))))
+
+(defn list-trash-category []
+  {:template_count (+ (count-deleted-apps) (count-orphaned-apps))
+   :name "Trash"
+   :groups []
+   :id trash-category-id
+   :is_public true
+   :description "Deleted and orphaned apps"})
