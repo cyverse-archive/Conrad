@@ -35,7 +35,6 @@
 
 (defn site-handler [routes]
   (-> routes
-      validate-cas-proxy-ticket
       wrap-keyword-params
       wrap-nested-params
       wrap-params))
