@@ -1,5 +1,5 @@
 (ns conrad.category-listings
-  (:use [conrad.app-listings :only (load-app-listing)]
+  (:use [conrad.app-listings]
         [conrad.category-crud])
   (:require [clojure.tools.logging :as log]))
 
@@ -16,6 +16,10 @@
         apps (load-apps-in-categories (extract-category-hids category))]
     (dissoc (assoc category :templates apps) :groups)))
 
+(defn- marshal-deleted-and-orphaned-apps []
+  (let [apps (load-deleted-and-orphaned-app-listings)]
+    (dissoc (assoc (list-trash-category) :templates apps) :groups)))
+
 (defn- marshal-category-without-apps [hid]
   (load-category hid #(dissoc % :hid :workspace_id)))
 
@@ -25,4 +29,6 @@
                    (list-trash-category))}))
 
 (defn list-category-with-apps [category-id]
-  (marshal-apps-in-category (get-category-hid category-id)))
+  (if (= category-id trash-category-id)
+    (marshal-deleted-and-orphaned-apps)
+    (marshal-apps-in-category (get-category-hid category-id))))

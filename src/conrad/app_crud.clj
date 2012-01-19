@@ -15,6 +15,33 @@
     ["SELECT * FROM analysis_listing WHERE hid = ?" hid]
     (first rs)))
 
+(defn list-deleted-and-orphaned-apps []
+  (jdbc/with-query-results rs
+    ["SELECT a.hid, a.id, a.name, a.description, i.integrator_name,
+          i.integrator_email, a.integration_date, a.wikiurl,
+          CAST(
+              COALESCE(AVG(r.rating), 0.0) AS DOUBLE PRECISION)
+              AS average_rating,
+          (EXISTS (
+              SELECT * FROM template_group_template tgt
+              JOIN template_group tg ON tgt.template_group_id = tg.hid
+              JOIN workspace w ON tg.workspace_id = w.id
+              WHERE a.hid = tgt.template_id
+              AND w.is_public)) AS is_public,
+          (SELECT COUNT(*)
+              FROM transformation_task_steps tts
+              WHERE tts.transformation_task_id = a.hid) AS step_count
+      FROM transformation_activity a
+          LEFT JOIN integration_data i ON a.integration_data_id = i.id
+          LEFT JOIN ratings r ON a.hid = r.transformation_activity_id
+      WHERE a.deleted
+          OR NOT EXISTS (
+              SELECT * FROM template_group_template tgt
+              WHERE a.hid = tgt.template_id)
+      GROUP BY a.hid, a.id, a.name, a.description, i.integrator_name,
+               i.integrator_email, a.integration_date, a.wikiurl"]
+    (doall rs)))
+
 (defn load-app-by-id [id]
   (jdbc/with-query-results rs
     ["SELECT * FROM transformation_activity WHERE id = ?" id]

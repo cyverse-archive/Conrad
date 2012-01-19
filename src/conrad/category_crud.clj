@@ -3,7 +3,7 @@
         [conrad.app-listings])
   (:require [clojure.java.jdbc :as jdbc]))
 
-(def ^{:private true} trash-category-id "Trash")
+(def trash-category-id "Trash")
 
 (declare load-category load-subcategories)
 
@@ -179,19 +179,18 @@
      :template_group
      [:id :name :description :workspace_id] vals)))
 
-(defn- count-deleted-apps []
+(defn- count-deleted-and-orphaned-apps []
   (jdbc/with-query-results rs
     ["SELECT COUNT(*) AS count FROM transformation_activity a
-      WHERE a.deleted
-      AND EXISTS (
-          SELECT * FROM template_group_template tgt
-          WHERE a.hid = tgt.template_id)"]
-    (:count (first rs))))
-
-(defn- count-orphaned-apps []
-  (jdbc/with-query-results rs
-    ["SELECT COUNT(*) AS count FROM transformation_activity a
-      WHERE NOT EXISTS (
+      WHERE (
+          a.deleted
+          AND EXISTS (
+              SELECT * FROM template_group_template tgt
+              JOIN template_group tg ON tgt.template_group_id = tg.hid
+              JOIN workspace w ON tg.workspace_id = w.id
+              WHERE a.hid = tgt.template_id
+              AND w.is_public))
+      OR NOT EXISTS (
           SELECT * FROM template_group_template tgt
           WHERE a.hid = tgt.template_id)"]
     (:count (first rs))))
@@ -226,7 +225,7 @@
       (:hid (first rs)))))
 
 (defn list-trash-category []
-  {:template_count (+ (count-deleted-apps) (count-orphaned-apps))
+  {:template_count (count-deleted-and-orphaned-apps)
    :name "Trash"
    :groups []
    :id trash-category-id

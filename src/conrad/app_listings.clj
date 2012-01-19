@@ -41,3 +41,6 @@
 
 (defn load-app-listing [hid]
   (normalize-app-listing (list-app hid)))
+
+(defn load-deleted-and-orphaned-app-listings []
+  (map #(normalize-app-listing %) (list-deleted-and-orphaned-apps)))
