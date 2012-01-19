@@ -139,62 +139,62 @@ an analysis group.  The output from this service is very similar to the output
 from the Discovery Environment's /get-analyses-in-group/{group-id} endpoint.
 Here's an example:
 
-dennis$ curl -s http://by-tor:14444/conrad/get-apps-in-group/EAD6C97D-8D7D-4199-B15E-6B1DABAB2D5F | python -mjson.tool
-{
-    "description": "",
-    "hid": 258,
-    "id": "EAD6C97D-8D7D-4199-B15E-6B1DABAB2D5F",
-    "is_public": true,
-    "name": "Bar",
-    "template_count": 1,
-    "templates": [
-        {
-            "deployed_components": [
-                {
-                    "attribution": "",
-                    "description": "Scan for unique values",
-                    "id": "c4e6f548cc0ee431da7f2ddfdf3ace761",
-                    "location": "/usr/bin/",
-                    "name": "uniq",
-                    "type": "executable",
-                    "version": "1.00"
-                }
-            ],
-            "description": "c...and t",
-            "id": "D36D47B0-A82F-40AB-AB1F-037249944620",
-            "integrator_email": "snowdog@iplantcollaborative.org",
-            "integrator_name": "Snow Dog",
-            "is_favorite": false,
-            "is_public": true,
-            "name": "c and t",
-            "pipeline_eligibility": {
-                "is_valid": true,
-                "reason": ""
-            },
-            "public_categories": [
-                {
-                    "description": "",
-                    "id": "EAD6C97D-8D7D-4199-B15E-6B1DABAB2D5F",
-                    "name": "Bar",
-                    "workspace_id": 0
-                }
-            ],
-            "rating": {
-                "average": 0.0
-            },
-            "suggested_categories": [
-                {
-                    "description": "",
-                    "id": "EAD6C97D-8D7D-4199-B15E-6B1DABAB2D5F",
-                    "name": "Bar",
-                    "workspace_id": 0
-                }
-            ],
-            "wiki_url": "https://pods.iplantcollaborative.org/wiki/display/DEapps/CACE"
-        }
-    ],
-    "workspace_id": 0
-}
+    dennis$ curl -s http://by-tor:14444/conrad/get-apps-in-group/EAD6C97D-8D7D-4199-B15E-6B1DABAB2D5F | python -mjson.tool
+    {
+        "description": "",
+        "hid": 258,
+        "id": "EAD6C97D-8D7D-4199-B15E-6B1DABAB2D5F",
+        "is_public": true,
+        "name": "Bar",
+        "template_count": 1,
+        "templates": [
+            {
+                "deployed_components": [
+                    {
+                        "attribution": "",
+                        "description": "Scan for unique values",
+                        "id": "c4e6f548cc0ee431da7f2ddfdf3ace761",
+                        "location": "/usr/bin/",
+                        "name": "uniq",
+                        "type": "executable",
+                        "version": "1.00"
+                    }
+                ],
+                "description": "c...and t",
+                "id": "D36D47B0-A82F-40AB-AB1F-037249944620",
+                "integrator_email": "snowdog@iplantcollaborative.org",
+                "integrator_name": "Snow Dog",
+                "is_favorite": false,
+                "is_public": true,
+                "name": "c and t",
+                "pipeline_eligibility": {
+                    "is_valid": true,
+                    "reason": ""
+                },
+                "public_categories": [
+                    {
+                        "description": "",
+                        "id": "EAD6C97D-8D7D-4199-B15E-6B1DABAB2D5F",
+                        "name": "Bar",
+                        "workspace_id": 0
+                    }
+                ],
+                "rating": {
+                    "average": 0.0
+                },
+                "suggested_categories": [
+                    {
+                        "description": "",
+                        "id": "EAD6C97D-8D7D-4199-B15E-6B1DABAB2D5F",
+                        "name": "Bar",
+                        "workspace_id": 0
+                    }
+                ],
+                "wiki_url": "https://pods.iplantcollaborative.org/wiki/display/DEapps/CACE"
+            }
+        ],
+        "workspace_id": 0
+    }
 
 ### Updating an App
 
