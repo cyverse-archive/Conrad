@@ -124,6 +124,12 @@ Here's an example:
         ]
     }
 
+Note that the list of app groups will contain a special group whose name and
+identifier are both set to _Trash_.  The Trash group represents a
+pseudo-category that contains all deleted and orphaned apps.  (Orphaned apps
+are apps that aren't in any category and thus aren't displayed in the
+Discovery Environment whether or not they're marked as deleted.)
+
 ### Listing Apps in a Category
 
 Endpoint: GET /get-analyses-in-group/{group-id}
@@ -467,12 +473,12 @@ This service will fail under the following circumstances:
 
 Endpoint: GET /undelete-app/{app-id}
 
-An app that has been deleted can be logically undeleted by sending a
-GET request to the /undelete-app/{app-id} endpoint.  This service
-takes no request body.  Upon success, this service returns a success
-flag along with the identifier of the application that was deleted.
-Upon failure, this service returns a success flag along with a brief
-description of the reason for the failure.
+An app that has been deleted can be logically undeleted by sending a GET
+request to the /undelete-app/{app-id} endpoint.  This service takes no request
+body.  Upon success, this service returns a success flag along with the
+identifier of the application that was deleted.  Upon failure, this service
+returns a success flag along with a brief description of the reason for the
+failure.
 
 Here are some examples:
 
@@ -665,6 +671,13 @@ Here are some examples:
         "reason": "category, Foo, does not exist",
         "success": false
     }
+
+As a special case, if the destination category identifier is set to the
+special pseudocategory identifier, _Trash_, then the app will be marked as
+deleted rather than moved.  Note that whenever an app is moved to a new
+category other than _Trash_ the app is automatically marked as not deleted.
+This feature allows clients to effectively delete and undelete apps by moving
+them to or from the _Trash_ category, respectively.
 
 This service will fail under the following circumstances:
 
