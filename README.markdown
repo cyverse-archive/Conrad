@@ -18,17 +18,17 @@ default, the file will look like this:
 
     # The database vendor ("postgresql" or "mysql")
     conrad.db.vendor=postgresql
-    
+
     # The database connection settings.
     conrad.db.host=localhost
     conrad.db.port=5432
     conrad.db.name=de
     conrad.db.user=user
     conrad.db.password=password
-    
+
     # Expire connections after the specified number of minutes.
     conrad.db.max-idle-minutes=180
-    
+
     # The settings to use for proxy authentication.
     conrad.cas.server=https://cas-server-hostname/cas/
     conrad.server-name=https://local-hostname
@@ -50,11 +50,11 @@ The logging settings are stored in WEB-INF/classes/log4j.properties inside the
 WAR file.  By default, the file will look like this:
 
     log4j.rootLogger=WARN, A, B
-    
+
     log4j.appender.B=org.apache.log4j.ConsoleAppender
     log4j.appender.B.layout=org.apache.log4j.PatternLayout
     log4j.appender.B.layout.ConversionPattern=%d{MM-dd@HH:mm:ss} %-5p (%13F:%L) %3x - %m%n
-    
+
     log4j.appender.A=org.apache.log4j.FileAppender
     log4j.appender.A.File=${catalina.home}/logs/conrad.log
     log4j.appender.A.layout=org.apache.log4j.PatternLayout
@@ -88,7 +88,7 @@ Currently, the response to this URL contains only a welcome message.  The
 response may be enhanced to include usage instructions or status information at
 some time in the future if it proves to be helpful.  Here's an example:
 
-    dennis$ curl -s http://hostname:14444/conrad/
+    dennis$ curl -s http://by-tor:14444/conrad/
     Welcome to Conrad!
 
 ### Listing App Groups
@@ -100,25 +100,25 @@ categories.  The output from this service is very similar to the output from the
 Discovery Environment's /get-only-analysis-groups/{workspace-id} endpoint.
 Here's an example:
 
-    dennis$ curl -s http://hostname:14444/conrad/get-app-groups | python -mjson.tool
+    dennis$ curl -s http://by-tor:14444/conrad/get-app-groups | python -mjson.tool
     {
         "groups": [
             {
-                "description": "", 
+                "description": "",
                 "groups": [
                     {
-                        "description": "", 
-                        "groups": [], 
-                        "id": "g5401bd146c144470aedd57b47ea1b979", 
-                        "is_public": true, 
-                        "name": "Beta", 
+                        "description": "",
+                        "groups": [],
+                        "id": "g5401bd146c144470aedd57b47ea1b979",
+                        "is_public": true,
+                        "name": "Beta",
                         "template_count": 8
                     },
                     ...
-                ], 
-                "id": "g12c7a585ec233352e31302e323112a7ccf18bfd7364", 
-                "is_public": true, 
-                "name": "Public Applications", 
+                ],
+                "id": "g12c7a585ec233352e31302e323112a7ccf18bfd7364",
+                "is_public": true,
+                "name": "Public Applications",
                 "template_count": 82
             }
         ]
@@ -133,47 +133,62 @@ an analysis group.  The output from this service is very similar to the output
 from the Discovery Environment's /get-analyses-in-group/{group-id} endpoint.
 Here's an example:
 
-    dennis$ curl -s http://hostname:14444/conrad/get-apps-in-group/8AC3DD03-B5EE-453A-832E-EED848A2D3CB | python -mjson.tool
-    {
-        "description": null, 
-        "hid": 189, 
-        "id": "8AC3DD03-B5EE-453A-832E-EED848A2D3CB", 
-        "is_public": true, 
-        "name": "Simple", 
-        "template_count": 1, 
-        "templates": [
-            {
-                "deployed_components": [
-                    {
-                        "attribution": "Naim Matasci", 
-                        "description": "", 
-                        "id": "C1D46AFE-02EC-4AB7-B6BE-D190A08B026E", 
-                        "location": "/usr/local2/bin", 
-                        "name": "run_muscle.pl", 
-                        "type": "executable", 
-                        "version": ""
-                    }
-                ], 
-                "description": "MUltiple Sequence Comparison by Log- Expectation for DNA or protein sequences", 
-                "id": "F50FE07D-91AA-AA36-1D47-BB2E7FDC7BB4", 
-                "integrator_email": "smckay@iplantcollaborative.org", 
-                "integrator_name": "Sheldon McKay", 
-                "is_favorite": false, 
-                "is_public": true, 
-                "name": "MUSCLE", 
-                "pipeline_eligibility": {
-                    "is_valid": true, 
-                    "reason": ""
-                }, 
-                "rating": {
-                    "average": 1.0
-                }, 
-                "suggested_categories": [], 
-                "wiki_url": "https://pods.iplantcollaborative.org/wiki/display/DEapps/MUSCLE"
-            }
-        ], 
-        "workspace_id": 0
-    }
+dennis$ curl -s http://by-tor:14444/conrad/get-apps-in-group/EAD6C97D-8D7D-4199-B15E-6B1DABAB2D5F | python -mjson.tool
+{
+    "description": "",
+    "hid": 258,
+    "id": "EAD6C97D-8D7D-4199-B15E-6B1DABAB2D5F",
+    "is_public": true,
+    "name": "Bar",
+    "template_count": 1,
+    "templates": [
+        {
+            "deployed_components": [
+                {
+                    "attribution": "",
+                    "description": "Scan for unique values",
+                    "id": "c4e6f548cc0ee431da7f2ddfdf3ace761",
+                    "location": "/usr/bin/",
+                    "name": "uniq",
+                    "type": "executable",
+                    "version": "1.00"
+                }
+            ],
+            "description": "c...and t",
+            "id": "D36D47B0-A82F-40AB-AB1F-037249944620",
+            "integrator_email": "snowdog@iplantcollaborative.org",
+            "integrator_name": "Snow Dog",
+            "is_favorite": false,
+            "is_public": true,
+            "name": "c and t",
+            "pipeline_eligibility": {
+                "is_valid": true,
+                "reason": ""
+            },
+            "public_categories": [
+                {
+                    "description": "",
+                    "id": "EAD6C97D-8D7D-4199-B15E-6B1DABAB2D5F",
+                    "name": "Bar",
+                    "workspace_id": 0
+                }
+            ],
+            "rating": {
+                "average": 0.0
+            },
+            "suggested_categories": [
+                {
+                    "description": "",
+                    "id": "EAD6C97D-8D7D-4199-B15E-6B1DABAB2D5F",
+                    "name": "Bar",
+                    "workspace_id": 0
+                }
+            ],
+            "wiki_url": "https://pods.iplantcollaborative.org/wiki/display/DEapps/CACE"
+        }
+    ],
+    "workspace_id": 0
+}
 
 ### Updating an App
 
@@ -201,59 +216,74 @@ Here are some examples:
 
     dennis$ curl -sd '
     {
-        "id": "EB6EDA51-1D5C-4466-8901-E0194D5D2A53",
-        "name": "COLLAR",
-        "description": "Description of COLLAR",
-        "wiki_url": "https://pods.iplantcollaborative.org/wiki/display/DEapps/COLLAR",
+        "id": "D36D47B0-A82F-40AB-AB1F-037249944620",
+        "name": "Scooby Snacks!",
+        "description": "Reah, reah, reah, reah, reah!",
+        "wiki_url": "https://pods.iplantcollaborative.org/wiki/display/DEapps/Rummy",
         "integrator_name": "Scooby Dooby Doo",
         "integrator_email": "scooby@iplantcollaborative.org"
     }
-    ' http://hostname:14444/conrad/update-app | python -mjson.tool
+    ' http://by-tor:14444/conrad/update-app | python -mjson.tool
     {
         "application": {
             "deployed_components": [
                 {
-                    "attribution": "", 
-                    "description": "generic script for submitting jobs to the Foundational API", 
-                    "id": "c0d7c27ee23784641a568dc9cbdc4e11d", 
-                    "location": "/usr/bin", 
-                    "name": "foundational_api_adapter.pl", 
-                    "type": "fAPI", 
-                    "version": "0.0.1"
+                    "attribution": "",
+                    "description": "Scan for unique values",
+                    "id": "c4e6f548cc0ee431da7f2ddfdf3ace761",
+                    "location": "/usr/bin/",
+                    "name": "uniq",
+                    "type": "executable",
+                    "version": "1.00"
                 }
-            ], 
-            "description": "Description of COLLAR", 
-            "id": "EB6EDA51-1D5C-4466-8901-E0194D5D2A53", 
-            "integrator_email": "scooby@iplantcollaborative.org", 
-            "integrator_name": "Scooby Dooby Doo", 
-            "is_favorite": false, 
-            "is_public": true, 
-            "name": "COLLAR", 
+            ],
+            "description": "Reah, reah, reah, reah, reah!",
+            "id": "D36D47B0-A82F-40AB-AB1F-037249944620",
+            "integrator_email": "scooby@iplantcollaborative.org",
+            "integrator_name": "Scooby Dooby Doo",
+            "is_favorite": false,
+            "is_public": true,
+            "name": "Scooby Snacks!",
             "pipeline_eligibility": {
-                "is_valid": true, 
+                "is_valid": true,
                 "reason": ""
-            }, 
+            },
+            "public_categories": [
+                {
+                    "description": "",
+                    "id": "EAD6C97D-8D7D-4199-B15E-6B1DABAB2D5F",
+                    "name": "Bar",
+                    "workspace_id": 0
+                }
+            ],
             "rating": {
                 "average": 0.0
-            }, 
-            "suggested_categories": [], 
-            "wiki_url": "https://pods.iplantcollaborative.org/wiki/display/DEapps/COLLAR"
-        }, 
+            },
+            "suggested_categories": [
+                {
+                    "description": "",
+                    "id": "EAD6C97D-8D7D-4199-B15E-6B1DABAB2D5F",
+                    "name": "Bar",
+                    "workspace_id": 0
+                }
+            ],
+            "wiki_url": "https://pods.iplantcollaborative.org/wiki/display/DEapps/Rummy"
+        },
         "success": true
     }
 
     dennis$ curl -sd '
     {
         "id": "Foo",
-        "name": "COLLAR",
-        "description": "Description of COLLAR",
-        "wiki_url": "https://pods.iplantcollaborative.org/wiki/display/DEapps/COLLAR",
+        "name": "Scooby Snacks!",
+        "description": "Reah, reah, reah, reah, reah!",
+        "wiki_url": "https://pods.iplantcollaborative.org/wiki/display/DEapps/Rummy",
         "integrator_name": "Scooby Dooby Doo",
         "integrator_email": "scooby@iplantcollaborative.org"
     }
-    ' http://hostname:14444/conrad/update-app | python -mjson.tool
+    ' http://by-tor:14444/conrad/update-app | python -mjson.tool
     {
-        "reason": "app, Foo, not found", 
+        "reason": "app, Foo, not found",
         "success": false
     }
 
@@ -289,9 +319,9 @@ Here are some examples:
         "categoryId": "g5401bd146c144470aedd57b47ea1b979",
         "name": "Etabay"
     }
-    ' http://hostname:14444/conrad/rename-category | python -mjson.tool
+    ' http://by-tor:14444/conrad/rename-category | python -mjson.tool
     {
-        "name": "Etabay", 
+        "name": "Etabay",
         "success": true
     }
 
@@ -300,9 +330,9 @@ Here are some examples:
         "categoryId": "Foo",
         "name": "Etabay"
     }
-    ' http://hostname:14444/conrad/rename-category | python -mjson.tool
+    ' http://by-tor:14444/conrad/rename-category | python -mjson.tool
     {
-        "reason": "category, Foo, does not exist", 
+        "reason": "category, Foo, does not exist",
         "success": false
     }
 
@@ -325,13 +355,13 @@ a brief description of the reason for the failure.
 
 Here are some examples:
 
-    dennis$ curl -sXDELETE http://hostname:14444/conrad/category/6FB48BDB-B034-48CE-8242-096525F50662 | format_json
+    dennis$ curl -sXDELETE http://by-tor:14444/conrad/category/6FB48BDB-B034-48CE-8242-096525F50662 | format_json
     {
        "success" : true,
        "categoryId" : "6FB48BDB-B034-48CE-8242-096525F50662"
     }
-    
-    dennis$ curl -sXDELETE http://hostname:14444/conrad/category/g5401bd146c144470aedd57b47ea1b979 | format_json
+
+    dennis$ curl -sXDELETE http://by-tor:14444/conrad/category/g5401bd146c144470aedd57b47ea1b979 | format_json
     {
        "success" : false,
        "reason" : "category, g5401bd146c144470aedd57b47ea1b979, contains apps"
@@ -369,29 +399,29 @@ Here are some examples:
         "parentCategoryId": "g12c7a585ec233352e31302e323112a7ccf18bfd7364",
         "name": "Foo"
     }
-    ' http://hostname:14444/conrad/category | python -mjson.tool
+    ' http://by-tor:14444/conrad/category | python -mjson.tool
     {
         "category": {
-            "description": "", 
-            "hid": 244, 
-            "id": "FF7155FC-132B-4AAB-9FBB-57DC40DC572B", 
-            "is_public": true, 
-            "name": "Foo", 
-            "template_count": 0, 
-            "templates": [], 
+            "description": "",
+            "hid": 244,
+            "id": "FF7155FC-132B-4AAB-9FBB-57DC40DC572B",
+            "is_public": true,
+            "name": "Foo",
+            "template_count": 0,
+            "templates": [],
             "workspace_id": 0
-        }, 
+        },
         "success": true
     }
-    
+
     dennis$ curl -sXPUT -d '
     {
         "parentCategoryId": "g12c7a585ec233352e31302e323112a7ccf18bfd7364",
         "name": "Foo"
     }
-    ' http://hostname:14444/conrad/category | python -mjson.tool
+    ' http://by-tor:14444/conrad/category | python -mjson.tool
     {
-        "reason": "category, g12c7a585ec233352e31302e323112a7ccf18bfd7364, already contains a subcategory named, \"Foo\"", 
+        "reason": "category, g12c7a585ec233352e31302e323112a7ccf18bfd7364, already contains a subcategory named, \"Foo\"",
         "success": false
     }
 
@@ -416,15 +446,45 @@ description of the reason for the failure.
 
 Here are some examples:
 
-    dennis$ curl -sXDELETE http://hostname:14444/conrad/app/2BB00471-502E-42DE-A57E-9B516CEA1493 | python -mjson.tool
+    dennis$ curl -sXDELETE http://by-tor:14444/conrad/app/2BB00471-502E-42DE-A57E-9B516CEA1493 | python -mjson.tool
     {
-        "id": "2BB00471-502E-42DE-A57E-9B516CEA1493", 
+        "id": "2BB00471-502E-42DE-A57E-9B516CEA1493",
         "success": true
     }
-    
-    dennis$ curl -sXDELETE http://hostname:14444/conrad/app/Foo | python -mjson.tool
+
+    dennis$ curl -sXDELETE http://by-tor:14444/conrad/app/Foo | python -mjson.tool
     {
-        "reason": "app, Foo, not found", 
+        "reason": "app, Foo, not found",
+        "success": false
+    }
+
+This service will fail under the following circumstances:
+
+* an app with the specified identifier can't be found;
+* a database error occurs.
+
+### Undeleting an App
+
+Endpoint: GET /undelete-app/{app-id}
+
+An app that has been deleted can be logically undeleted by sending a
+GET request to the /undelete-app/{app-id} endpoint.  This service
+takes no request body.  Upon success, this service returns a success
+flag along with the identifier of the application that was deleted.
+Upon failure, this service returns a success flag along with a brief
+description of the reason for the failure.
+
+Here are some examples:
+
+    dennis$ curl -s http://by-tor:14444/conrad/undelete-app/D36D47B0-A82F-40AB-AB1F-037249944620 | python -mjson.tool
+    {
+        "id": "D36D47B0-A82F-40AB-AB1F-037249944620",
+        "success": true
+    }
+
+    dennis$ curl -s http://by-tor:14444/conrad/undelete-app/Foo | python -mjson.tool
+    {
+        "reason": "app, Foo, not found",
         "success": false
     }
 
@@ -455,63 +515,77 @@ Here are some examples:
 
     dennis$ curl -sd '
     {
-        "id": "EB6EDA51-1D5C-4466-8901-E0194D5D2A53",
-        "categoryId": "06DFCE72-BC04-4556-9659-B4D87A471947"
+        "id": "D36D47B0-A82F-40AB-AB1F-037249944620",
+        "categoryId": "44EB59FA-E49E-480F-BBD4-7FCC91E3D1EB"
     }
-    ' http://hostname:14444/conrad/move-app | python -mjson.tool
+    ' http://by-tor:14444/conrad/move-app | python -mjson.tool
     {
         "category": {
-            "description": null, 
-            "hid": 168, 
-            "id": "06DFCE72-BC04-4556-9659-B4D87A471947", 
-            "is_public": true, 
-            "name": "Utility Tool", 
-            "template_count": 10, 
+            "description": "",
+            "hid": 259,
+            "id": "44EB59FA-E49E-480F-BBD4-7FCC91E3D1EB",
+            "is_public": true,
+            "name": "Baz",
+            "template_count": 1,
             "templates": [
                 {
                     "deployed_components": [
                         {
-                            "attribution": "Wrapper for GNU grep. iPlant DE tool developed by Matt Vaughn (vaughn at iplantcollaborative dot org).", 
-                            "description": "Grep", 
-                            "id": "c58d961d2d2434e2c824401e121c6f90c", 
-                            "location": "/usr/local3/bin/grep_tool-1.00/", 
-                            "name": "grep_wrapper.sh", 
-                            "type": "executable", 
+                            "attribution": "",
+                            "description": "Scan for unique values",
+                            "id": "c4e6f548cc0ee431da7f2ddfdf3ace761",
+                            "location": "/usr/bin/",
+                            "name": "uniq",
+                            "type": "executable",
                             "version": "1.00"
                         }
-                    ], 
-                    "description": "Identify and extract matching lines from a file", 
-                    "id": "EE8A6728-FEEE-F94C-ECCD-59C5DB1791B8", 
-                    "integrator_email": "vaughn@iplantcollaborative.org", 
-                    "integrator_name": "Matt Vaughn", 
-                    "is_favorite": false, 
-                    "is_public": true, 
-                    "name": "Find Lines Matching a Regular Expression", 
+                    ],
+                    "description": "Reah, reah, reah, reah, reah!",
+                    "id": "D36D47B0-A82F-40AB-AB1F-037249944620",
+                    "integrator_email": "scooby@iplantcollaborative.org",
+                    "integrator_name": "Scooby Dooby Doo",
+                    "is_favorite": false,
+                    "is_public": true,
+                    "name": "Scooby Snacks!",
                     "pipeline_eligibility": {
-                        "is_valid": true, 
+                        "is_valid": true,
                         "reason": ""
-                    }, 
+                    },
+                    "public_categories": [
+                        {
+                            "description": "",
+                            "id": "44EB59FA-E49E-480F-BBD4-7FCC91E3D1EB",
+                            "name": "Baz",
+                            "workspace_id": 0
+                        }
+                    ],
                     "rating": {
-                        "average": 5.0
-                    }, 
-                    "suggested_categories": [], 
-                    "wiki_url": "https://pods.iplantcollaborative.org/wiki/display/DEapps/Find%20Lines%20Matching%20a%20Regular%20Expression"
-                },
-                ...
-            ], 
+                        "average": 0.0
+                    },
+                    "suggested_categories": [
+                        {
+                            "description": "",
+                            "id": "EAD6C97D-8D7D-4199-B15E-6B1DABAB2D5F",
+                            "name": "Bar",
+                            "workspace_id": 0
+                        }
+                    ],
+                    "wiki_url": "https://pods.iplantcollaborative.org/wiki/display/DEapps/Rummy"
+                }
+            ],
             "workspace_id": 0
-        }, 
+        },
         "success": true
     }
-    
+
     dennis$ curl -sd '
     {
-        "id": "Foo",          
+        "id": "Foo",
         "categoryId": "06DFCE72-BC04-4556-9659-B4D87A471947"
     }
-    ' http://hostname:14444/conrad/move-app | python -mjson.tool
+    ' http://by-tor:14444/conrad/move-app | python -mjson.tool
     {
-        "reason": "app, Foo, not found", 
+        "reason": "app, Foo, not found",
         "success": false
     }
 
@@ -549,46 +623,46 @@ Here are some examples:
         "categoryId": "A8D08BAA-D930-4178-9647-2A17DB17E309",
         "parentCategoryId": "g12c7a585ec233352e31302e323112a7ccf18bfd7364"
     }
-    ' http://hostname:14444/conrad/move-category | python -mjson.tool
+    ' http://by-tor:14444/conrad/move-category | python -mjson.tool
     {
         "categories": {
             "groups": [
                 {
-                    "description": "", 
+                    "description": "",
                     "groups": [
                         {
-                            "description": null, 
+                            "description": null,
                             "groups": [
                                 {
-                                    "description": null, 
-                                    "groups": [], 
-                                    "id": "DE2F3D2B-1D0B-4A2D-BD6C-EBDE2F7E974A", 
-                                    "is_public": true, 
-                                    "name": "Aligners", 
+                                    "description": null,
+                                    "groups": [],
+                                    "id": "DE2F3D2B-1D0B-4A2D-BD6C-EBDE2F7E974A",
+                                    "is_public": true,
+                                    "name": "Aligners",
                                     "template_count": 5
                                 },
                             ]
                         },
                         ...
-                    ], 
-                    "id": "g12c7a585ec233352e31302e323112a7ccf18bfd7364", 
-                    "is_public": true, 
-                    "name": "Public Applications", 
+                    ],
+                    "id": "g12c7a585ec233352e31302e323112a7ccf18bfd7364",
+                    "is_public": true,
+                    "name": "Public Applications",
                     "template_count": 82
                 }
             ]
-        }, 
+        },
         "success": true
     }
-    
+
     dennis$ curl -sd '
     {
         "categoryId": "A8D08BAA-D930-4178-9647-2A17DB17E309",
-        "parentCategoryId": "Foo"                                        
+        "parentCategoryId": "Foo"
     }
-    ' http://hostname:14444/conrad/move-category | python -mjson.tool
+    ' http://by-tor:14444/conrad/move-category | python -mjson.tool
     {
-        "reason": "category, Foo, does not exist", 
+        "reason": "category, Foo, does not exist",
         "success": false
     }
 
@@ -608,8 +682,8 @@ If an unrecognized service path is used in a request to Conrad then the response
 will contain a success flag along with a message indicating that the service
 path is unrecognized:
 
-    dennis$ curl -s http://hostname:14444/conrad/foo | python -mjson.tool
+    dennis$ curl -s http://by-tor:14444/conrad/foo | python -mjson.tool
     {
-        "reason": "unrecognized service path", 
+        "reason": "unrecognized service path",
         "success": false
     }
