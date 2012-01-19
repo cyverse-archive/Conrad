@@ -34,15 +34,21 @@
                              (app-info->integration-data-update app-info))
     (success-response {:application (load-app-listing hid)})))
 
-(defn- move-app-to-new-category [categorization-info]
-  (let [app-id (extract-required-field categorization-info :id)
-        category-id (extract-required-field categorization-info :categoryId)
-        transformation-activity (load-transformation-activity app-id)
-        category (load-category-by-id category-id)
-        app-hid (:hid transformation-activity)
+(defn- move-app-to-category [app category-id]
+  (let [category (load-category-by-id category-id)
+        app-hid (:hid app)
         category-hid (:hid category)]
     (ensure-category-doesnt-contain-subcategories category-id category-hid)
     (move-public-app app-hid category-hid)
+    (set-app-deleted-flag (:id app) false)))
+
+(defn- move-app* [categorization-info]
+  (let [app-id (extract-required-field categorization-info :id)
+        category-id (extract-required-field categorization-info :categoryId)
+        app (load-transformation-activity app-id)]
+    (if (= category-id trash-category-id)
+      (set-app-deleted-flag app-id true)
+      (move-app-to-category app category-id))
     (success-response {:category (list-category-with-apps category-id)})))
 
 (defn update-app [body]
@@ -53,9 +59,16 @@
   (jdbc/with-connection (db-connection)
     (jdbc/transaction
      (load-transformation-activity id)
-     (mark-app-deleted id)
+     (set-app-deleted-flag id true)
+     (success-response {:id id}))))
+
+(defn undelete-app [id]
+  (jdbc/with-connection (db-connection)
+    (jdbc/transaction
+     (load-transformation-activity id)
+     (set-app-deleted-flag id false)
      (success-response {:id id}))))
 
 (defn move-app [body]
   (jdbc/with-connection (db-connection)
-    (jdbc/transaction (move-app-to-new-category (cc-json/body->json body)))))
+    (jdbc/transaction (move-app* (cc-json/body->json body)))))

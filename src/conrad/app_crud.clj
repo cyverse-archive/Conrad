@@ -10,6 +10,15 @@
       ORDER BY execution_order" app-hid]
     (doall rs)))
 
+(defn load-public-categories-for-app [app-hid]
+  (jdbc/with-query-results rs
+    ["SELECT tg.* FROM template_group_template tgt
+      JOIN template_group tg ON tgt.template_group_id = tg.hid
+      JOIN workspace w ON tg.workspace_id = w.id
+      WHERE w.is_public
+      AND tgt.template_id = ?" app-hid]
+    (doall (map #(dissoc % :hid) rs))))
+
 (defn list-app [hid]
   (jdbc/with-query-results rs
     ["SELECT * FROM analysis_listing WHERE hid = ?" hid]
@@ -19,8 +28,7 @@
   (jdbc/with-query-results rs
     ["SELECT a.hid, a.id, a.name, a.description, i.integrator_name,
           i.integrator_email, a.integration_date, a.wikiurl,
-          CAST(
-              COALESCE(AVG(r.rating), 0.0) AS DOUBLE PRECISION)
+          CAST(COALESCE(AVG(r.rating), 0.0) AS DOUBLE PRECISION)
               AS average_rating,
           (EXISTS (
               SELECT * FROM template_group_template tgt
@@ -61,10 +69,11 @@
 (defn update-integration-data [id integration-data-update]
   (jdbc/update-values :integration_data ["id = ?" id] integration-data-update))
 
-(defn mark-app-deleted [id]
+(defn set-app-deleted-flag [id flag]
+  (log/debug (str "setting the deleted flag for app, " id " to " flag))
   (jdbc/update-values
    :transformation_activity ["id = ?" id]
-   {:deleted true}))
+   {:deleted flag}))
 
 (defn- remove-public-categorizations [app-hid]
   (jdbc/delete-rows

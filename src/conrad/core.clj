@@ -1,6 +1,7 @@
 (ns conrad.core
   (:use [compojure.core]
         [ring.middleware keyword-params nested-params params]
+        [clojure-commons.query-params :only (wrap-query-params)]
         [conrad.app-admin]
         [conrad.category-admin]
         [conrad.common]
@@ -30,6 +31,7 @@
   (PUT "/category" [:as {body :body}] (trap #(create-category body)))
   (DELETE "/app/:id" [id] (trap #(delete-app id)))
   (POST "/move-app" [:as {body :body}] (trap #(move-app body)))
+  (GET "/undelete-app/:id" [id] (trap #(undelete-app id)))
   (POST "/move-category" [:as {body :body}] (trap #(move-category body)))
   (route/not-found (unrecognized-path-response)))
 
@@ -37,7 +39,7 @@
   (-> routes
       wrap-keyword-params
       wrap-nested-params
-      wrap-params))
+      wrap-query-params))
 
 (def app
   (site-handler conrad-routes))
