@@ -149,6 +149,8 @@ Here's an example:
         "template_count": 1,
         "templates": [
             {
+                "disabled": false,
+                "deleted": false,
                 "deployed_components": [
                     {
                         "attribution": "",
@@ -202,6 +204,7 @@ with the new values to be included in the app listing:
         "description": new-application-description,
         "integration_date": new-integration-date,
         "wiki_url": new-documentation-url,
+        "disabled": disabled-flag,
         "integrator_name": new-integrator-name,
         "integrator_email": new-integrator-email-address
     }
@@ -218,12 +221,15 @@ Here are some examples:
         "name": "Scooby Snacks!",
         "description": "Reah, reah, reah, reah, reah!",
         "wiki_url": "https://pods.iplantcollaborative.org/wiki/display/DEapps/Rummy",
+        "disabled": false,
         "integrator_name": "Scooby Dooby Doo",
         "integrator_email": "scooby@iplantcollaborative.org"
     }
     ' http://by-tor:14444/conrad/update-app | python -mjson.tool
     {
         "application": {
+            "disabled": false,
+            "deleted": false,
             "deployed_components": [
                 {
                     "attribution": "",
@@ -528,6 +534,8 @@ Here are some examples:
             "template_count": 1,
             "templates": [
                 {
+                    "disabled": false,
+                    "deleted": false,
                     "deployed_components": [
                         {
                             "attribution": "",

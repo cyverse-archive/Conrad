@@ -35,6 +35,8 @@
    :is_public (:is_public app)
    :is_favorite false
    :wiki_url (:wikiurl app)
+   :deleted (:deleted app)
+   :disabled (:disabled app)
    :deployed_components (app-deployed-component-listing app)
    :pipeline_eligibility (app-pipeline-eligibility app)
    :suggested_categories (load-suggested-categories-for-app (:hid app))})

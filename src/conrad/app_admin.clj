@@ -18,7 +18,8 @@
   {:name (:name app-info)
    :description (:description app-info)
    :integration_date (:integration_date app-info)
-   :wikiurl (:wiki_url app-info)})
+   :wikiurl (:wiki_url app-info)
+   :disabled (:disabled app-info)})
 
 (defn- app-info->integration-data-update [app-info]
   {:integrator_name (:integrator_name app-info)
