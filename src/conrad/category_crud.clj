@@ -182,14 +182,7 @@
 (defn- count-deleted-and-orphaned-apps []
   (jdbc/with-query-results rs
     ["SELECT COUNT(*) AS count FROM transformation_activity a
-      WHERE (
-          a.deleted
-          AND EXISTS (
-              SELECT * FROM template_group_template tgt
-              JOIN template_group tg ON tgt.template_group_id = tg.hid
-              JOIN workspace w ON tg.workspace_id = w.id
-              WHERE a.hid = tgt.template_id
-              AND w.is_public))
+      WHERE a.deleted
       OR NOT EXISTS (
           SELECT * FROM template_group_template tgt
           WHERE a.hid = tgt.template_id)"]
