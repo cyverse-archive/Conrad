@@ -42,7 +42,11 @@
       FROM transformation_activity a
           LEFT JOIN integration_data i ON a.integration_data_id = i.id
           LEFT JOIN ratings r ON a.hid = r.transformation_activity_id
-      WHERE a.deleted
+      WHERE (a.deleted AND EXISTS (
+              SELECT * FROM template_group_template tgt
+              JOIN template_group tg ON tgt.template_group_id = tg.hid
+              JOIN workspace w ON tg.workspace_id = w.id
+              WHERE tgt.template_id = a.hid AND w.is_public))
           OR NOT EXISTS (
               SELECT * FROM template_group_template tgt
               WHERE a.hid = tgt.template_id)

@@ -37,8 +37,7 @@
    :wiki_url (:wikiurl app)
    :deployed_components (app-deployed-component-listing app)
    :pipeline_eligibility (app-pipeline-eligibility app)
-   :suggested_categories (load-suggested-categories-for-app (:hid app))
-   :public_categories (load-public-categories-for-app (:hid app))})
+   :suggested_categories (load-suggested-categories-for-app (:hid app))})
 
 (defn load-app-listing [hid]
   (normalize-app-listing (list-app hid)))
