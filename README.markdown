@@ -171,14 +171,6 @@ Here's an example:
                     "is_valid": true,
                     "reason": ""
                 },
-                "public_categories": [
-                    {
-                        "description": "",
-                        "id": "EAD6C97D-8D7D-4199-B15E-6B1DABAB2D5F",
-                        "name": "Bar",
-                        "workspace_id": 0
-                    }
-                ],
                 "rating": {
                     "average": 0.0
                 },
@@ -254,14 +246,6 @@ Here are some examples:
                 "is_valid": true,
                 "reason": ""
             },
-            "public_categories": [
-                {
-                    "description": "",
-                    "id": "EAD6C97D-8D7D-4199-B15E-6B1DABAB2D5F",
-                    "name": "Bar",
-                    "workspace_id": 0
-                }
-            ],
             "rating": {
                 "average": 0.0
             },
@@ -298,7 +282,7 @@ This service will fail under the following circumstances:
 * the application with the specified identifier can't be found;
 * a database error occurs.
 
-Validation of the fields in the request body is not currently being done.  if
+Validation of the fields in the request body is not currenty being done.  if
 these services are exposed to direct access by users at some point in the future
 then validation will be added.
 
@@ -476,15 +460,23 @@ Endpoint: GET /undelete-app/{app-id}
 An app that has been deleted can be logically undeleted by sending a GET
 request to the /undelete-app/{app-id} endpoint.  This service takes no request
 body.  Upon success, this service returns a success flag along with the
-identifier of the application that was deleted.  Upon failure, this service
-returns a success flag along with a brief description of the reason for the
-failure.
+identifier of the application that was deleted and a list of the public
+categories that the app is in.  Upon failure, this service returns a success
+flag along with a brief description of the reason for the failure.
 
 Here are some examples:
 
-    dennis$ curl -s http://by-tor:14444/conrad/undelete-app/D36D47B0-A82F-40AB-AB1F-037249944620 | python -mjson.tool
+    dennis$ curl -s http://by-tor:14444/conrad/undelete-app/8E25FB08-E11E-476A-95A9-0D06563F261A | python -mjson.tool
     {
-        "id": "D36D47B0-A82F-40AB-AB1F-037249944620",
+        "categories": [
+            {
+                "description": null, 
+                "id": "7A0B68B2-6534-4CAD-8439-E0FAA3FD82B3", 
+                "name": "ChIPseq Analysis", 
+                "workspace_id": 0
+            }
+        ], 
+        "id": "8E25FB08-E11E-476A-95A9-0D06563F261A", 
         "success": true
     }
 
@@ -557,14 +549,6 @@ Here are some examples:
                         "is_valid": true,
                         "reason": ""
                     },
-                    "public_categories": [
-                        {
-                            "description": "",
-                            "id": "44EB59FA-E49E-480F-BBD4-7FCC91E3D1EB",
-                            "name": "Baz",
-                            "workspace_id": 0
-                        }
-                    ],
                     "rating": {
                         "average": 0.0
                     },

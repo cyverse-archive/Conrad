@@ -51,6 +51,10 @@
       (move-app-to-category app category-id))
     (success-response {:category (list-category-with-apps category-id)})))
 
+(defn- ensure-app-not-orphaned [id hid]
+  (if (is-orphaned-app hid)
+    (throw (IllegalStateException. (str "app, " id ", is orphaned")))))
+
 (defn update-app [body]
   (jdbc/with-connection (db-connection)
     (jdbc/transaction (update-app-info (cc-json/body->json body)))))
@@ -65,9 +69,13 @@
 (defn undelete-app [id]
   (jdbc/with-connection (db-connection)
     (jdbc/transaction
-     (load-transformation-activity id)
-     (set-app-deleted-flag id false)
-     (success-response {:id id}))))
+     (let [app (load-transformation-activity id)
+           hid (:hid app)]
+       (ensure-app-not-orphaned id hid)
+       (set-app-deleted-flag id false)
+       (success-response
+        {:id id
+         :categories (load-public-categories-for-app hid)})))))
 
 (defn move-app [body]
   (jdbc/with-connection (db-connection)
