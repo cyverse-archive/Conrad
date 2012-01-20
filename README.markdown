@@ -171,14 +171,6 @@ Here's an example:
                     "is_valid": true,
                     "reason": ""
                 },
-                "public_categories": [
-                    {
-                        "description": "",
-                        "id": "EAD6C97D-8D7D-4199-B15E-6B1DABAB2D5F",
-                        "name": "Bar",
-                        "workspace_id": 0
-                    }
-                ],
                 "rating": {
                     "average": 0.0
                 },
@@ -254,14 +246,6 @@ Here are some examples:
                 "is_valid": true,
                 "reason": ""
             },
-            "public_categories": [
-                {
-                    "description": "",
-                    "id": "EAD6C97D-8D7D-4199-B15E-6B1DABAB2D5F",
-                    "name": "Bar",
-                    "workspace_id": 0
-                }
-            ],
             "rating": {
                 "average": 0.0
             },
@@ -298,7 +282,7 @@ This service will fail under the following circumstances:
 * the application with the specified identifier can't be found;
 * a database error occurs.
 
-Validation of the fields in the request body is not currently being done.  if
+Validation of the fields in the request body is not currenty being done.  if
 these services are exposed to direct access by users at some point in the future
 then validation will be added.
 
@@ -565,14 +549,6 @@ Here are some examples:
                         "is_valid": true,
                         "reason": ""
                     },
-                    "public_categories": [
-                        {
-                            "description": "",
-                            "id": "44EB59FA-E49E-480F-BBD4-7FCC91E3D1EB",
-                            "name": "Baz",
-                            "workspace_id": 0
-                        }
-                    ],
                     "rating": {
                         "average": 0.0
                     },
