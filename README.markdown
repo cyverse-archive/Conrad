@@ -489,6 +489,7 @@ Here are some examples:
 This service will fail under the following circumstances:
 
 * an app with the specified identifier can't be found;
+* the speified app is not associated with an app category;
 * a database error occurs.
 
 ### Moving an App
