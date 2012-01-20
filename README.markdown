@@ -595,6 +595,13 @@ Here are some examples:
         "success": false
     }
 
+As a special case, if the destination category identifier is set to the
+special pseudocategory identifier, _Trash_, then the app will be marked as
+deleted rather than moved.  Note that whenever an app is moved to a new
+category other than _Trash_ the app is automatically marked as not deleted.
+This feature allows clients to effectively delete and undelete apps by moving
+them to or from the _Trash_ category, respectively.
+
 This service will fail under the following circumstances:
 
 * the application identifier is not specified in the request body;
@@ -671,13 +678,6 @@ Here are some examples:
         "reason": "category, Foo, does not exist",
         "success": false
     }
-
-As a special case, if the destination category identifier is set to the
-special pseudocategory identifier, _Trash_, then the app will be marked as
-deleted rather than moved.  Note that whenever an app is moved to a new
-category other than _Trash_ the app is automatically marked as not deleted.
-This feature allows clients to effectively delete and undelete apps by moving
-them to or from the _Trash_ category, respectively.
 
 This service will fail under the following circumstances:
 
