@@ -65,9 +65,12 @@
 (defn undelete-app [id]
   (jdbc/with-connection (db-connection)
     (jdbc/transaction
-     (load-transformation-activity id)
-     (set-app-deleted-flag id false)
-     (success-response {:id id}))))
+     (let [app (load-transformation-activity id)
+           hid (:hid app)]
+       (set-app-deleted-flag id false)
+       (success-response
+        {:id id
+         :categories (load-public-categories-for-app hid)})))))
 
 (defn move-app [body]
   (jdbc/with-connection (db-connection)

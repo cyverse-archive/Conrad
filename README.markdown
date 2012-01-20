@@ -476,15 +476,23 @@ Endpoint: GET /undelete-app/{app-id}
 An app that has been deleted can be logically undeleted by sending a GET
 request to the /undelete-app/{app-id} endpoint.  This service takes no request
 body.  Upon success, this service returns a success flag along with the
-identifier of the application that was deleted.  Upon failure, this service
-returns a success flag along with a brief description of the reason for the
-failure.
+identifier of the application that was deleted and a list of the public
+categories that the app is in.  Upon failure, this service returns a success
+flag along with a brief description of the reason for the failure.
 
 Here are some examples:
 
-    dennis$ curl -s http://by-tor:14444/conrad/undelete-app/D36D47B0-A82F-40AB-AB1F-037249944620 | python -mjson.tool
+    dennis$ curl -s http://by-tor:14444/conrad/undelete-app/8E25FB08-E11E-476A-95A9-0D06563F261A | python -mjson.tool
     {
-        "id": "D36D47B0-A82F-40AB-AB1F-037249944620",
+        "categories": [
+            {
+                "description": null, 
+                "id": "7A0B68B2-6534-4CAD-8439-E0FAA3FD82B3", 
+                "name": "ChIPseq Analysis", 
+                "workspace_id": 0
+            }
+        ], 
+        "id": "8E25FB08-E11E-476A-95A9-0D06563F261A", 
         "success": true
     }
 
