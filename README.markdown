@@ -209,6 +209,11 @@ with the new values to be included in the app listing:
         "integrator_email": new-integrator-email-address
     }
 
+Note that all fields are required; all fields that are omitted will be set to
+null in the database.  This is acceptable for now because this service is only
+accessed by the Belphegor UI.  If this service is ever made available to end
+users then this behavior will have to be changed.
+
 Upon success, the response body contains a success flag along with a complete
 listing of the updated app.  Upon failure, the response body contains a success
 flag along with a brief description of the reason for the failure.
@@ -217,9 +222,10 @@ Here are some examples:
 
     dennis$ curl -sd '
     {
-        "id": "D36D47B0-A82F-40AB-AB1F-037249944620",
+        "id": "F50FE07D-91AA-AA36-1D47-BB2E7FDC7BB4",
         "name": "Scooby Snacks!",
         "description": "Reah, reah, reah, reah, reah!",
+        "integration_date": 1327526294069,
         "wiki_url": "https://pods.iplantcollaborative.org/wiki/display/DEapps/Rummy",
         "disabled": false,
         "integrator_name": "Scooby Dooby Doo",
@@ -228,43 +234,36 @@ Here are some examples:
     ' http://by-tor:14444/conrad/update-app | python -mjson.tool
     {
         "application": {
-            "disabled": false,
-            "deleted": false,
+            "deleted": false, 
             "deployed_components": [
                 {
-                    "attribution": "",
-                    "description": "Scan for unique values",
-                    "id": "c4e6f548cc0ee431da7f2ddfdf3ace761",
-                    "location": "/usr/bin/",
-                    "name": "uniq",
-                    "type": "executable",
-                    "version": "1.00"
+                    "attribution": "Nobody Inparticular", 
+                    "description": "", 
+                    "id": "C1D46AFE-02EC-4AB7-B6BE-D190A08B026E", 
+                    "location": "/usr/local2/bin", 
+                    "name": "run_muscle.pl", 
+                    "type": "executable", 
+                    "version": ""
                 }
-            ],
-            "description": "Reah, reah, reah, reah, reah!",
-            "id": "D36D47B0-A82F-40AB-AB1F-037249944620",
-            "integrator_email": "scooby@iplantcollaborative.org",
-            "integrator_name": "Scooby Dooby Doo",
-            "is_favorite": false,
-            "is_public": true,
-            "name": "Scooby Snacks!",
+            ], 
+            "description": "Reah, reah, reah, reah, reah!", 
+            "disabled": false, 
+            "id": "F50FE07D-91AA-AA36-1D47-BB2E7FDC7BB4", 
+            "integrator_email": "scooby@iplantcollaborative.org", 
+            "integrator_name": "Scooby Dooby Doo", 
+            "is_favorite": false, 
+            "is_public": true, 
+            "name": "Scooby Snacks!", 
             "pipeline_eligibility": {
-                "is_valid": true,
+                "is_valid": true, 
                 "reason": ""
-            },
+            }, 
             "rating": {
                 "average": 0.0
-            },
-            "suggested_categories": [
-                {
-                    "description": "",
-                    "id": "EAD6C97D-8D7D-4199-B15E-6B1DABAB2D5F",
-                    "name": "Bar",
-                    "workspace_id": 0
-                }
-            ],
+            }, 
+            "suggested_categories": [], 
             "wiki_url": "https://pods.iplantcollaborative.org/wiki/display/DEapps/Rummy"
-        },
+        }, 
         "success": true
     }
 
@@ -273,7 +272,9 @@ Here are some examples:
         "id": "Foo",
         "name": "Scooby Snacks!",
         "description": "Reah, reah, reah, reah, reah!",
+        "integration_date": 1327526294069,
         "wiki_url": "https://pods.iplantcollaborative.org/wiki/display/DEapps/Rummy",
+        "disabled": false,
         "integrator_name": "Scooby Dooby Doo",
         "integrator_email": "scooby@iplantcollaborative.org"
     }
@@ -288,7 +289,7 @@ This service will fail under the following circumstances:
 * the application with the specified identifier can't be found;
 * a database error occurs.
 
-Validation of the fields in the request body is not currenty being done.  if
+Validation of the fields in the request body is not currenty being done.  If
 these services are exposed to direct access by users at some point in the future
 then validation will be added.
 
