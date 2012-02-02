@@ -338,6 +338,7 @@ This service will fail under the following circumstances:
 * the category ID is not specified in the request body;
 * the new category name is not specified in the request body;
 * the category with the specified identifier can't be found;
+* any parent of the category already contains a subcategory with the new name;
 * a database error occurs.
 
 ### Deleting a Category
@@ -681,6 +682,7 @@ This service will fail under the following circumstances:
 * the parent category can't be found;
 * the parent category contains apps;
 * the parent category is a descendent of the child category;
+* the parent categor already contains a subcategory of the same name;
 * a database error occurs.
 
 ### Unrecognized Service Paths
