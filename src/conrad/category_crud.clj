@@ -53,11 +53,6 @@
     ["SELECT * FROM workspace WHERE is_public IS TRUE"]
     (doall (map #(:root_analysis_group_id %) rs))))
 
-(defn update-category-name [hid name]
-    (jdbc/update-values
-     :template_group ["hid = ?" hid]
-     {:name name}))
-
 (defn count-apps-in-category [hid]
   (jdbc/with-query-results rs
     ["SELECT COUNT(*) AS count
@@ -79,6 +74,13 @@
     ["SELECT * FROM template_group_group
       WHERE subgroup_id = ?" hid]
     (doall (map #(:parent_group_id %) rs))))
+
+(defn- load-parent-categories [child-hid]
+  (jdbc/with-query-results rs
+    ["SELECT tg.* FROM template_group tg
+      JOIN template_group_group tgg ON tg.hid = tgg.parent_group_id
+      WHERE tgg.subgroup_id = ?" child-hid]
+    (doall rs)))
 
 (defn ensure-category-doesnt-contain-apps [id hid]
   (if (not= 0 (count-apps-in-category hid))
@@ -144,11 +146,30 @@
      [:parent_group_id :subgroup_id :hid]
      [parent-category-hid child-category-hid grouping-hid])))
 
+(defn- ensure-category-doesnt-exist [parent-id parent-hid name]
+  (jdbc/with-query-results rs
+    ["SELECT COUNT(*) AS count FROM template_group_group tgg
+      JOIN template_group tg ON tgg.subgroup_id = tg.hid
+      WHERE tgg.parent_group_id = ?
+      AND name = ?" parent-hid name]
+    (if (> (:count (first rs)) 0)
+      (throw (IllegalStateException.
+              (str "category, " parent-id ", already contains a subcategory "
+                   "named, \"" name "\""))))))
+
+(defn update-category-name [hid name]
+  (dorun (map #(ensure-category-doesnt-exist (:id %) (:hid %) name)
+              (load-parent-categories hid)))
+  (jdbc/update-values
+    :template_group ["hid = ?" hid]
+    {:name name}))
+
 (defn move-subcategory [parent-id child-id]
   (let [parent (load-category-by-id parent-id)
         child (load-category-by-id child-id)
         parent-hid (:hid parent)
         child-hid (:hid child)]
+    (ensure-category-doesnt-exist parent-id parent-hid (:name child))
     (ensure-category-doesnt-contain-apps parent-id parent-hid)
     (ensure-parent-not-descendent-of-child parent child)
     (remove-category-from-parents child-hid)
@@ -161,17 +182,6 @@
     (remove-category-from-parents hid)
     (jdbc/delete-rows :template_group_template ["template_group_id = ?" hid])
     (jdbc/delete-rows :template_group ["hid = ?" hid])))
-
-(defn- ensure-category-doesnt-exist [parent-id parent-hid name]
-  (jdbc/with-query-results rs
-    ["SELECT COUNT(*) AS count FROM template_group_group tgg
-      JOIN template_group tg ON tgg.subgroup_id = tg.hid
-      WHERE tgg.parent_group_id = ?
-      AND name = ?" parent-hid name]
-    (if (> (:count (first rs)) 0)
-      (throw (IllegalStateException.
-              (str "category, " parent-id ", already contains a subcategory "
-                   "named, \"" name "\""))))))
 
 (defn- insert-category [args]
   (let [vals (conj (vec (map #(get args %) [:id :name :description])) 0)]
