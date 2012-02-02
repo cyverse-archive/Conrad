@@ -8,3 +8,6 @@ conrad-*.war
 conrad.log
 *~
 \#*
+/.classpath
+/.project
+/bin/
