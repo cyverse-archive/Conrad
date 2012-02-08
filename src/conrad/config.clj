@@ -5,7 +5,7 @@
 
 (def
   ^{:doc "The name of the properties file."}
-  prop-file "conrad.properties")
+  prop-file "zkhosts.properties")
 
 (def
   ^{:doc "The properties loaded from the properties file."}
