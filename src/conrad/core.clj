@@ -1,16 +1,21 @@
 (ns conrad.core
+  (:gen-class)
   (:use [compojure.core]
         [ring.middleware keyword-params nested-params params]
         [clojure-commons.query-params :only (wrap-query-params)]
         [conrad.app-admin]
         [conrad.category-admin]
         [conrad.common]
+        [conrad.config]
         [conrad.listings]
         [conrad.database]
         [conrad.middleware.cas-proxy-auth :only (validate-cas-proxy-ticket)]
         [clojure.data.json :only (json-str)])
   (:require [compojure.route :as route]
-            [compojure.handler :as handler])
+            [compojure.handler :as handler]
+            [clojure-commons.clavin-client :as cl]
+            [clojure.tools.logging :as log]
+            [ring.adapter.jetty :as jetty])
   (:import [java.sql SQLException]))
 
 (defn- trap [f]
@@ -35,6 +40,21 @@
   (POST "/move-category" [:as {body :body}] (trap #(move-category body)))
   (route/not-found (unrecognized-path-response)))
 
+(defn load-configuration
+  "Loads the configuration properties from Zookeeper."
+  []
+  (cl/with-zk
+    zk-url
+    (when (not (cl/can-run?))
+      (log/warn "THIS APPLICATION CANNOT RUN ON THIS MACHINE. SO SAYETH ZOOKEEPER.")
+      (log/warn "THIS APPLICATION WILL NOT EXECUTE CORRECTLY.")
+      (System/exit 1))
+    (reset! props (cl/properties "conrad")))
+  (log/warn @props)
+  (when (not (configuration-valid))
+    (log/warn "THE CONFIGURATION IS INVALID - EXITING NOW")
+    (System/exit 1)))
+
 (defn site-handler [routes]
   (-> routes
       wrap-keyword-params
@@ -43,3 +63,9 @@
 
 (def app
   (site-handler conrad-routes))
+
+(defn -main
+  [& args]
+  (load-configuration)
+  (log/warn "Listening on" (listen-port))
+  (jetty/run-jetty app {:port (listen-port)}))

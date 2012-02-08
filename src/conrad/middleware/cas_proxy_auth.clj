@@ -11,10 +11,10 @@
   "Determines whether or not the given proxy ticket is valid."
   [proxy-ticket]
   (if (not (blank? proxy-ticket))
-    (let [validator (Cas20ProxyTicketValidator. cas-server)]
+    (let [validator (Cas20ProxyTicketValidator. (cas-server))]
       (.setAcceptAnyProxy validator true)
       (try
-        (do (.validate validator proxy-ticket server-name) true)
+        (do (.validate validator proxy-ticket (server-name)) true)
         (catch TicketValidationException e
           (do (log/error e "proxy ticket validation failed") false))))
     false))
