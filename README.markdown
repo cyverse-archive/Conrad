@@ -126,29 +126,31 @@ categories.  The output from this service is very similar to the output from the
 Discovery Environment's /get-only-analysis-groups/{workspace-id} endpoint.
 Here's an example:
 
-    dennis$ curl -s http://by-tor:14444/conrad/get-app-groups | python -mjson.tool
-    {
-        "groups": [
-            {
-                "description": "",
-                "groups": [
-                    {
-                        "description": "",
-                        "groups": [],
-                        "id": "g5401bd146c144470aedd57b47ea1b979",
-                        "is_public": true,
-                        "name": "Beta",
-                        "template_count": 8
-                    },
-                    ...
-                ],
-                "id": "g12c7a585ec233352e31302e323112a7ccf18bfd7364",
-                "is_public": true,
-                "name": "Public Applications",
-                "template_count": 82
-            }
-        ]
-    }
+```
+dennis$ curl -s http://by-tor:14444/conrad/get-app-groups | python -mjson.tool
+{
+    "groups": [
+        {
+            "description": "",
+            "groups": [
+                {
+                    "description": "",
+                    "groups": [],
+                    "id": "g5401bd146c144470aedd57b47ea1b979",
+                    "is_public": true,
+                    "name": "Beta",
+                    "template_count": 8
+                },
+                ...
+            ],
+            "id": "g12c7a585ec233352e31302e323112a7ccf18bfd7364",
+            "is_public": true,
+            "name": "Public Applications",
+            "template_count": 82
+        }
+    ]
+}
+```
 
 Note that the list of app groups will contain a special group whose name and
 identifier are both set to _Trash_.  The Trash group represents a
@@ -165,56 +167,58 @@ an analysis group.  The output from this service is very similar to the output
 from the Discovery Environment's /get-analyses-in-group/{group-id} endpoint.
 Here's an example:
 
-    dennis$ curl -s http://by-tor:14444/conrad/get-apps-in-group/EAD6C97D-8D7D-4199-B15E-6B1DABAB2D5F | python -mjson.tool
-    {
-        "description": "",
-        "hid": 258,
-        "id": "EAD6C97D-8D7D-4199-B15E-6B1DABAB2D5F",
-        "is_public": true,
-        "name": "Bar",
-        "template_count": 1,
-        "templates": [
-            {
-                "disabled": false,
-                "deleted": false,
-                "deployed_components": [
-                    {
-                        "attribution": "",
-                        "description": "Scan for unique values",
-                        "id": "c4e6f548cc0ee431da7f2ddfdf3ace761",
-                        "location": "/usr/bin/",
-                        "name": "uniq",
-                        "type": "executable",
-                        "version": "1.00"
-                    }
-                ],
-                "description": "c...and t",
-                "id": "D36D47B0-A82F-40AB-AB1F-037249944620",
-                "integrator_email": "snowdog@iplantcollaborative.org",
-                "integrator_name": "Snow Dog",
-                "is_favorite": false,
-                "is_public": true,
-                "name": "c and t",
-                "pipeline_eligibility": {
-                    "is_valid": true,
-                    "reason": ""
-                },
-                "rating": {
-                    "average": 0.0
-                },
-                "suggested_categories": [
-                    {
-                        "description": "",
-                        "id": "EAD6C97D-8D7D-4199-B15E-6B1DABAB2D5F",
-                        "name": "Bar",
-                        "workspace_id": 0
-                    }
-                ],
-                "wiki_url": "https://pods.iplantcollaborative.org/wiki/display/DEapps/CACE"
-            }
-        ],
-        "workspace_id": 0
-    }
+```
+dennis$ curl -s http://by-tor:14444/conrad/get-apps-in-group/EAD6C97D-8D7D-4199-B15E-6B1DABAB2D5F | python -mjson.tool
+{
+    "description": "",
+    "hid": 258,
+    "id": "EAD6C97D-8D7D-4199-B15E-6B1DABAB2D5F",
+    "is_public": true,
+    "name": "Bar",
+    "template_count": 1,
+    "templates": [
+        {
+            "disabled": false,
+            "deleted": false,
+            "deployed_components": [
+                {
+                    "attribution": "",
+                    "description": "Scan for unique values",
+                    "id": "c4e6f548cc0ee431da7f2ddfdf3ace761",
+                    "location": "/usr/bin/",
+                    "name": "uniq",
+                    "type": "executable",
+                    "version": "1.00"
+                }
+            ],
+            "description": "c...and t",
+            "id": "D36D47B0-A82F-40AB-AB1F-037249944620",
+            "integrator_email": "snowdog@iplantcollaborative.org",
+            "integrator_name": "Snow Dog",
+            "is_favorite": false,
+            "is_public": true,
+            "name": "c and t",
+            "pipeline_eligibility": {
+                "is_valid": true,
+                "reason": ""
+            },
+            "rating": {
+                "average": 0.0
+            },
+            "suggested_categories": [
+                {
+                    "description": "",
+                    "id": "EAD6C97D-8D7D-4199-B15E-6B1DABAB2D5F",
+                    "name": "Bar",
+                    "workspace_id": 0
+                }
+            ],
+            "wiki_url": "https://pods.iplantcollaborative.org/wiki/display/DEapps/CACE"
+        }
+    ],
+    "workspace_id": 0
+}
+```
 
 ### Updating an App
 
@@ -224,16 +228,18 @@ Much of the information included in the app listing can be updated using the
 /update-app endpoint.  The post body of this service contains the app ID along
 with the new values to be included in the app listing:
 
-    {
-        "id": application-id,
-        "name": new-application-name,
-        "description": new-application-description,
-        "integration_date": new-integration-date,
-        "wiki_url": new-documentation-url,
-        "disabled": disabled-flag,
-        "integrator_name": new-integrator-name,
-        "integrator_email": new-integrator-email-address
-    }
+```json
+{
+    "id": application-id,
+    "name": new-application-name,
+    "description": new-application-description,
+    "integration_date": new-integration-date,
+    "wiki_url": new-documentation-url,
+    "disabled": disabled-flag,
+    "integrator_name": new-integrator-name,
+    "integrator_email": new-integrator-email-address
+}
+```
 
 Note that all fields are required; all fields that are omitted will be set to
 null in the database.  This is acceptable for now because this service is only
@@ -246,69 +252,71 @@ flag along with a brief description of the reason for the failure.
 
 Here are some examples:
 
-    dennis$ curl -sd '
-    {
-        "id": "F50FE07D-91AA-AA36-1D47-BB2E7FDC7BB4",
-        "name": "Scooby Snacks!",
-        "description": "Reah, reah, reah, reah, reah!",
-        "integration_date": 1327526294069,
-        "wiki_url": "https://pods.iplantcollaborative.org/wiki/display/DEapps/Rummy",
-        "disabled": false,
-        "integrator_name": "Scooby Dooby Doo",
-        "integrator_email": "scooby@iplantcollaborative.org"
-    }
-    ' http://by-tor:14444/conrad/update-app | python -mjson.tool
-    {
-        "application": {
-            "deleted": false, 
-            "deployed_components": [
-                {
-                    "attribution": "Nobody Inparticular", 
-                    "description": "", 
-                    "id": "C1D46AFE-02EC-4AB7-B6BE-D190A08B026E", 
-                    "location": "/usr/local2/bin", 
-                    "name": "run_muscle.pl", 
-                    "type": "executable", 
-                    "version": ""
-                }
-            ], 
-            "description": "Reah, reah, reah, reah, reah!", 
-            "disabled": false, 
-            "id": "F50FE07D-91AA-AA36-1D47-BB2E7FDC7BB4", 
-            "integrator_email": "scooby@iplantcollaborative.org", 
-            "integrator_name": "Scooby Dooby Doo", 
-            "is_favorite": false, 
-            "is_public": true, 
-            "name": "Scooby Snacks!", 
-            "pipeline_eligibility": {
-                "is_valid": true, 
-                "reason": ""
-            }, 
-            "rating": {
-                "average": 0.0
-            }, 
-            "suggested_categories": [], 
-            "wiki_url": "https://pods.iplantcollaborative.org/wiki/display/DEapps/Rummy"
+```
+dennis$ curl -sd '
+{
+    "id": "F50FE07D-91AA-AA36-1D47-BB2E7FDC7BB4",
+    "name": "Scooby Snacks!",
+    "description": "Reah, reah, reah, reah, reah!",
+    "integration_date": 1327526294069,
+    "wiki_url": "https://pods.iplantcollaborative.org/wiki/display/DEapps/Rummy",
+    "disabled": false,
+    "integrator_name": "Scooby Dooby Doo",
+    "integrator_email": "scooby@iplantcollaborative.org"
+}
+' http://by-tor:14444/conrad/update-app | python -mjson.tool
+{
+    "application": {
+        "deleted": false, 
+        "deployed_components": [
+            {
+                "attribution": "Nobody Inparticular", 
+                "description": "", 
+                "id": "C1D46AFE-02EC-4AB7-B6BE-D190A08B026E", 
+                "location": "/usr/local2/bin", 
+                "name": "run_muscle.pl", 
+                "type": "executable", 
+                "version": ""
+            }
+        ], 
+        "description": "Reah, reah, reah, reah, reah!", 
+        "disabled": false, 
+        "id": "F50FE07D-91AA-AA36-1D47-BB2E7FDC7BB4", 
+        "integrator_email": "scooby@iplantcollaborative.org", 
+        "integrator_name": "Scooby Dooby Doo", 
+        "is_favorite": false, 
+        "is_public": true, 
+        "name": "Scooby Snacks!", 
+        "pipeline_eligibility": {
+            "is_valid": true, 
+            "reason": ""
         }, 
-        "success": true
-    }
+        "rating": {
+            "average": 0.0
+        }, 
+        "suggested_categories": [], 
+        "wiki_url": "https://pods.iplantcollaborative.org/wiki/display/DEapps/Rummy"
+    }, 
+    "success": true
+}
 
-    dennis$ curl -sd '
-    {
-        "id": "Foo",
-        "name": "Scooby Snacks!",
-        "description": "Reah, reah, reah, reah, reah!",
-        "integration_date": 1327526294069,
-        "wiki_url": "https://pods.iplantcollaborative.org/wiki/display/DEapps/Rummy",
-        "disabled": false,
-        "integrator_name": "Scooby Dooby Doo",
-        "integrator_email": "scooby@iplantcollaborative.org"
-    }
-    ' http://by-tor:14444/conrad/update-app | python -mjson.tool
-    {
-        "reason": "app, Foo, not found",
-        "success": false
-    }
+dennis$ curl -sd '
+{
+    "id": "Foo",
+    "name": "Scooby Snacks!",
+    "description": "Reah, reah, reah, reah, reah!",
+    "integration_date": 1327526294069,
+    "wiki_url": "https://pods.iplantcollaborative.org/wiki/display/DEapps/Rummy",
+    "disabled": false,
+    "integrator_name": "Scooby Dooby Doo",
+    "integrator_email": "scooby@iplantcollaborative.org"
+}
+' http://by-tor:14444/conrad/update-app | python -mjson.tool
+{
+    "reason": "app, Foo, not found",
+    "success": false
+}
+```
 
 This service will fail under the following circumstances:
 
@@ -327,37 +335,41 @@ An application category can be renamed using the /rename-category endpoint.  The
 request body for this service should contain a JSON object that specifies the
 category identifier and the new category name:
 
-    {
-        "categoryId": category-id,
-        "name": category-name
-    }
+```json
+{
+    "categoryId": category-id,
+    "name": category-name
+}
+```
 
 The response body is a JSON object containing a success flag along with the new
 category name.
 
 Here are some examples:
 
-    dennis$ curl -sd '
-    {
-        "categoryId": "g5401bd146c144470aedd57b47ea1b979",
-        "name": "Etabay"
-    }
-    ' http://by-tor:14444/conrad/rename-category | python -mjson.tool
-    {
-        "name": "Etabay",
-        "success": true
-    }
+```
+dennis$ curl -sd '
+{
+    "categoryId": "g5401bd146c144470aedd57b47ea1b979",
+    "name": "Etabay"
+}
+' http://by-tor:14444/conrad/rename-category | python -mjson.tool
+{
+    "name": "Etabay",
+    "success": true
+}
 
-    dennis$ curl -sd '
-    {
-        "categoryId": "Foo",
-        "name": "Etabay"
-    }
-    ' http://by-tor:14444/conrad/rename-category | python -mjson.tool
-    {
-        "reason": "category, Foo, does not exist",
-        "success": false
-    }
+dennis$ curl -sd '
+{
+    "categoryId": "Foo",
+    "name": "Etabay"
+}
+' http://by-tor:14444/conrad/rename-category | python -mjson.tool
+{
+    "reason": "category, Foo, does not exist",
+    "success": false
+}
+```
 
 This service will fail under the following circumstances:
 
@@ -379,17 +391,19 @@ a brief description of the reason for the failure.
 
 Here are some examples:
 
-    dennis$ curl -sXDELETE http://by-tor:14444/conrad/category/6FB48BDB-B034-48CE-8242-096525F50662 | format_json
-    {
-       "success" : true,
-       "categoryId" : "6FB48BDB-B034-48CE-8242-096525F50662"
-    }
+```
+dennis$ curl -sXDELETE http://by-tor:14444/conrad/category/6FB48BDB-B034-48CE-8242-096525F50662 | format_json
+{
+   "success" : true,
+   "categoryId" : "6FB48BDB-B034-48CE-8242-096525F50662"
+}
 
-    dennis$ curl -sXDELETE http://by-tor:14444/conrad/category/g5401bd146c144470aedd57b47ea1b979 | format_json
-    {
-       "success" : false,
-       "reason" : "category, g5401bd146c144470aedd57b47ea1b979, contains apps"
-    }
+dennis$ curl -sXDELETE http://by-tor:14444/conrad/category/g5401bd146c144470aedd57b47ea1b979 | format_json
+{
+   "success" : false,
+   "reason" : "category, g5401bd146c144470aedd57b47ea1b979, contains apps"
+}
+```
 
 This service will fail under the following circumstances:
 
@@ -407,47 +421,51 @@ An application category can be created by sending an HTTP PUT request to the
 identifier of the parent category, the name of the new category, and an optional
 description of the new category:
 
-    {
-        "parentCategoryId": parent-category-id,
-        "name": new-category-name,
-        "description": new-category-description
-    }
+```json
+{
+    "parentCategoryId": parent-category-id,
+    "name": new-category-name,
+    "description": new-category-description
+}
+```
 
 Upon success, the response body contains a success flag along with a complete
 listing of the newly created category.  Upon failure, the response body contains
 a success flag along with a brief description of the reason for the failure.
 Here are some examples:
 
-    dennis$ curl -sXPUT -d '
-    {
-        "parentCategoryId": "g12c7a585ec233352e31302e323112a7ccf18bfd7364",
-        "name": "Foo"
-    }
-    ' http://by-tor:14444/conrad/category | python -mjson.tool
-    {
-        "category": {
-            "description": "",
-            "hid": 244,
-            "id": "FF7155FC-132B-4AAB-9FBB-57DC40DC572B",
-            "is_public": true,
-            "name": "Foo",
-            "template_count": 0,
-            "templates": [],
-            "workspace_id": 0
-        },
-        "success": true
-    }
+```
+dennis$ curl -sXPUT -d '
+{
+    "parentCategoryId": "g12c7a585ec233352e31302e323112a7ccf18bfd7364",
+    "name": "Foo"
+}
+' http://by-tor:14444/conrad/category | python -mjson.tool
+{
+    "category": {
+        "description": "",
+        "hid": 244,
+        "id": "FF7155FC-132B-4AAB-9FBB-57DC40DC572B",
+        "is_public": true,
+        "name": "Foo",
+        "template_count": 0,
+        "templates": [],
+        "workspace_id": 0
+    },
+    "success": true
+}
 
-    dennis$ curl -sXPUT -d '
-    {
-        "parentCategoryId": "g12c7a585ec233352e31302e323112a7ccf18bfd7364",
-        "name": "Foo"
-    }
-    ' http://by-tor:14444/conrad/category | python -mjson.tool
-    {
-        "reason": "category, g12c7a585ec233352e31302e323112a7ccf18bfd7364, already contains a subcategory named, \"Foo\"",
-        "success": false
-    }
+dennis$ curl -sXPUT -d '
+{
+    "parentCategoryId": "g12c7a585ec233352e31302e323112a7ccf18bfd7364",
+    "name": "Foo"
+}
+' http://by-tor:14444/conrad/category | python -mjson.tool
+{
+    "reason": "category, g12c7a585ec233352e31302e323112a7ccf18bfd7364, already contains a subcategory named, \"Foo\"",
+    "success": false
+}
+```
 
 This service will fail under the following circumstances:
 
@@ -470,17 +488,19 @@ description of the reason for the failure.
 
 Here are some examples:
 
-    dennis$ curl -sXDELETE http://by-tor:14444/conrad/app/2BB00471-502E-42DE-A57E-9B516CEA1493 | python -mjson.tool
-    {
-        "id": "2BB00471-502E-42DE-A57E-9B516CEA1493",
-        "success": true
-    }
+```
+dennis$ curl -sXDELETE http://by-tor:14444/conrad/app/2BB00471-502E-42DE-A57E-9B516CEA1493 | python -mjson.tool
+{
+    "id": "2BB00471-502E-42DE-A57E-9B516CEA1493",
+    "success": true
+}
 
-    dennis$ curl -sXDELETE http://by-tor:14444/conrad/app/Foo | python -mjson.tool
-    {
-        "reason": "app, Foo, not found",
-        "success": false
-    }
+dennis$ curl -sXDELETE http://by-tor:14444/conrad/app/Foo | python -mjson.tool
+{
+    "reason": "app, Foo, not found",
+    "success": false
+}
+```
 
 This service will fail under the following circumstances:
 
@@ -500,25 +520,27 @@ flag along with a brief description of the reason for the failure.
 
 Here are some examples:
 
-    dennis$ curl -s http://by-tor:14444/conrad/undelete-app/8E25FB08-E11E-476A-95A9-0D06563F261A | python -mjson.tool
-    {
-        "categories": [
-            {
-                "description": null, 
-                "id": "7A0B68B2-6534-4CAD-8439-E0FAA3FD82B3", 
-                "name": "ChIPseq Analysis", 
-                "workspace_id": 0
-            }
-        ], 
-        "id": "8E25FB08-E11E-476A-95A9-0D06563F261A", 
-        "success": true
-    }
+```
+dennis$ curl -s http://by-tor:14444/conrad/undelete-app/8E25FB08-E11E-476A-95A9-0D06563F261A | python -mjson.tool
+{
+    "categories": [
+        {
+            "description": null, 
+            "id": "7A0B68B2-6534-4CAD-8439-E0FAA3FD82B3", 
+            "name": "ChIPseq Analysis", 
+            "workspace_id": 0
+        }
+    ], 
+    "id": "8E25FB08-E11E-476A-95A9-0D06563F261A", 
+    "success": true
+}
 
-    dennis$ curl -s http://by-tor:14444/conrad/undelete-app/Foo | python -mjson.tool
-    {
-        "reason": "app, Foo, not found",
-        "success": false
-    }
+dennis$ curl -s http://by-tor:14444/conrad/undelete-app/Foo | python -mjson.tool
+{
+    "reason": "app, Foo, not found",
+    "success": false
+}
+```
 
 This service will fail under the following circumstances:
 
@@ -534,10 +556,12 @@ An app can be moved to a new category by sending an HTTP POST request to the
 /move-app endpoint.  The request body should contain a JSON object with fields
 containing the application ID and the identifier of the new category:
 
-    {
-        "id": app-id
-        "categoryId": category-id
-    }
+```json
+{
+    "id": app-id
+    "categoryId": category-id
+}
+```
 
 Upon success, this service returns a JSON object containing a success flag and a
 complete listing of the new parent category.  Upon failure, this service returns
@@ -546,75 +570,77 @@ for the failure.
 
 Here are some examples:
 
-    dennis$ curl -sd '
-    {
-        "id": "D36D47B0-A82F-40AB-AB1F-037249944620",
-        "categoryId": "44EB59FA-E49E-480F-BBD4-7FCC91E3D1EB"
-    }
-    ' http://by-tor:14444/conrad/move-app | python -mjson.tool
-    {
-        "category": {
-            "description": "",
-            "hid": 259,
-            "id": "44EB59FA-E49E-480F-BBD4-7FCC91E3D1EB",
-            "is_public": true,
-            "name": "Baz",
-            "template_count": 1,
-            "templates": [
-                {
-                    "disabled": false,
-                    "deleted": false,
-                    "deployed_components": [
-                        {
-                            "attribution": "",
-                            "description": "Scan for unique values",
-                            "id": "c4e6f548cc0ee431da7f2ddfdf3ace761",
-                            "location": "/usr/bin/",
-                            "name": "uniq",
-                            "type": "executable",
-                            "version": "1.00"
-                        }
-                    ],
-                    "description": "Reah, reah, reah, reah, reah!",
-                    "id": "D36D47B0-A82F-40AB-AB1F-037249944620",
-                    "integrator_email": "scooby@iplantcollaborative.org",
-                    "integrator_name": "Scooby Dooby Doo",
-                    "is_favorite": false,
-                    "is_public": true,
-                    "name": "Scooby Snacks!",
-                    "pipeline_eligibility": {
-                        "is_valid": true,
-                        "reason": ""
-                    },
-                    "rating": {
-                        "average": 0.0
-                    },
-                    "suggested_categories": [
-                        {
-                            "description": "",
-                            "id": "EAD6C97D-8D7D-4199-B15E-6B1DABAB2D5F",
-                            "name": "Bar",
-                            "workspace_id": 0
-                        }
-                    ],
-                    "wiki_url": "https://pods.iplantcollaborative.org/wiki/display/DEapps/Rummy"
-                }
-            ],
-            "workspace_id": 0
-        },
-        "success": true
-    }
+```
+dennis$ curl -sd '
+{
+    "id": "D36D47B0-A82F-40AB-AB1F-037249944620",
+    "categoryId": "44EB59FA-E49E-480F-BBD4-7FCC91E3D1EB"
+}
+' http://by-tor:14444/conrad/move-app | python -mjson.tool
+{
+    "category": {
+        "description": "",
+        "hid": 259,
+        "id": "44EB59FA-E49E-480F-BBD4-7FCC91E3D1EB",
+        "is_public": true,
+        "name": "Baz",
+        "template_count": 1,
+        "templates": [
+            {
+                "disabled": false,
+                "deleted": false,
+                "deployed_components": [
+                    {
+                        "attribution": "",
+                        "description": "Scan for unique values",
+                        "id": "c4e6f548cc0ee431da7f2ddfdf3ace761",
+                        "location": "/usr/bin/",
+                        "name": "uniq",
+                        "type": "executable",
+                        "version": "1.00"
+                    }
+                ],
+                "description": "Reah, reah, reah, reah, reah!",
+                "id": "D36D47B0-A82F-40AB-AB1F-037249944620",
+                "integrator_email": "scooby@iplantcollaborative.org",
+                "integrator_name": "Scooby Dooby Doo",
+                "is_favorite": false,
+                "is_public": true,
+                "name": "Scooby Snacks!",
+                "pipeline_eligibility": {
+                    "is_valid": true,
+                    "reason": ""
+                },
+                "rating": {
+                    "average": 0.0
+                },
+                "suggested_categories": [
+                    {
+                        "description": "",
+                        "id": "EAD6C97D-8D7D-4199-B15E-6B1DABAB2D5F",
+                        "name": "Bar",
+                        "workspace_id": 0
+                    }
+                ],
+                "wiki_url": "https://pods.iplantcollaborative.org/wiki/display/DEapps/Rummy"
+            }
+        ],
+        "workspace_id": 0
+    },
+    "success": true
+}
 
-    dennis$ curl -sd '
-    {
-        "id": "Foo",
-        "categoryId": "06DFCE72-BC04-4556-9659-B4D87A471947"
-    }
-    ' http://by-tor:14444/conrad/move-app | python -mjson.tool
-    {
-        "reason": "app, Foo, not found",
-        "success": false
-    }
+dennis$ curl -sd '
+{
+    "id": "Foo",
+    "categoryId": "06DFCE72-BC04-4556-9659-B4D87A471947"
+}
+' http://by-tor:14444/conrad/move-app | python -mjson.tool
+{
+    "reason": "app, Foo, not found",
+    "success": false
+}
+```
 
 As a special case, if the destination category identifier is set to the
 special pseudocategory identifier, _Trash_, then the app will be marked as
@@ -641,10 +667,12 @@ to the /move-category endpoint.  The request body should contain a JSON object
 containing the identifier of the category to move along with the identifier of
 the new parent category:
 
-    {
-        "categoryId": category-id,
-        "parentCategoryId": new-parent-category-id
-    }
+```json
+{
+    "categoryId": category-id,
+    "parentCategoryId": new-parent-category-id
+}
+```
 
 Upon success, this service returns a success flag along with a complete category
 listing.  Upon failure, this service returns a success flag along with a brief
@@ -652,53 +680,55 @@ description of the reason for the failure.
 
 Here are some examples:
 
-    dennis$ curl -sd '
-    {
-        "categoryId": "A8D08BAA-D930-4178-9647-2A17DB17E309",
-        "parentCategoryId": "g12c7a585ec233352e31302e323112a7ccf18bfd7364"
-    }
-    ' http://by-tor:14444/conrad/move-category | python -mjson.tool
-    {
-        "categories": {
-            "groups": [
-                {
-                    "description": "",
-                    "groups": [
-                        {
-                            "description": null,
-                            "groups": [
-                                {
-                                    "description": null,
-                                    "groups": [],
-                                    "id": "DE2F3D2B-1D0B-4A2D-BD6C-EBDE2F7E974A",
-                                    "is_public": true,
-                                    "name": "Aligners",
-                                    "template_count": 5
-                                },
-                            ]
-                        },
-                        ...
-                    ],
-                    "id": "g12c7a585ec233352e31302e323112a7ccf18bfd7364",
-                    "is_public": true,
-                    "name": "Public Applications",
-                    "template_count": 82
-                }
-            ]
-        },
-        "success": true
-    }
+```
+dennis$ curl -sd '
+{
+    "categoryId": "A8D08BAA-D930-4178-9647-2A17DB17E309",
+    "parentCategoryId": "g12c7a585ec233352e31302e323112a7ccf18bfd7364"
+}
+' http://by-tor:14444/conrad/move-category | python -mjson.tool
+{
+    "categories": {
+        "groups": [
+            {
+                "description": "",
+                "groups": [
+                    {
+                        "description": null,
+                        "groups": [
+                            {
+                                "description": null,
+                                "groups": [],
+                                "id": "DE2F3D2B-1D0B-4A2D-BD6C-EBDE2F7E974A",
+                                "is_public": true,
+                                "name": "Aligners",
+                                "template_count": 5
+                            },
+                        ]
+                    },
+                    ...
+                ],
+                "id": "g12c7a585ec233352e31302e323112a7ccf18bfd7364",
+                "is_public": true,
+                "name": "Public Applications",
+                "template_count": 82
+            }
+        ]
+    },
+    "success": true
+}
 
-    dennis$ curl -sd '
-    {
-        "categoryId": "A8D08BAA-D930-4178-9647-2A17DB17E309",
-        "parentCategoryId": "Foo"
-    }
-    ' http://by-tor:14444/conrad/move-category | python -mjson.tool
-    {
-        "reason": "category, Foo, does not exist",
-        "success": false
-    }
+dennis$ curl -sd '
+{
+    "categoryId": "A8D08BAA-D930-4178-9647-2A17DB17E309",
+    "parentCategoryId": "Foo"
+}
+' http://by-tor:14444/conrad/move-category | python -mjson.tool
+{
+    "reason": "category, Foo, does not exist",
+    "success": false
+}
+```
 
 This service will fail under the following circumstances:
 
@@ -717,8 +747,10 @@ If an unrecognized service path is used in a request to Conrad then the response
 will contain a success flag along with a message indicating that the service
 path is unrecognized:
 
-    dennis$ curl -s http://by-tor:14444/conrad/foo | python -mjson.tool
-    {
-        "reason": "unrecognized service path",
-        "success": false
-    }
+```
+dennis$ curl -s http://by-tor:14444/conrad/foo | python -mjson.tool
+{
+    "reason": "unrecognized service path",
+    "success": false
+}
+```
