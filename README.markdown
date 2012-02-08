@@ -218,6 +218,7 @@ dennis$ curl -s http://by-tor:14444/conrad/get-apps-in-group/EAD6C97D-8D7D-4199-
     ],
     "workspace_id": 0
 }
+```
 
 ### Updating an App
 
