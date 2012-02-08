@@ -4,61 +4,87 @@ Conrad is a REST-like HTTP API for administering apps in the Discovery
 Environment.  These are the back-end services for Belphegor, the app
 administration console for the Discovery Environment.
 
-## Deploying Conrad
+## Installing and Configuring Conrad
 
-Conrad is currently packaged as a WAR file, so it can be deployed in any
-existing servlet container.  This may change at some point in the future, but
-for the time being a pre-existing servlet container is required.
+Conrad is packaged as an RPM and published in iPlant's YUM repositories.  It
+can be installed using `yum install conrad` and upgraded using `yum upgrade
+conrad`.
 
-## Configuring Conrad
+### Primary Configuration
 
-The primary configuration settings for Conrad are stored in a properties file
-inside the WAR file.  The path is WEB-INF/classes/conrad.properties.  By
-default, the file will look like this:
+Conrad gets most of its configuration settings from Apache Zookeeper.  These
+configuration settings are uploaded to Zookeeper using Clavin, a command-line
+tool maintained by iPlant that allows configuration properties and access
+control lists to be easily uploaded to Zookeeper.  Please see the Clavin
+documentation for information about how to upload configuration settings.
+Here's an example Conrad configuraiton file:
 
-    # The database vendor ("postgresql" or "mysql")
-    conrad.db.vendor=postgresql
+```properties
+# The listen port.
+conrad.listen-port=65535
 
-    # The database connection settings.
-    conrad.db.host=localhost
-    conrad.db.port=5432
-    conrad.db.name=de
-    conrad.db.user=user
-    conrad.db.password=password
+# The database vendor ("postgresql" or "mysql")
+conrad.db.vendor=postgresql
 
-    # Expire connections after the specified number of minutes.
-    conrad.db.max-idle-minutes=180
+# The database connection settings.
+conrad.db.host=localhost
+conrad.db.port=5432
+conrad.db.name=de
+conrad.db.user=user
+conrad.db.password=password
 
-    # The settings to use for proxy authentication.
-    conrad.cas.server=https://cas-server-hostname/cas/
-    conrad.server-name=https://local-hostname
+# Expire connections after the specified number of minutes.
+conrad.db.max-idle-minutes=180
 
-Generally, the only database settings that will have to be changed are
-the database connection settings.  Since the discovery environment
-currently always uses PostgreSQL, the vendor should never have to be
-changed.  The rest of the database settings are fairly
-self-explanatory.
+# The settings to use for proxy authentication.
+conrad.cas.server=https://cas-server-hostname/cas/
+conrad.server-name=https://local-hostname
+```
 
-The CAS settings deserve some explanation.  conrad.cas.server refers
-to the base URL of the CAS server.  This URL will be used when the
-services are validating CAS proxy tickets.  conrad.server-namne refers
-to the name on the server on which conrad is deployed.  Typically,
-this should be an HTTPS URL, but HTTP URLs are acceptable for testing
-when signed certificates are not available.
+Generally, the only database settings that will have to be changed are the
+database connection settings.  Since the discovery environment currently
+always uses PostgreSQL, the vendor should never have to be changed.  The rest
+of the database settings are fairly self-explanatory.
+
+The CAS settings deserve some explanation.  `conrad.cas.server` refers to the
+base URL of the CAS server.  This URL will be used when the services are
+validating CAS proxy tickets.  conrad.server-namne refers to the name on the
+server on which conrad is deployed.  Typically, this should be an HTTPS URL,
+but HTTP URLs are acceptable for testing when signed certificates are not
+available.
+
+### Zookeeper Connection Information
+
+One piece of information that can't be stored in Zookeeper is the information
+required to connect to Zookeeper.  For Conrad, this is stored in a single file:
+`/etc/conrad/conrad.properties`.  Here's an example:
+
+```properties
+zookeeper=zookeeper://127.0.0.1:2181
+```
+
+After installing Conrad, it will be necessary to modify this file so that it
+points to the correct host and port.
+
+### Logging Configuration
 
 The logging settings are stored in WEB-INF/classes/log4j.properties inside the
 WAR file.  By default, the file will look like this:
 
-    log4j.rootLogger=WARN, A, B
+```properties
+log4j.rootLogger=WARN, A
 
-    log4j.appender.B=org.apache.log4j.ConsoleAppender
-    log4j.appender.B.layout=org.apache.log4j.PatternLayout
-    log4j.appender.B.layout.ConversionPattern=%d{MM-dd@HH:mm:ss} %-5p (%13F:%L) %3x - %m%n
+log4j.appender.B=org.apache.log4j.ConsoleAppender
+log4j.appender.B.layout=org.apache.log4j.PatternLayout
+log4j.appender.B.layout.ConversionPattern=%d{MM-dd@HH:mm:ss} %-5p (%13F:%L) %3x - %m%n
 
-    log4j.appender.A=org.apache.log4j.FileAppender
-    log4j.appender.A.File=${catalina.home}/logs/conrad.log
-    log4j.appender.A.layout=org.apache.log4j.PatternLayout
-    log4j.appender.A.layout.ConversionPattern=%d{MM-dd@HH:mm:ss} %-5p (%13F:%L) %3x - %m%n
+log4j.appender.A=org.apache.log4j.RollingFileAppender
+log4j.appender.A.File=/var/log/conrad/conrad.log
+log4j.appender.A.layout=org.apache.log4j.PatternLayout
+log4j.appender.A.layout.ConversionPattern=%d{MM-dd@HH:mm:ss} %-5p (%13F:%L) %3x - %m%n
+log4j.appender.A.MaxFileSize=10MB
+log4j.appender.A.MaxBackupIndex=1
+```
 
 See [the log4j documentation](http://logging.apache.org/log4j/1.2/manual.html)
 for logging configuration instructions.
@@ -126,9 +152,9 @@ Here's an example:
 
 Note that the list of app groups will contain a special group whose name and
 identifier are both set to _Trash_.  The Trash group represents a
-pseudo-category that contains all deleted and orphaned apps.  (Orphaned apps
-are apps that aren't in any category and thus aren't displayed in the
-Discovery Environment whether or not they're marked as deleted.)
+pseudo-category that contains all deleted and orphaned apps.  (Orphaned apps are
+apps that aren't in any category and thus aren't displayed in the Discovery
+Environment whether or not they're marked as deleted.)
 
 ### Listing Apps in a Category
 
