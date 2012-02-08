@@ -6,14 +6,13 @@
 Summary: conrad
 Name: conrad
 Version: 0.1.0
-Release: 2
+Release: 1
 Epoch: 0
 BuildArchitectures: noarch
 Group: Applications
 BuildRoot: %{_tmppath}/%{name}-%{version}-buildroot
 License: BSD
 Provides: conrad
-Requires: iplant-service-config
 Source0: %{name}-%{version}.tar.gz
 
 %description
