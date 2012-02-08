@@ -43,7 +43,6 @@ install -d $RPM_BUILD_ROOT/etc/conrad/
 install conrad $RPM_BUILD_ROOT/etc/init.d/
 install conrad-1.0.0-SNAPSHOT-standalone.jar $RPM_BUILD_ROOT/usr/local/lib/conrad/
 install conf/log4j.properties $RPM_BUILD_ROOT/etc/conrad/
-install conf/conrad.properties $RPM_BUILD_ROOT/etc/conrad/
 
 %post
 /sbin/chkconfig --add conrad
