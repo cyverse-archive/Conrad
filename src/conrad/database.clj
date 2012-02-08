@@ -23,13 +23,16 @@
 (defn- get-subprotocol [vendor]
   (get-required subprotocols vendor (str "subprotocol not known for " vendor)))
 
-(def db-spec
-  {:classname (get-driver db-vendor)
-   :subprotocol (get-subprotocol db-vendor)
-   :subname (str "//" db-host ":" db-port "/" db-name)
-   :user db-user
-   :password db-password
-   :max-idle-time db-max-idle-time})
+(defn db-spec
+  "Constructs a database connection specification from the configuration
+   settings."
+  []
+  {:classname (get-driver (db-vendor))
+   :subprotocol (get-subprotocol (db-vendor))
+   :subname (str "//" (db-host) ":" (db-port) "/" (db-name))
+   :user (db-user)
+   :password (db-password)
+   :max-idle-time (db-max-idle-time)})
 
 (defn- pool [spec]
   (let [cpds (doto (ComboPooledDataSource.)
@@ -40,6 +43,6 @@
                (.setMaxIdleTime(:max-idle-time spec)))]
     {:datasource cpds}))
 
-(def pooled-db (delay (pool db-spec)))
+(def pooled-db (delay (pool (db-spec))))
 
 (defn db-connection [] @pooled-db)
