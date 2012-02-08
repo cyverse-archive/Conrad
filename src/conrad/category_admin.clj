@@ -1,6 +1,5 @@
 (ns conrad.category-admin
-  (:use [clojure.contrib.datalog.util :only (keys-to-vals)]
-        [clojure.data.json :only (json-str)]
+  (:use [clojure.data.json :only (json-str)]
         [conrad.common :only (success-response uuid)]
         [conrad.category-listings]
         [conrad.database :only (db-connection)]

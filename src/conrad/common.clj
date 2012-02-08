@@ -1,6 +1,6 @@
 (ns conrad.common
   (:use [clojure.data.json :only (json-str)]
-        [clojure.contrib.string :only (upper-case)])
+        [clojure.string :only (upper-case)])
   (:require [clojure.tools.logging :as log])
   (:import [java.util UUID]))
 

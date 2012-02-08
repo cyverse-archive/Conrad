@@ -1,5 +1,5 @@
 (ns conrad.middleware.cas-proxy-auth
-  (:use [clojure.contrib.string :only (blank?)]
+  (:use [clojure.string :only (blank?)]
         [clojure.data.json :only (json-str)]
         [conrad.common :only (unauthorized-response)]
         [conrad.config])
