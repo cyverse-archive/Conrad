@@ -114,7 +114,7 @@ Currently, the response to this URL contains only a welcome message.  The
 response may be enhanced to include usage instructions or status information at
 some time in the future if it proves to be helpful.  Here's an example:
 
-    dennis$ curl -s http://by-tor:14444/conrad/
+    dennis$ curl -s http://by-tor:14444/
     Welcome to Conrad!
 
 ### Listing App Groups
@@ -127,7 +127,7 @@ Discovery Environment's /get-only-analysis-groups/{workspace-id} endpoint.
 Here's an example:
 
 ```
-dennis$ curl -s http://by-tor:14444/conrad/get-app-groups | python -mjson.tool
+dennis$ curl -s http://by-tor:14444/get-app-groups | python -mjson.tool
 {
     "groups": [
         {
@@ -168,7 +168,7 @@ from the Discovery Environment's /get-analyses-in-group/{group-id} endpoint.
 Here's an example:
 
 ```
-dennis$ curl -s http://by-tor:14444/conrad/get-apps-in-group/EAD6C97D-8D7D-4199-B15E-6B1DABAB2D5F | python -mjson.tool
+dennis$ curl -s http://by-tor:14444/get-apps-in-group/EAD6C97D-8D7D-4199-B15E-6B1DABAB2D5F | python -mjson.tool
 {
     "description": "",
     "hid": 258,
@@ -264,7 +264,7 @@ dennis$ curl -sd '
     "integrator_name": "Scooby Dooby Doo",
     "integrator_email": "scooby@iplantcollaborative.org"
 }
-' http://by-tor:14444/conrad/update-app | python -mjson.tool
+' http://by-tor:14444/update-app | python -mjson.tool
 {
     "application": {
         "deleted": false, 
@@ -311,7 +311,7 @@ dennis$ curl -sd '
     "integrator_name": "Scooby Dooby Doo",
     "integrator_email": "scooby@iplantcollaborative.org"
 }
-' http://by-tor:14444/conrad/update-app | python -mjson.tool
+' http://by-tor:14444/update-app | python -mjson.tool
 {
     "reason": "app, Foo, not found",
     "success": false
@@ -353,7 +353,7 @@ dennis$ curl -sd '
     "categoryId": "g5401bd146c144470aedd57b47ea1b979",
     "name": "Etabay"
 }
-' http://by-tor:14444/conrad/rename-category | python -mjson.tool
+' http://by-tor:14444/rename-category | python -mjson.tool
 {
     "name": "Etabay",
     "success": true
@@ -364,7 +364,7 @@ dennis$ curl -sd '
     "categoryId": "Foo",
     "name": "Etabay"
 }
-' http://by-tor:14444/conrad/rename-category | python -mjson.tool
+' http://by-tor:14444/rename-category | python -mjson.tool
 {
     "reason": "category, Foo, does not exist",
     "success": false
@@ -392,13 +392,13 @@ a brief description of the reason for the failure.
 Here are some examples:
 
 ```
-dennis$ curl -sXDELETE http://by-tor:14444/conrad/category/6FB48BDB-B034-48CE-8242-096525F50662 | format_json
+dennis$ curl -sXDELETE http://by-tor:14444/category/6FB48BDB-B034-48CE-8242-096525F50662 | format_json
 {
    "success" : true,
    "categoryId" : "6FB48BDB-B034-48CE-8242-096525F50662"
 }
 
-dennis$ curl -sXDELETE http://by-tor:14444/conrad/category/g5401bd146c144470aedd57b47ea1b979 | format_json
+dennis$ curl -sXDELETE http://by-tor:14444/category/g5401bd146c144470aedd57b47ea1b979 | format_json
 {
    "success" : false,
    "reason" : "category, g5401bd146c144470aedd57b47ea1b979, contains apps"
@@ -440,7 +440,7 @@ dennis$ curl -sXPUT -d '
     "parentCategoryId": "g12c7a585ec233352e31302e323112a7ccf18bfd7364",
     "name": "Foo"
 }
-' http://by-tor:14444/conrad/category | python -mjson.tool
+' http://by-tor:14444/category | python -mjson.tool
 {
     "category": {
         "description": "",
@@ -460,7 +460,7 @@ dennis$ curl -sXPUT -d '
     "parentCategoryId": "g12c7a585ec233352e31302e323112a7ccf18bfd7364",
     "name": "Foo"
 }
-' http://by-tor:14444/conrad/category | python -mjson.tool
+' http://by-tor:14444/category | python -mjson.tool
 {
     "reason": "category, g12c7a585ec233352e31302e323112a7ccf18bfd7364, already contains a subcategory named, \"Foo\"",
     "success": false
@@ -489,13 +489,13 @@ description of the reason for the failure.
 Here are some examples:
 
 ```
-dennis$ curl -sXDELETE http://by-tor:14444/conrad/app/2BB00471-502E-42DE-A57E-9B516CEA1493 | python -mjson.tool
+dennis$ curl -sXDELETE http://by-tor:14444/app/2BB00471-502E-42DE-A57E-9B516CEA1493 | python -mjson.tool
 {
     "id": "2BB00471-502E-42DE-A57E-9B516CEA1493",
     "success": true
 }
 
-dennis$ curl -sXDELETE http://by-tor:14444/conrad/app/Foo | python -mjson.tool
+dennis$ curl -sXDELETE http://by-tor:14444/app/Foo | python -mjson.tool
 {
     "reason": "app, Foo, not found",
     "success": false
@@ -521,7 +521,7 @@ flag along with a brief description of the reason for the failure.
 Here are some examples:
 
 ```
-dennis$ curl -s http://by-tor:14444/conrad/undelete-app/8E25FB08-E11E-476A-95A9-0D06563F261A | python -mjson.tool
+dennis$ curl -s http://by-tor:14444/undelete-app/8E25FB08-E11E-476A-95A9-0D06563F261A | python -mjson.tool
 {
     "categories": [
         {
@@ -535,7 +535,7 @@ dennis$ curl -s http://by-tor:14444/conrad/undelete-app/8E25FB08-E11E-476A-95A9-
     "success": true
 }
 
-dennis$ curl -s http://by-tor:14444/conrad/undelete-app/Foo | python -mjson.tool
+dennis$ curl -s http://by-tor:14444/undelete-app/Foo | python -mjson.tool
 {
     "reason": "app, Foo, not found",
     "success": false
@@ -576,7 +576,7 @@ dennis$ curl -sd '
     "id": "D36D47B0-A82F-40AB-AB1F-037249944620",
     "categoryId": "44EB59FA-E49E-480F-BBD4-7FCC91E3D1EB"
 }
-' http://by-tor:14444/conrad/move-app | python -mjson.tool
+' http://by-tor:14444/move-app | python -mjson.tool
 {
     "category": {
         "description": "",
@@ -635,7 +635,7 @@ dennis$ curl -sd '
     "id": "Foo",
     "categoryId": "06DFCE72-BC04-4556-9659-B4D87A471947"
 }
-' http://by-tor:14444/conrad/move-app | python -mjson.tool
+' http://by-tor:14444/move-app | python -mjson.tool
 {
     "reason": "app, Foo, not found",
     "success": false
@@ -686,7 +686,7 @@ dennis$ curl -sd '
     "categoryId": "A8D08BAA-D930-4178-9647-2A17DB17E309",
     "parentCategoryId": "g12c7a585ec233352e31302e323112a7ccf18bfd7364"
 }
-' http://by-tor:14444/conrad/move-category | python -mjson.tool
+' http://by-tor:14444/move-category | python -mjson.tool
 {
     "categories": {
         "groups": [
@@ -723,7 +723,7 @@ dennis$ curl -sd '
     "categoryId": "A8D08BAA-D930-4178-9647-2A17DB17E309",
     "parentCategoryId": "Foo"
 }
-' http://by-tor:14444/conrad/move-category | python -mjson.tool
+' http://by-tor:14444/move-category | python -mjson.tool
 {
     "reason": "category, Foo, does not exist",
     "success": false
@@ -748,7 +748,7 @@ will contain a success flag along with a message indicating that the service
 path is unrecognized:
 
 ```
-dennis$ curl -s http://by-tor:14444/conrad/foo | python -mjson.tool
+dennis$ curl -s http://by-tor:14444/foo | python -mjson.tool
 {
     "reason": "unrecognized service path",
     "success": false
