@@ -6,7 +6,7 @@
 Summary: conrad
 Name: conrad
 Version: 0.1.0
-Release: 5
+Release: 6
 Epoch: 0
 BuildArchitectures: noarch
 Group: Applications
@@ -71,7 +71,6 @@ rm -r $RPM_BUILD_ROOT
 %attr(-,iplant,iplant) /etc/conrad/
 
 %config %attr(0644,iplant,iplant) /etc/conrad/log4j.properties
-%config %attr(0644,iplant,iplant) /etc/conrad/conrad.properties
 
 %attr(0755,root,root) /etc/init.d/conrad
 %attr(0644,iplant,iplant) /usr/local/lib/conrad/conrad-1.0.0-SNAPSHOT-standalone.jar
