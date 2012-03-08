@@ -1,5 +1,5 @@
 (ns conrad.config
-  (:use [clojure.string :only (blank?)])
+  (:use [clojure.string :only (blank? split)])
   (:require [clojure-commons.props :as cc-props]
             [clojure.tools.logging :as log]))
 
@@ -65,6 +65,12 @@
     (catch NumberFormatException e
       (do (record-invalid-prop prop-name e) 0))))
 
+(defn- get-vector
+  "Gets a vector property from the properties that were loaded from
+   Zookeeper."
+  [prop-name]
+  (split (get-str prop-name) #",\s*"))
+
 (defmacro defprop
   "Defines a property."
   [sym docstr & init-forms]
@@ -124,6 +130,16 @@
   (defprop server-name
     "The name of the local server to provide to CAS."
     (get-str "conrad.server-name")))
+
+(required
+  (defprop group-attr-name
+    "The name of the user attribute containing group membership information."
+    (get-str "conrad.cas.group-attr-name")))
+
+(required
+  (defprop allowed-groups
+    "The names of the groups that are permitted to access secured services."
+    (get-vector "conrad.cas.allowed-groups")))
 
 (defn configuration-valid
   "Ensures that all required properties are valued."
