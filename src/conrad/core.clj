@@ -2,6 +2,8 @@
   (:gen-class)
   (:use [compojure.core]
         [ring.middleware keyword-params nested-params params]
+        [clojure-commons.cas-proxy-auth]
+        [clojure-commons.filtered-routes]
         [clojure-commons.query-params :only (wrap-query-params)]
         [conrad.app-admin]
         [conrad.category-admin]
@@ -9,7 +11,6 @@
         [conrad.config]
         [conrad.listings]
         [conrad.database]
-        [conrad.middleware.cas-proxy-auth :only (validate-cas-proxy-ticket)]
         [clojure.data.json :only (json-str)])
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
@@ -27,17 +28,59 @@
     (catch Throwable t (error-response t))))
 
 (defroutes conrad-routes
+
   (GET "/" [] "Welcome to Conrad!\n")
-  (GET "/get-app-groups" [] (trap #(get-public-categories)))
-  (GET "/get-apps-in-group/:id" [id] (trap #(get-category-with-apps id)))
-  (POST "/update-app" [:as {body :body}] (trap #(update-app body)))
-  (POST "/rename-category" [:as {body :body}] (trap #(rename-category body)))
-  (DELETE "/category/:id" [id] (trap #(delete-category id)))
-  (PUT "/category" [:as {body :body}] (trap #(create-category body)))
-  (DELETE "/app/:id" [id] (trap #(delete-app id)))
-  (POST "/move-app" [:as {body :body}] (trap #(move-app body)))
-  (GET "/undelete-app/:id" [id] (trap #(undelete-app id)))
-  (POST "/move-category" [:as {body :body}] (trap #(move-category body)))
+
+  (FILTERED-GET
+    "/get-app-groups" []
+    [validate-cas-proxy-ticket #(cas-server) #(server-name)]
+    (trap #(get-public-categories)))
+
+  (FILTERED-GET
+    "/get-apps-in-group/:id" [id]
+    [validate-cas-proxy-ticket #(cas-server) #(server-name)]
+    (trap #(get-category-with-apps id)))
+
+  (FILTERED-POST
+    "/update-app" [:as {body :body}]
+    [validate-cas-proxy-ticket #(cas-server) #(server-name)]
+    (trap #(update-app body)))
+
+  (FILTERED-POST
+    "/rename-category" [:as {body :body}]
+    [validate-cas-proxy-ticket #(cas-server) #(server-name)]
+    (trap #(rename-category body)))
+
+  (FILTERED-DELETE
+    "/category/:id" [id]
+    [validate-cas-proxy-ticket #(cas-server) #(server-name)]
+    (trap #(delete-category id)))
+
+  (FILTERED-PUT
+    "/category" [:as {body :body}]
+    [validate-cas-proxy-ticket #(cas-server) #(server-name)]
+    (trap #(create-category body)))
+
+  (FILTERED-DELETE
+    "/app/:id" [id]
+    [validate-cas-proxy-ticket #(cas-server) #(server-name)]
+    (trap #(delete-app id)))
+
+  (FILTERED-POST
+    "/move-app" [:as {body :body}]
+    [validate-cas-proxy-ticket #(cas-server) #(server-name)]
+    (trap #(move-app body)))
+
+  (FILTERED-GET
+    "/undelete-app/:id" [id]
+    [validate-cas-proxy-ticket #(cas-server) #(server-name)]
+    (trap #(undelete-app id)))
+
+  (FILTERED-POST
+    "/move-category" [:as {body :body}]
+    [validate-cas-proxy-ticket #(cas-server) #(server-name)]
+    (trap #(move-category body)))
+
   (route/not-found (unrecognized-path-response)))
 
 (defn load-configuration
