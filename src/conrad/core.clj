@@ -3,7 +3,6 @@
   (:use [compojure.core]
         [ring.middleware keyword-params nested-params params]
         [clojure-commons.cas-proxy-auth :only (validate-cas-group-membership)]
-        [clojure-commons.filtered-routes]
         [clojure-commons.query-params :only (wrap-query-params)]
         [conrad.app-admin]
         [conrad.category-admin]
@@ -27,69 +26,49 @@
     (catch SQLException e (do (log-next-exception e) (error-response e)))
     (catch Throwable t (error-response t))))
 
+;; Secured routes.
+(defroutes secured-routes
+  (GET "/get-app-groups" []
+       (trap #(get-public-categories)))
+
+  (GET "/get-apps-in-group/:id" [id]
+       (trap #(get-category-with-apps id)))
+
+  (POST "/update-app" [:as {body :body}]
+        (trap #(update-app body)))
+
+  (POST "/rename-category" [:as {body :body}]
+        (trap #(rename-category body)))
+
+  (DELETE "/category/:id" [id]
+          (trap #(delete-category id)))
+
+  (PUT "/category" [:as {body :body}]
+       (trap #(create-category body)))
+
+  (DELETE "/app/:id" [id]
+          (trap #(delete-app id)))
+
+  (POST "/move-app" [:as {body :body}]
+        (trap #(move-app body)))
+
+  (GET "/undelete-app/:id" [id]
+       (trap #(undelete-app id)))
+
+  (POST "/move-category" [:as {body :body}]
+        (trap #(move-category body)))
+
+  (route/not-found (unrecognized-path-response)))
+
+;; All routes.
 (defroutes conrad-routes
 
   (GET "/" [] "Welcome to Conrad!\n")
 
-  (FILTERED-GET
-    "/get-app-groups" []
-    [validate-cas-group-membership
-      #(cas-server) #(server-name) #(group-attr-name) #(allowed-groups)]
-    (trap #(get-public-categories)))
-
-  (FILTERED-GET
-    "/get-apps-in-group/:id" [id]
-    [validate-cas-group-membership
-      #(cas-server) #(server-name) #(group-attr-name) #(allowed-groups)]
-    (trap #(get-category-with-apps id)))
-
-  (FILTERED-POST
-    "/update-app" [:as {body :body}]
-    [validate-cas-group-membership
-      #(cas-server) #(server-name) #(group-attr-name) #(allowed-groups)]
-    (trap #(update-app body)))
-
-  (FILTERED-POST
-    "/rename-category" [:as {body :body}]
-    [validate-cas-group-membership
-      #(cas-server) #(server-name) #(group-attr-name) #(allowed-groups)]
-    (trap #(rename-category body)))
-
-  (FILTERED-DELETE
-    "/category/:id" [id]
-    [validate-cas-group-membership
-      #(cas-server) #(server-name) #(group-attr-name) #(allowed-groups)]
-    (trap #(delete-category id)))
-
-  (FILTERED-PUT
-    "/category" [:as {body :body}]
-    [validate-cas-group-membership
-      #(cas-server) #(server-name) #(group-attr-name) #(allowed-groups)]
-    (trap #(create-category body)))
-
-  (FILTERED-DELETE
-    "/app/:id" [id]
-    [validate-cas-group-membership
-      #(cas-server) #(server-name) #(group-attr-name) #(allowed-groups)]
-    (trap #(delete-app id)))
-
-  (FILTERED-POST
-    "/move-app" [:as {body :body}]
-    [validate-cas-group-membership
-      #(cas-server) #(server-name) #(group-attr-name) #(allowed-groups)]
-    (trap #(move-app body)))
-
-  (FILTERED-GET
-    "/undelete-app/:id" [id]
-    [validate-cas-group-membership
-      #(cas-server) #(server-name) #(group-attr-name) #(allowed-groups)]
-    (trap #(undelete-app id)))
-
-  (FILTERED-POST
-    "/move-category" [:as {body :body}]
-    [validate-cas-group-membership
-      #(cas-server) #(server-name) #(group-attr-name) #(allowed-groups)]
-    (trap #(move-category body)))
+  (context "/secured" []
+           (validate-cas-group-membership
+             secured-routes #(cas-server) #(server-name) #(group-attr-name)
+             #(allowed-groups)))
 
   (route/not-found (unrecognized-path-response)))
 

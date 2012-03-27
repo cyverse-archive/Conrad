@@ -119,7 +119,7 @@ some time in the future if it proves to be helpful.  Here's an example:
 
 ### Listing App Groups
 
-Endpoint: GET /get-app-groups
+Endpoint: GET /secured/get-app-groups
 
 The /get-app-groups endpoint is used to obtain a hierarchical list of public app
 categories.  The output from this service is very similar to the output from the
@@ -127,7 +127,7 @@ Discovery Environment's /get-only-analysis-groups/{workspace-id} endpoint.
 Here's an example:
 
 ```
-dennis$ curl -s http://by-tor:14444/get-app-groups | python -mjson.tool
+dennis$ curl -s http://by-tor:14444/secured/secured/get-app-groups | python -mjson.tool
 {
     "groups": [
         {
@@ -160,7 +160,7 @@ Environment whether or not they're marked as deleted.)
 
 ### Listing Apps in a Category
 
-Endpoint: GET /get-analyses-in-group/{group-id}
+Endpoint: GET /secured/get-analyses-in-group/{group-id}
 
 The /get-apps-in-group/{group-id} endpoint is used to obtain a list of apps in
 an analysis group.  The output from this service is very similar to the output
@@ -168,7 +168,7 @@ from the Discovery Environment's /get-analyses-in-group/{group-id} endpoint.
 Here's an example:
 
 ```
-dennis$ curl -s http://by-tor:14444/get-apps-in-group/EAD6C97D-8D7D-4199-B15E-6B1DABAB2D5F | python -mjson.tool
+dennis$ curl -s http://by-tor:14444/secured/get-apps-in-group/EAD6C97D-8D7D-4199-B15E-6B1DABAB2D5F | python -mjson.tool
 {
     "description": "",
     "hid": 258,
@@ -222,7 +222,7 @@ dennis$ curl -s http://by-tor:14444/get-apps-in-group/EAD6C97D-8D7D-4199-B15E-6B
 
 ### Updating an App
 
-Endpoint: POST /update-app
+Endpoint: POST /secured/update-app
 
 Much of the information included in the app listing can be updated using the
 /update-app endpoint.  The post body of this service contains the app ID along
@@ -264,7 +264,7 @@ dennis$ curl -sd '
     "integrator_name": "Scooby Dooby Doo",
     "integrator_email": "scooby@iplantcollaborative.org"
 }
-' http://by-tor:14444/update-app | python -mjson.tool
+' http://by-tor:14444/secured/update-app | python -mjson.tool
 {
     "application": {
         "deleted": false, 
@@ -311,7 +311,7 @@ dennis$ curl -sd '
     "integrator_name": "Scooby Dooby Doo",
     "integrator_email": "scooby@iplantcollaborative.org"
 }
-' http://by-tor:14444/update-app | python -mjson.tool
+' http://by-tor:14444/secured/update-app | python -mjson.tool
 {
     "reason": "app, Foo, not found",
     "success": false
@@ -329,7 +329,7 @@ then validation will be added.
 
 ### Renaming a Category
 
-Endpoint: POST /rename-category
+Endpoint: POST /secured/rename-category
 
 An application category can be renamed using the /rename-category endpoint.  The
 request body for this service should contain a JSON object that specifies the
@@ -353,7 +353,7 @@ dennis$ curl -sd '
     "categoryId": "g5401bd146c144470aedd57b47ea1b979",
     "name": "Etabay"
 }
-' http://by-tor:14444/rename-category | python -mjson.tool
+' http://by-tor:14444/secured/rename-category | python -mjson.tool
 {
     "name": "Etabay",
     "success": true
@@ -364,7 +364,7 @@ dennis$ curl -sd '
     "categoryId": "Foo",
     "name": "Etabay"
 }
-' http://by-tor:14444/rename-category | python -mjson.tool
+' http://by-tor:14444/secured/rename-category | python -mjson.tool
 {
     "reason": "category, Foo, does not exist",
     "success": false
@@ -381,7 +381,7 @@ This service will fail under the following circumstances:
 
 ### Deleting a Category
 
-Endpoint: DELETE /category/{category-id}
+Endpoint: DELETE /secured/category/{category-id}
 
 An application category can be deleted by sending an HTTP DELETE request to the
 /category/{category-id} endpoint.  This service takes no request body.  Upon
@@ -392,13 +392,13 @@ a brief description of the reason for the failure.
 Here are some examples:
 
 ```
-dennis$ curl -sXDELETE http://by-tor:14444/category/6FB48BDB-B034-48CE-8242-096525F50662 | format_json
+dennis$ curl -sXDELETE http://by-tor:14444/secured/category/6FB48BDB-B034-48CE-8242-096525F50662 | format_json
 {
    "success" : true,
    "categoryId" : "6FB48BDB-B034-48CE-8242-096525F50662"
 }
 
-dennis$ curl -sXDELETE http://by-tor:14444/category/g5401bd146c144470aedd57b47ea1b979 | format_json
+dennis$ curl -sXDELETE http://by-tor:14444/secured/category/g5401bd146c144470aedd57b47ea1b979 | format_json
 {
    "success" : false,
    "reason" : "category, g5401bd146c144470aedd57b47ea1b979, contains apps"
@@ -414,7 +414,7 @@ This service will fail under the following circumstances:
 
 ### Creating a New Category
 
-Endpoint PUT /category
+Endpoint PUT /secured/category
 
 An application category can be created by sending an HTTP PUT request to the
 /category endpoint.  The request body for this service should contain the
@@ -440,7 +440,7 @@ dennis$ curl -sXPUT -d '
     "parentCategoryId": "g12c7a585ec233352e31302e323112a7ccf18bfd7364",
     "name": "Foo"
 }
-' http://by-tor:14444/category | python -mjson.tool
+' http://by-tor:14444/secured/category | python -mjson.tool
 {
     "category": {
         "description": "",
@@ -460,7 +460,7 @@ dennis$ curl -sXPUT -d '
     "parentCategoryId": "g12c7a585ec233352e31302e323112a7ccf18bfd7364",
     "name": "Foo"
 }
-' http://by-tor:14444/category | python -mjson.tool
+' http://by-tor:14444/secured/category | python -mjson.tool
 {
     "reason": "category, g12c7a585ec233352e31302e323112a7ccf18bfd7364, already contains a subcategory named, \"Foo\"",
     "success": false
@@ -478,7 +478,7 @@ This service will fail under the following circumstances:
 
 ### Deleting an App
 
-Endpoint: DELETE /app/{app-id}
+Endpoint: DELETE /secured/app/{app-id}
 
 An app can be logically deleted by sending a DELETE request to the /app/{app-id}
 endpoint.  This service takes no request body.  Upon success, this service
@@ -489,13 +489,13 @@ description of the reason for the failure.
 Here are some examples:
 
 ```
-dennis$ curl -sXDELETE http://by-tor:14444/app/2BB00471-502E-42DE-A57E-9B516CEA1493 | python -mjson.tool
+dennis$ curl -sXDELETE http://by-tor:14444/secured/app/2BB00471-502E-42DE-A57E-9B516CEA1493 | python -mjson.tool
 {
     "id": "2BB00471-502E-42DE-A57E-9B516CEA1493",
     "success": true
 }
 
-dennis$ curl -sXDELETE http://by-tor:14444/app/Foo | python -mjson.tool
+dennis$ curl -sXDELETE http://by-tor:14444/secured/app/Foo | python -mjson.tool
 {
     "reason": "app, Foo, not found",
     "success": false
@@ -509,7 +509,7 @@ This service will fail under the following circumstances:
 
 ### Undeleting an App
 
-Endpoint: GET /undelete-app/{app-id}
+Endpoint: GET /secured/undelete-app/{app-id}
 
 An app that has been deleted can be logically undeleted by sending a GET
 request to the /undelete-app/{app-id} endpoint.  This service takes no request
@@ -521,7 +521,7 @@ flag along with a brief description of the reason for the failure.
 Here are some examples:
 
 ```
-dennis$ curl -s http://by-tor:14444/undelete-app/8E25FB08-E11E-476A-95A9-0D06563F261A | python -mjson.tool
+dennis$ curl -s http://by-tor:14444/secured/undelete-app/8E25FB08-E11E-476A-95A9-0D06563F261A | python -mjson.tool
 {
     "categories": [
         {
@@ -535,7 +535,7 @@ dennis$ curl -s http://by-tor:14444/undelete-app/8E25FB08-E11E-476A-95A9-0D06563
     "success": true
 }
 
-dennis$ curl -s http://by-tor:14444/undelete-app/Foo | python -mjson.tool
+dennis$ curl -s http://by-tor:14444/secured/undelete-app/Foo | python -mjson.tool
 {
     "reason": "app, Foo, not found",
     "success": false
@@ -550,7 +550,7 @@ This service will fail under the following circumstances:
 
 ### Moving an App
 
-Endpoint: POST /move-app
+Endpoint: POST /secured/move-app
 
 An app can be moved to a new category by sending an HTTP POST request to the
 /move-app endpoint.  The request body should contain a JSON object with fields
@@ -576,7 +576,7 @@ dennis$ curl -sd '
     "id": "D36D47B0-A82F-40AB-AB1F-037249944620",
     "categoryId": "44EB59FA-E49E-480F-BBD4-7FCC91E3D1EB"
 }
-' http://by-tor:14444/move-app | python -mjson.tool
+' http://by-tor:14444/secured/move-app | python -mjson.tool
 {
     "category": {
         "description": "",
@@ -635,7 +635,7 @@ dennis$ curl -sd '
     "id": "Foo",
     "categoryId": "06DFCE72-BC04-4556-9659-B4D87A471947"
 }
-' http://by-tor:14444/move-app | python -mjson.tool
+' http://by-tor:14444/secured/move-app | python -mjson.tool
 {
     "reason": "app, Foo, not found",
     "success": false
@@ -660,7 +660,7 @@ This service will fail under the following circumstances:
 
 ### Moving a Category
 
-Endpoint: POST /move-category
+Endpoint: POST /secured/move-category
 
 A category can be moved to a new parent category by sending an HTTP POST request
 to the /move-category endpoint.  The request body should contain a JSON object
@@ -686,7 +686,7 @@ dennis$ curl -sd '
     "categoryId": "A8D08BAA-D930-4178-9647-2A17DB17E309",
     "parentCategoryId": "g12c7a585ec233352e31302e323112a7ccf18bfd7364"
 }
-' http://by-tor:14444/move-category | python -mjson.tool
+' http://by-tor:14444/secured/move-category | python -mjson.tool
 {
     "categories": {
         "groups": [
@@ -723,7 +723,7 @@ dennis$ curl -sd '
     "categoryId": "A8D08BAA-D930-4178-9647-2A17DB17E309",
     "parentCategoryId": "Foo"
 }
-' http://by-tor:14444/move-category | python -mjson.tool
+' http://by-tor:14444/secured/move-category | python -mjson.tool
 {
     "reason": "category, Foo, does not exist",
     "success": false
@@ -748,7 +748,7 @@ will contain a success flag along with a message indicating that the service
 path is unrecognized:
 
 ```
-dennis$ curl -s http://by-tor:14444/foo | python -mjson.tool
+dennis$ curl -s http://by-tor:14444/secured/foo | python -mjson.tool
 {
     "reason": "unrecognized service path",
     "success": false
