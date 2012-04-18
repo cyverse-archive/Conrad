@@ -11,7 +11,7 @@
                  [postgresql/postgresql "9.0-801.jdbc4"]
                  [c3p0/c3p0 "0.9.1.2"]
                  [ring/ring-jetty-adapter "1.0.1"]]
-  :dev-dependencies [[org.iplantc/lein-iplant-rpm "1.0.0-SNAPSHOT"]
+  :dev-dependencies [[org.iplantc/lein-iplant-rpm "1.1.0-SNAPSHOT"]
                      [lein-ring "0.4.5"]
                      [swank-clojure "1.4.0-SNAPSHOT"]]
   :extra-classpath-dirs ["conf/test"]
