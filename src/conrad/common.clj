@@ -41,6 +41,3 @@
 
 (defn uuid []
   (upper-case (str (java.util.UUID/randomUUID))))
-
-(defn log-next-exception [e]
-  (log/error (.getNextException e) "next exception"))

@@ -375,6 +375,7 @@ This service will fail under the following circumstances:
 
 * the category ID is not specified in the request body;
 * the new category name is not specified in the request body;
+* the new category name is too long;
 * the category with the specified identifier can't be found;
 * any parent of the category already contains a subcategory with the new name;
 * a database error occurs.
@@ -470,7 +471,8 @@ dennis$ curl -sXPUT -d '
 This service will fail under the following circumstances:
 
 * the parent category ID is not specified in the request body;
-* the new categbory name is not specified in the request body;
+* the new category name is not specified in the request body;
+* the new category name is too long;
 * the parent category can't be found;
 * the parent category directly contains apps;
 * the parent category already contains a subcategory with the specified name;

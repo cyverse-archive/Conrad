@@ -1,7 +1,9 @@
 (ns conrad.database
   (:use [conrad.config])
-  (:import javax.sql.DataSource
-           com.mchange.v2.c3p0.ComboPooledDataSource))
+  (:require [clojure.java.jdbc :as jdbc])
+  (:import [java.sql Types]
+           [javax.sql DataSource]
+           [com.mchange.v2.c3p0 ComboPooledDataSource]))
 
 (defn- get-required [props name msg]
   (let [value (get props name)]
@@ -46,3 +48,35 @@
 (def pooled-db (delay (pool (db-spec))))
 
 (defn db-connection [] @pooled-db)
+
+(defn get-column-metadata
+  "Obtains the metadata for a table column."
+  [table-name column-name]
+  (first (filter
+           #(= (:column_name %) column-name)
+           (jdbc/resultset-seq
+             (-> (jdbc/connection)
+               (.getMetaData)
+               (.getColumns nil nil table-name column-name))))))
+
+(defn is-text-column
+  "Determines whether or not a table column represents a text column."
+  ([table-name column-name]
+    (is-text-column (get-column-metadata table-name column-name)))
+  ([{data-type :data_type}]
+    (or (= data-type Types/CHAR)
+        (= data-type Types/LONGNVARCHAR)
+        (= data-type Types/LONGVARCHAR)
+        (= data-type Types/VARCHAR))))
+
+(defn validate-field-length
+  "Validates a field value against the field length constraint in the
+   database."
+  [table-name column-name field-value]
+  (let [column-metadata (get-column-metadata table-name column-name)
+        max-len (Integer/parseInt (:char_octet_length column-metadata))]
+    (when (and (is-text-column column-metadata)
+             (> (count field-value) max-len))
+      (throw (IllegalArgumentException.
+               (str column-name " can be at most " max-len
+                    " characters long"))))))

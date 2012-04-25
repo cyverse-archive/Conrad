@@ -5,6 +5,11 @@
 
 (def trash-category-id "Trash")
 
+(def
+  ^{:private true}
+   validate-category-name
+  (partial validate-field-length "template_group" "name"))
+
 (declare load-category load-subcategories)
 
 (defn load-category-by-id [id]
@@ -158,6 +163,7 @@
                    "named, \"" name "\""))))))
 
 (defn update-category-name [hid name]
+  (validate-category-name name)
   (dorun (map #(ensure-category-doesnt-exist (:id %) (:hid %) name)
               (load-parent-categories hid)))
   (jdbc/update-values
@@ -206,6 +212,7 @@
   (let [parent-id (:parent-category-id args)
         parent-hid (:parent-category-hid args)
         name (:name args)]
+    (validate-category-name name)
     (ensure-category-doesnt-exist parent-id parent-hid name)
     (ensure-category-doesnt-contain-apps parent-id parent-hid)))
 
