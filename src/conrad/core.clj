@@ -2,7 +2,7 @@
   (:gen-class)
   (:use [compojure.core]
         [ring.middleware keyword-params nested-params params]
-        [clojure-commons.cas-proxy-auth :only (validate-cas-group-membership)]
+        [clj-cas.cas-proxy-auth :only (validate-cas-group-membership)]
         [clojure-commons.query-params :only (wrap-query-params)]
         [conrad.app-admin]
         [conrad.category-admin]
