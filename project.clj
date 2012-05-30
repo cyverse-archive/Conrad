@@ -1,7 +1,7 @@
 (defproject conrad "1.1.0-SNAPSHOT"
   :description "Back-End Services for the iPlant Administrative Console"
-  :dependencies [[org.clojure/clojure "1.3.0"]
-                 [org.clojure/data.json "0.1.1"]
+  :dependencies [[org.clojure/clojure "1.4.0"]
+                 [org.clojure/data.json "0.1.2"]
                  [org.clojure/tools.logging "0.2.3"]
                  [org.clojure/java.jdbc "0.2.0"]
                  [org.iplantc/clj-cas "1.0.0-SNAPSHOT"]
@@ -12,10 +12,10 @@
                  [postgresql/postgresql "9.0-801.jdbc4"]
                  [c3p0/c3p0 "0.9.1.2"]
                  [ring/ring-jetty-adapter "1.0.1"]]
-  :dev-dependencies [[org.iplantc/lein-iplant-rpm "1.1.0-SNAPSHOT"]
-                     [lein-ring "0.4.5"]
-                     [swank-clojure "1.4.0-SNAPSHOT"]]
-  :extra-classpath-dirs ["conf/test"]
+  :plugins [[org.iplantc/lein-iplant-rpm "1.2.1-SNAPSHOT"]
+                     [lein-ring "0.7.1"]
+                     [swank-clojure "1.4.2"]]
+  :profiles {:dev {:resource-paths ["conf/test"]}}
   :aot [conrad.core]
   :main conrad.core
   :ring {:handler conrad.core/app :init conrad.core/load-configuration}
