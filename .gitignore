@@ -11,3 +11,5 @@ conrad.log
 /.classpath
 /.project
 /bin/
+/.lein-plugins/
+/target/

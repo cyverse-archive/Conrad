@@ -3,29 +3,32 @@
   (:require [clojure-commons.props :as cc-props]
             [clojure.tools.logging :as log]))
 
-(def
-  ^{:doc "The name of the properties file."}
-  prop-file "zkhosts.properties")
+(defn prop-file
+  "The name of the properties file."
+  []
+  "zkhosts.properties")
 
-(def
-  ^{:doc "The properties loaded from the properties file."}
-   zk-props (cc-props/parse-properties prop-file))
+(defn zk-props
+  "The properties loaded from the properties file."
+  []
+  (cc-props/parse-properties (prop-file)))
 
-(def
-  ^{:doc "The URL used to connect to zookeeper."}
-   zk-url (get zk-props "zookeeper"))
+(defn zk-url
+  "The URL used to connect to zookeeper."
+  []
+  (get (zk-props) "zookeeper"))
 
-(def
-  ^{:doc "The properites that have been loaded from Zookeeper."}
-   props (atom nil))
+(def props
+  "The properites that have been loaded from Zookeeper."
+  (atom nil))
 
-(def
-  ^{:doc "The list of required properties."}
-   required-props (ref []))
+(def required-props
+  "The list of required properties."
+  (ref []))
 
-(def
-  ^{:doc "True if the configuraiton is valid."}
-   configuration-is-valid (atom true))
+(def configuration-is-valid
+  "True if the configuraiton is valid."
+  (atom true))
 
 (defn- record-missing-prop
   "Records a property that is missing.  Instead of failing on the first
