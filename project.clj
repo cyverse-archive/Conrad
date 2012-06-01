@@ -13,8 +13,8 @@
                  [c3p0/c3p0 "0.9.1.2"]
                  [ring/ring-jetty-adapter "1.0.1"]]
   :plugins [[org.iplantc/lein-iplant-rpm "1.2.1-SNAPSHOT"]
-                     [lein-ring "0.7.1"]
-                     [swank-clojure "1.4.2"]]
+            [lein-ring "0.7.1"]
+            [swank-clojure "1.4.2"]]
   :profiles {:dev {:resource-paths ["conf/test"]}}
   :aot [conrad.core]
   :main conrad.core
