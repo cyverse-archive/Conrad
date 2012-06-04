@@ -61,6 +61,9 @@
   (POST "/move-category" [:as {body :body}]
         (trap #(move-category body)))
 
+  (GET "/get-genome-references/" []
+       (trap #(get-genome-references)))
+
   (route/not-found (unrecognized-path-response)))
 
 ;; All routes.
