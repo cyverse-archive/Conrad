@@ -6,6 +6,7 @@
         [clojure-commons.query-params :only (wrap-query-params)]
         [conrad.app-admin]
         [conrad.category-admin]
+        [conrad.genome-reference]
         [conrad.common]
         [conrad.config]
         [conrad.listings]

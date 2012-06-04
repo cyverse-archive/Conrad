@@ -13,3 +13,4 @@ conrad.log
 /bin/
 /.lein-plugins/
 /target/
+*.swp
