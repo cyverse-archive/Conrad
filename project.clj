@@ -14,6 +14,8 @@
                  [ring/ring-jetty-adapter "1.0.1"]]
   :plugins [[org.iplantc/lein-iplant-rpm "1.2.1-SNAPSHOT"]
             [lein-ring "0.7.1"]
+            [korma "0.3.0-beta7"]
+            [postgresql "9.0-801.jdbc4"]
             [swank-clojure "1.4.2"]]
   :profiles {:dev {:resource-paths ["conf/test"]}}
   :aot [conrad.core]
