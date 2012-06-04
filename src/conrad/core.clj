@@ -18,7 +18,9 @@
             [ring.adapter.jetty :as jetty])
   (:import [java.sql SQLException]))
 
-(defn- trap [f]
+(defn- trap
+"An error catching function."
+[f]
   (try
     (f)
     (catch IllegalArgumentException e (failure-response e))
