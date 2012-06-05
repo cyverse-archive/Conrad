@@ -5,6 +5,7 @@
                  [org.clojure/tools.logging "0.2.3"]
                  [org.clojure/java.jdbc "0.2.1"]
                  [org.iplantc/clj-cas "1.0.0-SNAPSHOT"]
+                 [org.iplantc/kameleon "0.0.1-SNAPSHOT"]
                  [org.iplantc/clojure-commons "1.1.0-SNAPSHOT"]
                  [compojure "1.0.1"]
                  [swank-clojure "1.4.0-SNAPSHOT"]
