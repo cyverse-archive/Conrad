@@ -65,6 +65,9 @@
   (GET "/get-genome-references" []
        (trap #(get-genome-references)))
 
+  (GET "/get-genome-references-by-username/:un" [un]
+       (trap #(get-genome-references-by-username un)))
+
   (route/not-found (unrecognized-path-response)))
 
 ;; All routes.
