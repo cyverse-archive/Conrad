@@ -68,6 +68,9 @@
   (GET "/get-genome-references-by-username/:un" [un]
        (trap #(get-genome-references-by-username un)))
 
+  (DELETE "/genome-reference/:id" [id]
+       (trap #(delete-genome-references-by-UUID id)))
+
   (route/not-found (unrecognized-path-response)))
 
 ;; All routes.
