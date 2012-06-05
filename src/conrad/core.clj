@@ -8,6 +8,7 @@
         [conrad.category-admin]
         [conrad.genome-reference]
         [conrad.common]
+        [conrad.kormadb]
         [conrad.config]
         [conrad.listings]
         [conrad.database]
@@ -61,7 +62,7 @@
   (POST "/move-category" [:as {body :body}]
         (trap #(move-category body)))
 
-  (GET "/get-genome-references/" []
+  (GET "/get-genome-references" []
        (trap #(get-genome-references)))
 
   (route/not-found (unrecognized-path-response)))
@@ -91,7 +92,8 @@
   (log/warn @props)
   (when (not (configuration-valid))
     (log/warn "THE CONFIGURATION IS INVALID - EXITING NOW")
-    (System/exit 1)))
+    (System/exit 1))
+  (define-database))
 
 (defn site-handler [routes]
   (-> routes
