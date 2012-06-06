@@ -62,10 +62,10 @@
   (POST "/move-category" [:as {body :body}]
         (trap #(move-category body)))
 
-  (GET "/get-genome-references" []
+  (GET "/genome-references" []
        (trap #(get-genome-references)))
 
-  (GET "/get-genome-references-by-username/:un" [un]
+  (GET "/genome-references-by-username/:un" [un]
        (trap #(get-genome-references-by-username un)))
 
   (DELETE "/genome-reference/:id" [id]
