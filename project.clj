@@ -22,7 +22,7 @@
   :main conrad.core
   :ring {:handler conrad.core/app :init conrad.core/load-configuration}
   :iplant-rpm {:summary "iPlant Conrad"
-               :release 1
+               :release 2
                :provides "conrad"
                :dependencies ["iplant-service-config >= 0.1.0-4"]
                :config-files ["log4j.properties"]
