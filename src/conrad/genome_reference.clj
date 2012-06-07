@@ -31,6 +31,8 @@
 
 (defn insert-genome-reference
 "This function adds a genome-reference to the database taking only a json object containing the genome name and the path." [body]
-(log/warn "Object Passed ="(str body))
-(exec-raw ["INSERT INTO \"genome_reference\" (uuid, name, path, created_by) VALUES
-           ('7FB992E8-ED8C-458D-B49D-1C58E2CA1F9B', 'test', 'test', 0);"]))
+(log/warn "Object Passed ="(str (clojure-commons.json/body->json body)))
+(def [data (clojure-commons.json/body->json body)])
+(let [idpass (:uuid data) namepass (:name data) pathpass (:path data) cbpass (:created_by data)]
+;(exec-raw ["INSERT INTO \"genome_reference\" (uuid, name, path, created_by) VALUES (\"idpass\", \"namepass\", \"pathpass\", \"cbpass\");"[idpass namepass pathpass cbpass]])))
+;(insert genome_reference (values [{:uuid "9FB992E8-EB8C-458D-C49C-1C58E2CA1F9B" :name "TEST" :path "/TEST/" :created_by 1}])))
