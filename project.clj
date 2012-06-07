@@ -22,7 +22,7 @@
   :iplant-rpm {:summary "iPlant Conrad"
                :release 1
                :provides "conrad"
-               :dependencies ["iplant-service-config >= 0.1.0-4"]
+               :dependencies ["iplant-service-config >= 0.1.0-5"]
                :config-files ["log4j.properties"]
                :config-path "conf/main"}
   :repositories {"iplantCollaborative"
