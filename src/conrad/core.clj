@@ -71,6 +71,12 @@
   (DELETE "/genome-reference/:id" [id]
        (trap #(delete-genome-references-by-UUID id)))
 
+  (PUT "/genome-reference" [:as {body :body}]
+       (trap #(insert-genome-reference body)))
+
+  (GET "/user-attributes" [:as req]
+       (trap #(clojure.data.json/json-str (:user-attributes req))))
+
   (route/not-found (unrecognized-path-response)))
 
 ;; All routes.

@@ -25,6 +25,12 @@
 ;                    (where {:uuid uuid})))))
 
 (defn delete-genome-references-by-UUID
-"This function sets the deleted column of the genome_reference that matches the passed UUID's genome_reference table to true." [uuid]
+"This function updates the deleted column of the genome_reference that matches the passed UUID's genome_reference table to true." [uuid]
 (log/warn "UUID Passed ="uuid)
 (exec-raw ["UPDATE \"genome_reference\" SET \"deleted\" = TRUE WHERE (\"genome_reference\".\"uuid\" = ?)" [uuid]]))
+
+(defn insert-genome-reference
+"This function adds a genome-reference to the database taking only a json object containing the genome name and the path." [body]
+(log/warn "Object Passed ="(str body))
+(exec-raw ["INSERT INTO \"genome_reference\" (uuid, name, path, created_by) VALUES
+           ('7FB992E8-ED8C-458D-B49D-1C58E2CA1F9B', 'test', 'test', 0);"]))
