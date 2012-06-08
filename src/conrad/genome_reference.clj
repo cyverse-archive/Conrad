@@ -14,11 +14,14 @@
 ;---------------------------------Helper Functions------------------------------------------
 
 (defn json-parser
-  "This function takes in a sequence and parses the nil values and Timestamp object for JSON encoding compliance."
+  "This function takes in a sequence and parses non-strings into strings, nil values into empty strings, and Timestamp objects into epoch seconds for JSON encoding compliance."
   [body]
   {:genomes (mapv #(assoc % :created_by (or (:created_by %) "")
                             :last_modified_by (or (:last_modified_by %) "")
                             :created_on (str (.getTime (:created_on %)))
+                            :created_by (str (:created_by %))
+                            :deleted (str (:deleted %))
+                            :id (str (:id %))
                             :last_modified_on (or (:last_modified_on %) "")) body)})
 
 ;-----------------------------Conrad.core Called Functions----------------------------------
