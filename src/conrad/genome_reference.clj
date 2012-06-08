@@ -14,27 +14,25 @@
 ;---------------------------------Helper Functions------------------------------------------
 
 (defn json-parser
-"This function coerces the timestamp field returned by the database into a JSON encode friendly format."
-  [input]
-  (str {:timestamp input}))
-
-(defn json-slurper
-"This function converts the body of the passed object into a json compliant object."
+  "This function takes in a sequence and parses the nil values and Timestamp object for JSON encoding compliance."
   [body]
-  (cc-json/body->json body))
+  {:genomes (mapv #(assoc % :created_by (or (:created_by %) "")
+                            :last_modified_by (or (:last_modified_by %) "")
+                            :created_on (str (.getTime (:created_on %)))
+                            :last_modified_on (or (:last_modified_on %) "")) body)})
 
 ;-----------------------------Conrad.core Called Functions----------------------------------
 
 (defn get-genome-references
   "This function returns a JSON representation of the map of all the genome_reference table data in the DB (for testing purposes)"
   []
-  (json-str (str (select genome_reference))))
+  (json-str (json-parser (select genome_reference))))
 
 (defn get-genome-references-by-username
   "This function returns a JSON representation of the map of all the genome_reference table data in the DB that was created by the passed username."
   [username]
   (log/warn "Username Passed =" username)
-  (json-str (str (select genome_reference
+  (json-str (json-parser (select genome_reference
                     (join users (= :users.id :genome_reference.created_by))
                     (where {:users.username username})))))
 
