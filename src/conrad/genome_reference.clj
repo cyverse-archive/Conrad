@@ -62,7 +62,7 @@
   [body]
   (def data (cc-json/body->json body))
   (log/warn "JSON Object Passed=" data)
-  (let [uuid (:uuid data) name (:name data) path (:path data) cb (:created_by data)]
+  (let [uuid (uuid-gen) name (:name data) path (:path data) cb (:created_by data)]
     (exec-raw ["INSERT INTO \"genome_reference\" (uuid, name, path, created_by)
                 VALUES (?, ?, ?, ?);" [uuid name path cb]])))
 
