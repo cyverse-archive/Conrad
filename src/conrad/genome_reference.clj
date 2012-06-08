@@ -1,16 +1,17 @@
 (ns conrad.genome-reference
   (:use
-        [conrad.kormadb]
-        [clojure.data.json :only (json-str)]
-        [korma.core]
-        [korma.db]
-        [kameleon.entities])
+    [conrad.kormadb]
+    [clojure.data.json :only (json-str)]
+    [korma.core]
+    [korma.db]
+    [kameleon.entities])
   (:require
-        [clojure.tools.logging :as log]
-        [clojure-commons.json :as cc-json]))
+    [clojure.tools.logging :as log]
+    [clojure-commons.json :as cc-json]))
 
 (defn get-genome-references
-  "This function returns a JSON representation of the map of all the genome_reference table data in the DB (for testing purposes)" []
+  "This function returns a JSON representation of the map of all the genome_reference table data in the DB (for testing purposes)"
+  []
   (json-str (str (select genome_reference))))
 
 (defn get-genome-references-by-username
@@ -43,3 +44,4 @@
 
 ;delete-genome-reference
 ;(update genome_reference(set-fields {:deleted true})(where {:uuid uuid}))
+;-------------------------------------------------------------------------------------------
