@@ -12,16 +12,16 @@
     [java.sql Timestamp]))
 
 ;---------------------------------Helper Functions------------------------------------------
-;
-;(defn json-parser
-;  "This function coerces the timestamp field returned by the database into a JSON encode friendl format."
-;  [input]
-;  (str {:timestamp input}))
 
-;(defn json-slurper
-;  "This function converts the body of the passed object into a json compliant object."
-;  [body]
-;  (cc-json/body->json body))
+(defn json-parser
+"This function coerces the timestamp field returned by the database into a JSON encode friendly format."
+  [input]
+  (str {:timestamp input}))
+
+(defn json-slurper
+"This function converts the body of the passed object into a json compliant object."
+  [body]
+  (cc-json/body->json body))
 
 ;-----------------------------Conrad.core Called Functions----------------------------------
 
@@ -57,7 +57,7 @@
 ;-----------------------------Non-Functional Korma Code-------------------------------------
 ;insert-genome-reference
 ;(insert genome_reference (values [{:uuid uuid :name name :path path :created_by cb}])))
-;
+
 ;delete-genome-reference
 ;(update genome_reference(set-fields {:deleted true})(where {:uuid uuid}))
 ;-------------------------------------------------------------------------------------------
