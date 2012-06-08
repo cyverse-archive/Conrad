@@ -7,23 +7,7 @@
     [kameleon.entities])
   (:require
     [clojure.tools.logging :as log]
-    [clojure-commons.json :as cc-json])
-  (:import
-    [java.sql Timestamp]))
-
-;---------------------------------Helper Functions------------------------------------------
-;
-;(defn json-parser
-;  "This function coerces the timestamp field returned by the database into a JSON encode friendl format."
-;  [input]
-;  (str {:timestamp input}))
-
-;(defn json-slurper
-;  "This function converts the body of the passed object into a json compliant object."
-;  [body]
-;  (cc-json/body->json body))
-
-;-----------------------------Conrad.core Called Functions----------------------------------
+    [clojure-commons.json :as cc-json]))
 
 (defn get-genome-references
   "This function returns a JSON representation of the map of all the genome_reference table data in the DB (for testing purposes)"
@@ -57,7 +41,7 @@
 ;-----------------------------Non-Functional Korma Code-------------------------------------
 ;insert-genome-reference
 ;(insert genome_reference (values [{:uuid uuid :name name :path path :created_by cb}])))
-;
+
 ;delete-genome-reference
 ;(update genome_reference(set-fields {:deleted true})(where {:uuid uuid}))
 ;-------------------------------------------------------------------------------------------
