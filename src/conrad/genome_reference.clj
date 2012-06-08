@@ -30,9 +30,11 @@
 (exec-raw ["UPDATE \"genome_reference\" SET \"deleted\" = TRUE WHERE (\"genome_reference\".\"uuid\" = ?)" [uuid]]))
 
 (defn insert-genome-reference
-"This function adds a genome-reference to the database taking only a json object containing the genome name and the path." [body]
-;(log/warn "PASSED="(str (clojure-commons.json/body->json body)))
-(def data (clojure-commons.json/body->json body))
-(let [idpass (:uuid data) namepass (:name data) pathpass (:path data) cbpass (:created_by data)](str idpass ", " namepass ", " pathpass ", " cbpass)))
-;(exec-raw ["INSERT INTO \"genome_reference\" (uuid, name, path, created_by) VALUES (\"idpass\", ;\"namepass\", \"pathpass\", \"cbpass\");"[idpass namepass pathpass cbpass]])))
-;(insert genome_reference (values [{:uuid "9FB992E8-EB8C-458D-C49C-1C58E2CA1F9B" :name "TEST" :pa;th "/TEST/" :created_by 1}])))
+"This function adds a genome-reference to the database taking a json object containing the genome name and the path." [body]
+  (def data (clojure-commons.json/body->json body))
+  (log/warn "PASSED="data)
+  (let [uuid (:uuid data) name (:name data) path (:path data) cb (:created_by data)]
+    (exec-raw ["INSERT INTO \"genome_reference\" (uuid, name, path, created_by)
+                VALUES (?, ?, ?, ?);" [uuid name path cb]])))
+
+;(insert genome_reference (values [{:uuid uuid :name name :path path :created_by cb}])))
