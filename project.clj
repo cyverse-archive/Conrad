@@ -3,7 +3,7 @@
   :dependencies [[org.clojure/clojure "1.4.0"]
                  [org.clojure/data.json "0.1.2"]
                  [org.clojure/tools.logging "0.2.3"]
-                 [org.clojure/java.jdbc "0.2.1"]
+                 [org.clojure/java.jdbc "0.1.3"]
                  [org.iplantc/clj-cas "1.0.0-SNAPSHOT"]
                  [org.iplantc/kameleon "0.0.1-SNAPSHOT"]
                  [org.iplantc/clojure-commons "1.1.0-SNAPSHOT"]
