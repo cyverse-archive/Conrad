@@ -13,13 +13,19 @@
 
 ;---------------------------------Helper Functions------------------------------------------
 
+(defn get-name
+  "This function takes in a userID and performs an sql query getting out the username, and returning it."
+  [id]
+      (:username (first (select users
+                          (fields :username)
+                          (where {:id id})))))
+
 (defn json-parser
   "This function takes in a sequence and parses non-strings into strings, nil values into empty strings, and Timestamp objects into epoch seconds for JSON encoding compliance."
   [body]
-  {:genomes (mapv #(assoc % :created_by (or (:created_by %) "")
-                            :last_modified_by (or (:last_modified_by %) "")
+  {:genomes (mapv #(assoc % :created_by (or (get-name (:created_by %)) "")
+                            :last_modified_by (or (get-name (:last_modified_by %)) "")
                             :created_on (str (.getTime (:created_on %)))
-                            :created_by (str (:created_by %))
                             :deleted (str (:deleted %))
                             :id (str (:id %))
                             :last_modified_on (or (:last_modified_on %) "")) body)})
@@ -36,8 +42,8 @@
   [username]
   (log/warn "Username Passed =" username)
   (json-str (json-parser (select genome_reference
-                    (join users (= :users.id :genome_reference.created_by))
-                    (where {:users.username username})))))
+                            (join users (= :users.id :genome_reference.created_by))
+                            (where {:users.username username})))))
 
 (defn delete-genome-references-by-UUID
   "This function updates the deleted column of the genome_reference that matches the passed UUID's genome_reference table to true."
