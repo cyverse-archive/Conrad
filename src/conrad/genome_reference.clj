@@ -30,6 +30,11 @@
                             :id (str (:id %))
                             :last_modified_on (or (:last_modified_on %) "")) body)})
 
+(defn uuid-gen
+  "Auto generates a Unique Universal ID for new genome reference records."
+  []
+  (str (java.util.UUID/randomUUID)))
+
 ;-----------------------------Conrad.core Called Functions----------------------------------
 
 (defn get-genome-references
