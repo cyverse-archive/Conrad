@@ -7,7 +7,23 @@
     [kameleon.entities])
   (:require
     [clojure.tools.logging :as log]
-    [clojure-commons.json :as cc-json]))
+    [clojure-commons.json :as cc-json])
+  (:import
+    [java.sql Timestamp]))
+
+;---------------------------------Helper Functions------------------------------------------
+
+(defn json-parser
+"This function coerces the timestamp field returned by the database into a JSON encode friendly format."
+  [input]
+  (str {:timestamp input}))
+
+(defn json-slurper
+"This function converts the body of the passed object into a json compliant object."
+  [body]
+  (cc-json/body->json body))
+
+;-----------------------------Conrad.core Called Functions----------------------------------
 
 (defn get-genome-references
   "This function returns a JSON representation of the map of all the genome_reference table data in the DB (for testing purposes)"
