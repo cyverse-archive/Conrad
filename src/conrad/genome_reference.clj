@@ -30,7 +30,8 @@
 (exec-raw ["UPDATE \"genome_reference\" SET \"deleted\" = TRUE WHERE (\"genome_reference\".\"uuid\" = ?)" [uuid]]))
 
 (defn insert-genome-reference
-"This function adds a genome-reference to the database taking a json object containing the genome name and the path." [body]
+  "This function adds a genome-reference to the database taking a JSON object containing the geno   me name and the path. TODO: uuid and created_by autogeneration should be generated sans JSON."
+  [body]
   (def data (clojure-commons.json/body->json body))
   (log/warn "PASSED="data)
   (let [uuid (:uuid data) name (:name data) path (:path data) cb (:created_by data)]
