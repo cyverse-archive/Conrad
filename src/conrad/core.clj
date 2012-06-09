@@ -77,6 +77,9 @@
   (PUT "/genome-reference" [:as {body :body}]
        (trap #(insert-genome-reference body)))
 
+  (POST "/genome-reference" [:as {body :body} req]
+       (trap #(modify-genome-reference body req)))
+
   (GET "/user-attributes" [:as req]
        (trap #(clojure.data.json/json-str (:user-attributes req))))
 

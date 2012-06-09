@@ -68,3 +68,13 @@
   (log/warn "JSON Object Passed=" data)
   (let [uuid (uuid-gen) name (:name data) path (:path data) cb (:created_by data)]
     (insert genome_reference (values [{:uuid uuid :name name :path path :created_by cb}]))))
+
+  (defn modify-genome-reference
+  "This function modifies an existing genome-reference in the database. It takes a JSON object containing the new genome name, path, and UUID."
+  [body req]
+  (def data (cc-json/body->json body))
+  (log/warn "JSON Object Passed=" data)
+  (let [uuid (:uuid data) name (:name data) id (get-in req [:user-attributes :uid]) path (:path data)]
+    (update genome_reference
+      (where {:uuid uuid :id id}) ;need to get a way to get the uid from the passed from req username.
+      (set-fields {:name name :path path}))))
