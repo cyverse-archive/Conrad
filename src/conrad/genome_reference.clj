@@ -37,10 +37,15 @@
 
 ;-----------------------------Conrad.core Called Functions----------------------------------
 
-(defn get-genome-references
-  "This function returns a JSON representation of the map of all the genome_reference table data in the DB (for testing purposes)"
+(defn get-all-genome-references
+  "This function returns a JSON representation of the map of all the genome_reference table data, including 'deleted' records."
   []
   (json-str (json-parser (select genome_reference))))
+
+(defn get-genome-references
+  "This function returns a JSON representation of the map of all the genome_reference table data, skipping 'deleted' records."
+  []
+  (json-str (json-parser (select genome_reference (where {:deleted false})))))
 
 (defn get-genome-references-by-username
   "This function returns a JSON representation of the map of all the genome_reference table data in the DB that was created by the passed username."
@@ -48,7 +53,7 @@
   (log/warn "Username Passed =" username)
   (json-str (json-parser (select genome_reference
                             (join users (= :users.id :genome_reference.created_by))
-                            (where {:users.username username})))))
+                            (where {:users.username username :deleted false})))))
 
 (defn delete-genome-references-by-UUID
   "This function updates the deleted column of the genome_reference that matches the passed UUID's genome_reference table to true."

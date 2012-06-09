@@ -62,6 +62,9 @@
   (POST "/move-category" [:as {body :body}]
         (trap #(move-category body)))
 
+  (GET "/all-genome-references" []
+       (trap #(get-all-genome-references)))
+
   (GET "/genome-references" []
        (trap #(get-genome-references)))
 
