@@ -144,6 +144,11 @@
     "The names of the groups that are permitted to access secured services."
     (get-vector "conrad.cas.allowed-groups")))
 
+(required
+  (defprop uid-domain
+    "The user domain of the current CAS authenticated user."
+    (get-str "conrad.uid-domain")))
+
 (defn configuration-valid
   "Ensures that all required properties are valued."
   []
