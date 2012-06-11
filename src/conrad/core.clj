@@ -77,11 +77,8 @@
   (PUT "/genome-reference" [:as {body :body}]
        (trap #(insert-genome-reference body)))
 
-  (POST "/genome-reference" [:as {body :body} req]
-       (trap #(modify-genome-reference body req)))
-
-  (GET "/user-attributes" [:as req]
-       (trap #(clojure.data.json/json-str (:user-attributes req))))
+  (POST "/genome-reference" [:as {body :body attrs :user-attributes}]
+       (trap #(modify-genome-reference body attrs)))
 
   (route/not-found (unrecognized-path-response)))
 
