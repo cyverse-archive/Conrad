@@ -74,8 +74,8 @@
   (DELETE "/genome-reference/:id" [id]
        (trap #(delete-genome-references-by-UUID id)))
 
-  (PUT "/genome-reference" [:as {body :body}]
-       (trap #(insert-genome-reference body)))
+  (PUT "/genome-reference" [:as {body :body attrs :user-attributes}]
+       (trap #(insert-genome-reference body attrs)))
 
   (POST "/genome-reference" [:as {body :body attrs :user-attributes}]
        (trap #(modify-genome-reference body attrs)))
