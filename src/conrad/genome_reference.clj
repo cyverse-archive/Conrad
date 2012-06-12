@@ -14,6 +14,13 @@
 
 ;---------------------------------Helper Functions------------------------------------------
 
+(defn get-name
+  "This function takes in a userID and performs an sql query getting out the username, and returning it."
+  [id]
+      (:username (first (select users
+                          (fields :username)
+                          (where {:id id})))))
+
 (defn get-id
   "This function takes in a username and performs an sql query which finds the users id, and returns it."
   [username]
