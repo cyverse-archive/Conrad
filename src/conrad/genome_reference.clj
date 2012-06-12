@@ -1,6 +1,7 @@
 (ns conrad.genome-reference
   (:use
     [conrad.kormadb]
+    [conrad.core]
     [clojure.data.json :only (json-str)]
     [korma.core]
     [korma.db]
@@ -12,6 +13,26 @@
     [java.sql Timestamp]))
 
 ;---------------------------------Helper Functions------------------------------------------
+(defn get-id
+  "This function takes in a username and performs an sql query which finds the users id, and returns it."
+  [username]
+  (:id (first (select users
+                (fields :id)
+                (where {:username username})))))
+
+(defn get-user-domain
+  "this function appends the domain set in the config.clj to the request mapped username."
+  [attrs]
+  (str (attrs "uid") "@" (uid-domain)))
+
+(defn get-or-create-id
+  "This function will call get-id and if it returns nil it will create a new user and return that id, otherwise it will just return the id."
+  [attrs]
+  (let [username (get-user-domain attrs)]
+  (let [id (get-id username)]
+    (if (nil? id)
+        (do (insert users (values {:username username}))
+            (get-id username)))id)))
 
 (defn get-name
   "This function takes in a userID and performs an sql query getting out the username, and returning it."
