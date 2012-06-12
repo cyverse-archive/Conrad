@@ -743,6 +743,35 @@ This service will fail under the following circumstances:
 * the parent categor already contains a subcategory of the same name;
 * a database error occurs.
 
+### Listing Genome References
+
+Let's say you want to get a list of all genome references in the database, it's pretty simple, and I'm gonna break it down for you. There are two forms of endpoints that retrieve 'all' genome references.
+
+``
+The first being '/all-genome-references'
+    This will return ALL references including ones marked as 'deleted'.
+
+The second being '/genome-references'
+    This will return just the references that are not marked as 'deleted'.
+``
+
+Imagine Conrad is running on localhost at port 3000, then the command to list all genome references is: 
+
+`curl -v http://localhost:3000/secured/all-genome-references`
+
+if you need an authentication token then you want to append this command with:
+
+`?proxyToken=$(cas-ticket)`
+
+And if you want the output to actually be readable you probably want to append this:
+
+`| python -mjson.tool`
+
+The entire command would look something like this:
+
+`curl -v http://localhost:3000/secured/all-genome-references?proxyToken=$(cas-ticket) | python -mjson.tool`
+
+
 ### Unrecognized Service Paths
 
 If an unrecognized service path is used in a request to Conrad then the response
