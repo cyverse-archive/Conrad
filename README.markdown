@@ -749,11 +749,11 @@ Let's say you want to get a list of all genome references in the database, it's 
 
 There are two forms of endpoints that retrieve 'all' genome references.
 
-1. `'.../all-genome-references'`
-    This will return ALL references including ones marked as 'deleted'.
+####1.
+`'.../all-genome-references'` This will return ALL references including ones marked as 'deleted'.
 
-2. `'.../genome-references'`
-    This will return just the references that are not marked as 'deleted'.
+####2.
+`'.../genome-references'` This will return just the references that are not marked as 'deleted'.
 
 Imagine Conrad is running on localhost at port 3000, then the command to list all genome references is: 
 
