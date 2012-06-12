@@ -749,25 +749,60 @@ Let's say you want to get a list of all genome references in the database, it's 
 
 There are two forms of endpoints that retrieve 'all' genome references.
 
-####1. `'.../all-genome-references'` This will return ALL references including ones marked as 'deleted'.
+1. `'.../all-genome-references'` This will return ALL references including ones marked as 'deleted'.
 
-####2. `'.../genome-references'` This will return just the references that are not marked as 'deleted'.
+2. `'.../genome-references'` This will return just the references that are not marked as 'deleted'.
 
-Imagine Conrad is running on localhost at port 3000, then the command to list all genome references is: 
+Imagine Conrad is running on localhost at port 3000, then a command will look like this: 
 
 `curl -v http://localhost:3000/secured/all-genome-references`
 
-if you need an authentication token then you want to append this command with:
+As always the endpoint is specified at the end...point of the url request. The genome endpoints that GET data, are done via a GET request, this is the default curl request so it does not have to specified as one (the -v switch just turn verbose mode ON, feel free to exclude it).
+
+if you need an authentication token then append the command with:
 
 `?proxyToken=$(cas-ticket)`
 
-And if you want the output to actually be readable you probably want to append this:
+if you want the JSON output to actually be readable you probably want to append this:
 
 `| python -mjson.tool`
 
-The entire command would look something like this:
+All together the entire command would look something like this:
 
 `curl -v http://localhost:3000/secured/all-genome-references?proxyToken=$(cas-ticket) | python -mjson.tool`
+
+The output looks like this:
+
+```
+{
+    "genomes": [
+        {
+            "created_by": "Andy@iplantcollaborative.org, 
+            "created_on": "1338503205918", 
+            "deleted": false, 
+            "id": "20", 
+            "last_modified_by": "", 
+            "last_modified_on": "", 
+            "name": "Physcomitrella patens Phypa1.1 (Ensembl 13)", 
+            "path": "/data2/collections/genomeservices/0.2/Physcomitrella_patens.Phypa1.1/de_support/", 
+            "uuid": "9B5AED20-7882-44AB-BEBC-8DD7B4C7E13F"
+        }, 
+        {
+            "created_by": "Storme@iplantcollaborative.org", 
+            "created_on": "1338503205918", 
+            "deleted": true, 
+            "id": "22", 
+            "last_modified_by": "", 
+            "last_modified_on": "", 
+            "name": "Rattus norvegicus RGSC3.4 (Ensembl 66)", 
+            "path": "/data2/collections/genomeservices/0.2/Rattus_norvegicus.RGSC3.4/de_support/", 
+            "uuid": "080C3A4A-3566-4C62-9F4D-04F129915761"
+        }
+    ]
+}
+```
+
+but there will probably be a LOT more, try it yourself!
 
 
 ### Unrecognized Service Paths
