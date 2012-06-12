@@ -68,8 +68,11 @@
   (GET "/genome-references" []
        (trap #(get-genome-references)))
 
-  (GET "/genome-references/:un" [un]
+  (GET "/genome-references-by-user/:un" [un]
        (trap #(get-genome-references-by-username un)))
+
+  (GET "/genome-reference/:id" [id]
+       (trap #(get-genome-reference-by-uuid id)))
 
   (DELETE "/genome-reference/:id" [id]
        (trap #(delete-genome-reference-by-UUID id)))
