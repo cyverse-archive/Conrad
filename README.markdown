@@ -798,7 +798,8 @@ The output of this command looks like this:
 }
 ```
 
-Note how there are both "deleted": flase and "deleted": true entries returned because we asked for `all-genome-references/`.
+Note how there are both `"deleted": false` and `"deleted": true` entries returned because we asked for `all-genome-references/` which even returns 'deleted' genome references.
+
 There will probably be a LOT more data, try it yourself!
 
 #### Listing Specific Genome References
@@ -807,6 +808,12 @@ There's also functionality for retrieving specific genome references.
 
 1. `genome-references/<username>` gets all genome references created by the passed username.
 2. `genome-reference/<uuid>` gets the genome reference specified by the passed Universal Unique ID.
+
+An endpoint request for the user 'Bilbo@iplantcollaborative.org' would look like this:
+
+`curl -v http://localhost:3000/secured/genome-references/Bilbo@iplantcollaborative.org?proxyToken=$(cas-ticket) | python -mjson.tool`
+
+Be careful: Usernames are CaSe sensitive!
 
 ### Unrecognized Service Paths
 
