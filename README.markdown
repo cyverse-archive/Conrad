@@ -745,15 +745,15 @@ This service will fail under the following circumstances:
 
 ### Listing Genome References
 
-Let's say you want to get a list of all genome references in the database, it's pretty simple, and I'm gonna break it down for you. There are two forms of endpoints that retrieve 'all' genome references.
+Let's say you want to get a list of all genome references in the database, it's pretty simple, and I'm gonna break it down for you.
 
-``
-The first being '/all-genome-references'
+There are two forms of endpoints that retrieve 'all' genome references.
+
+1. `'.../all-genome-references'`
     This will return ALL references including ones marked as 'deleted'.
 
-The second being '/genome-references'
+2. `'.../genome-references'`
     This will return just the references that are not marked as 'deleted'.
-``
 
 Imagine Conrad is running on localhost at port 3000, then the command to list all genome references is: 
 
