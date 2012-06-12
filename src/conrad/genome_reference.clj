@@ -62,6 +62,11 @@
   (json-str (json-parser (select genome_reference
                             (where {:deleted false})))))
 
+(defn get-genome-reference-by-uuid
+  "This function returns a JSON representation of the genome_reference specified by the passed uuid, skipping 'deleted' records."
+  [id]
+  (json-str (json-parser (select genome_reference (where {:uuid id})))))
+
 (defn get-genome-references-by-username
   "This function returns a JSON representation of the map of all the genome_reference table data in the DB that was created by the passed username."
   [username]
