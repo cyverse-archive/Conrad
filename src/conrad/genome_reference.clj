@@ -82,7 +82,7 @@
                              (join users (= :users.id :genome_reference.created_by))
                              (where {:users.username username :deleted false})))))
 
-(defn delete-genome-references-by-UUID
+(defn delete-genome-reference-by-UUID
   "This function updates the deleted column of the genome_reference that matches the passed UUID's genome_reference table to true, 'deleting' the reference."
   [uuid]
   (log/warn "UUID Passed =" uuid)
