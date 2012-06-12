@@ -40,7 +40,7 @@
   (let [id (get-id username)]
       (if (nil? id)
           (do (insert users (values {:username username}))
-              (get-id username))) id)))
+              (get-id username)) id))))
 
 (defn json-parser
   "This function takes in a sequence and parses numbers into strings, nil values into empty strings, and Timestamp objects into epoch seconds into strings. For JSON encoding compliance."
@@ -67,7 +67,7 @@
   "This function returns a JSON representation of the map of all the genome_reference table data, skipping 'deleted' records."
   []
   (json-str (json-parser (select genome_reference
-                            (where {:deleted false})))))
+                             (where {:deleted false})))))
 
 (defn get-genome-reference-by-uuid
   "This function returns a JSON representation of the genome_reference specified by the passed uuid, skipping 'deleted' records."
@@ -79,16 +79,16 @@
   [username]
   (log/warn "Username Passed =" username)
   (json-str (json-parser (select genome_reference
-                            (join users (= :users.id :genome_reference.created_by))
-                            (where {:users.username username :deleted false})))))
+                             (join users (= :users.id :genome_reference.created_by))
+                             (where {:users.username username :deleted false})))))
 
 (defn delete-genome-references-by-UUID
   "This function updates the deleted column of the genome_reference that matches the passed UUID's genome_reference table to true, 'deleting' the reference."
   [uuid]
   (log/warn "UUID Passed =" uuid)
   (update genome_reference
-    (set-fields {:deleted true})
-    (where {:uuid uuid})))
+      (set-fields {:deleted true})
+      (where {:uuid uuid})))
 
 (defn insert-genome-reference
   "This function adds a genome-reference to the database taking a JSON object containing the genome name and the path. The uuid is generated automatically, and the created_by info is pulled from the CAS info of the request map."
@@ -96,8 +96,8 @@
   (def data (cc-json/body->json body))
   (log/warn "JSON Object Passed=" data)
   (let [uuid (uuid-gen) name (:name data) path (:path data) cb (get-or-create-id attrs)]
-    (insert genome_reference
-      (values [{:uuid uuid :name name :path path :created_by cb}]))))
+      (insert genome_reference
+          (values [{:uuid uuid :name name :path path :created_by cb}]))))
 
 (defn modify-genome-reference
   "This function modifies an existing genome-reference in the database. It takes a JSON object containing the new genome name and path, and the existing UUID to identify it."
@@ -105,6 +105,6 @@
   (def data (cc-json/body->json body))
   (log/warn "JSON Object Passed=" data)
   (let [uuid (:uuid data) name (:name data) cb (get-or-create-id attrs) path (:path data)]
-    (update genome_reference
-      (where {:created_by cb :uuid uuid})
-      (set-fields {:name name :path path}))))
+      (update genome_reference
+          (where {:created_by cb :uuid uuid})
+          (set-fields {:name name :path path}))))
