@@ -68,11 +68,11 @@
   (GET "/genome-references" []
        (trap #(get-genome-references)))
 
-  (GET "/genome-references-by-username/:un" [un]
+  (GET "/genome-references/:un" [un]
        (trap #(get-genome-references-by-username un)))
 
   (DELETE "/genome-reference/:id" [id]
-       (trap #(delete-genome-references-by-UUID id)))
+       (trap #(delete-genome-reference-by-UUID id)))
 
   (PUT "/genome-reference" [:as {body :body attrs :user-attributes}]
        (trap #(insert-genome-reference body attrs)))
