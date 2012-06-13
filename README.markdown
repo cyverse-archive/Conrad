@@ -758,9 +758,9 @@ Namely, a unique identifier of the reference, the path where the genome file is 
 
 Let's say you want to get a list of all genome references in the database, there are two forms of endpoints that retrieve 'all' genome references.
 
-1. GET **'/all-genome-references'** This will return ALL references including ones marked as 'deleted'.
+1. GET **'/all-genome-references'** This will return ALL references including ones flagged as 'deleted'.
 
-2. GET **'/genome-references'** This will return just the references that are not marked as 'deleted'.
+2. GET **'/genome-references'** This will return just the references that are not flagged as 'deleted'.
 
 Imagine Conrad is running on localhost at port 3000, then a command requesting data for ALL genome references in the database will look like this:
 
@@ -783,7 +783,7 @@ The output of this command looks like this:
             "uuid": "9B5AED20-7882-44AB-BEBC-8DD7B4C7E13F"
         },
         {
-            "created_by": "stormerules@iplantcollaborative.org",
+            "created_by": "stormeschinrules@iplantcollaborative.org",
             "created_on": "1338503205918",
             "deleted": true,
             "id": "22",
