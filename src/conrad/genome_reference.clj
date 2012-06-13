@@ -41,12 +41,12 @@
   "This function will call get-id and if it returns nil it will create a new
   user and return that id, otherwise it will just return the id."
   [attrs]
-  (let [username (get-full-username attrs)]
-      (let [id (get-id username)]
-          (if (nil? id)
-              (do (insert users (values {:username username}))
-                  (get-id username))
-              id))))
+  (let [username (get-full-username attrs)
+        id       (get-id username)]
+      (if (nil? id)
+          (do (insert users (values {:username username}))
+              (get-id username))
+          id)))
 
 (defn format-json-output
   "This function takes in a sequence and parses numbers into strings, nil
@@ -58,11 +58,11 @@
           #(assoc %
               :created_by       (or (get-name (:created_by %)) "")
               :last_modified_by (or (get-name (:last_modified_by %)) "")
+              :created_on       (str (.getTime (:created_on %)))
+              :id               (str (:id %))
               :last_modified_on (if (:last_modified_on %)
                                     (str (.getTime (:last_modified_on %)))
-                                    "")
-              :created_on       (str (.getTime (:created_on %)))
-              :id               (str (:id %)))
+                                    ""))
           data)}))
 
 (defn uuid-gen
@@ -77,14 +77,16 @@
   "This function returns a JSON representation of the map of all the
   genome_reference table data, including 'deleted' records."
   []
-  (format-json-output (select genome_reference)))
+  (format-json-output
+      (select genome_reference)))
 
 (defn get-genome-references
   "This function returns a JSON representation of the map of all the
   genome_reference table data, skipping 'deleted' records."
   []
-  (format-json-output (select genome_reference
-                                    (where {:deleted false}))))
+  (format-json-output
+      (select genome_reference
+          (where {:deleted false}))))
 
 (defn get-genome-references-by-username
   "This function returns a JSON representation the genome_reference table data
@@ -119,33 +121,33 @@
   containing the genome name and the path. The uuid is generated automatically,
   and the created_by info is pulled from the CAS info of the request map."
   [body attrs]
-  (def data (cc-json/body->json body))
-  (log/debug "JSON Object Passed=" data)
-  (let [uuid (uuid-gen)
-        name (:name data)
-        path (:path data)
-        cb   (get-or-create-id attrs)]
+  (let [data       (cc-json/body->json body)
+        uuid       (uuid-gen)
+        name       (:name data)
+        path       (:path data)
+        created_by (get-or-create-id attrs)]
+      (log/debug "JSON Object Passed=" data)
       (insert genome_reference
-          (values [{:uuid uuid
-                    :name name
-                    :path path
-                    :created_by cb}]))))
+          (values [{:uuid       uuid
+                    :name       name
+                    :path       path
+                    :created_by created_by}]))))
 
 (defn modify-genome-reference
   "This function modifies an existing genome-reference in the database. It
   takes a JSON object containing the new genome name and path, and the existing
   UUID to identify it."
   [body attrs]
-  (def data (cc-json/body->json body))
-  (log/debug "JSON Object Passed=" data)
-  (let [uuid (:uuid data)
-        name (:name data)
-        path (:path data)
-        lmb  (get-or-create-id attrs)
-        lmo  (Timestamp. (.getTime (Date.)))]
+  (let [data             (cc-json/body->json body)
+        uuid             (:uuid data)
+        name             (:name data)
+        path             (:path data)
+        last_modified_by (get-or-create-id attrs)
+        last_modified_on (Timestamp. (.getTime (Date.)))]
+      (log/debug "JSON Object Passed=" data)
       (update genome_reference
           (where {:uuid uuid})
-          (set-fields {:name name
-                       :path path
-                       :last_modified_by lmb
-                       :last_modified_on lmo}))))
+          (set-fields {:name             name
+                       :path             path
+                       :last_modified_by last_modified_by
+                       :last_modified_on last_modified_on}))))
