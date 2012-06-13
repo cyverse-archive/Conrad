@@ -19,17 +19,17 @@
   "This function takes in a userID and performs an sql query getting out the
   username, and returning it."
   [id]
-      (:username (first (select users
-                          (fields :username)
-                          (where {:id id})))))
+  (:username (first (select users
+                        (fields :username)
+                        (where {:id id})))))
 
 (defn get-id
   "This function takes in a username and performs an sql query which finds the
   users id, and returns it."
   [username]
   (:id (first (select users
-                (fields :id)
-                (where {:username username})))))
+                  (fields :id)
+                  (where {:username username})))))
 
 (defn get-full-username
   "this function appends the domain set in the config.clj to the request mapped
@@ -42,24 +42,28 @@
   user and return that id, otherwise it will just return the id."
   [attrs]
   (let [username (get-full-username attrs)]
-  (let [id (get-id username)]
-      (if (nil? id)
-          (do (insert users (values {:username username}))
-              (get-id username))
-          id))))
+      (let [id (get-id username)]
+          (if (nil? id)
+              (do (insert users (values {:username username}))
+                  (get-id username))
+              id))))
 
 (defn format-json-output
   "This function takes in a sequence and parses numbers into strings, nil
   values into empty strings, and Timestamp objects into epoch seconds into
   strings. For JSON encoding compliance."
   [data]
-  {:genomes
-      (mapv #(assoc %
-                :created_by (or (get-name (:created_by %)) "")
-                :last_modified_by (or (get-name (:last_modified_by %)) "")
-                :created_on (str (.getTime (:created_on %)))
-                :id (str (:id %))
-                :last_modified_on (or (:last_modified_on %) "")) data)})
+  (json-str {:genomes
+      (mapv
+          #(assoc %
+              :created_by       (or (get-name (:created_by %)) "")
+              :last_modified_by (or (get-name (:last_modified_by %)) "")
+              :last_modified_on (if (:last_modified_on %)
+                                    (str (.getTime (:last_modified_on %)))
+                                    "")
+              :created_on       (str (.getTime (:created_on %)))
+              :id               (str (:id %)))
+          data)}))
 
 (defn uuid-gen
   "This function helps new genome reference record insertion by autogenerating
@@ -73,30 +77,32 @@
   "This function returns a JSON representation of the map of all the
   genome_reference table data, including 'deleted' records."
   []
-  (json-str (format-json-output (select genome_reference))))
+  (format-json-output (select genome_reference)))
 
 (defn get-genome-references
   "This function returns a JSON representation of the map of all the
   genome_reference table data, skipping 'deleted' records."
   []
-  (json-str (format-json-output (select genome_reference
-                                    (where {:deleted false})))))
-
-(defn get-genome-reference-by-uuid
-  "This function returns a JSON representation of the genome_reference
-  specified by the passed uuid, skipping 'deleted' records."
-  [id]
-  (json-str (format-json-output (select genome_reference (where {:uuid id})))))
+  (format-json-output (select genome_reference
+                                    (where {:deleted false}))))
 
 (defn get-genome-references-by-username
   "This function returns a JSON representation the genome_reference table data
-  in the DB that was created by the passed username."
+  in the DB that was created by the passed username, skips 'deleted' records."
   [username]
   (log/debug "Username Passed =" username)
-  (json-str (format-json-output
-                (select genome_reference
-                    (join users (= :users.id :genome_reference.created_by))
-                    (where {:users.username username :deleted false})))))
+  (format-json-output
+      (select genome_reference
+          (join users (= :users.id :genome_reference.created_by))
+          (where {:users.username username :deleted false}))))
+
+(defn get-genome-reference-by-uuid
+  "This function returns a JSON representation of the genome_reference
+  specified by the passed uuid, skips 'deleted' records."
+  [id]
+  (format-json-output
+      (select genome_reference
+          (where {:uuid id :deleted false}))))
 
 (defn delete-genome-reference-by-uuid
   "This function updates the deleted column of the genome_reference that
@@ -118,7 +124,7 @@
   (let [uuid (uuid-gen)
         name (:name data)
         path (:path data)
-          cb (get-or-create-id attrs)]
+        cb   (get-or-create-id attrs)]
       (insert genome_reference
           (values [{:uuid uuid
                     :name name
@@ -135,8 +141,8 @@
   (let [uuid (:uuid data)
         name (:name data)
         path (:path data)
-         lmb (get-or-create-id attrs)
-         lmo (Timestamp. (.getTime (Date.)))]
+        lmb  (get-or-create-id attrs)
+        lmo  (Timestamp. (.getTime (Date.)))]
       (update genome_reference
           (where {:uuid uuid})
           (set-fields {:name name
