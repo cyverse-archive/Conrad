@@ -848,7 +848,7 @@ The output of this command looks like this:
 
 #### Deleting a Genome Reference
 
-The endpoint to make a specific genome reference as deleted is: DELETE **/genome-reference/{uuid}**.
+Endpoint: DELETE **/genome-reference/{uuid}**.
 
 An example command looks like this:
 
@@ -862,8 +862,6 @@ Now the genome reference specified by the uuid will be marked as deleted.
 #### Modifying a Genome Reference
 
 The endpoint that modifies the reference is: POST **/genome-reference**.
-
-If you know the uuid of the genome reference, and you are the user who created the genome reference, then you meet the prerequisites to modify it.
 
 To modify a current genome reference you need to form a JSON body with three parameters and pass it in with the request.
 
@@ -890,12 +888,14 @@ Here is an example command:
     http://localhost:3000/secured/genome-reference
 ```
 
+When modifying a genome reference, the user and when it was modified will be updated.
+
 **NOTE:** If you want to only change one of the parameters, you will still need to pass all three params. Just pass the current value of the field that remains the same.
 
 
 #### Creating a New Genome Reference
 
-The endpoint that creates a new genome reference is: PUT **/genome-reference**.
+Endpoint: PUT **/genome-reference**.
 
 You will need to form a JSON body with two parameters and pass it in with the request.
 

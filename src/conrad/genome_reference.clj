@@ -124,7 +124,7 @@
   (update genome_reference
       (set-fields {:deleted true})
       (where {:uuid uuid}))
-      (get-genome-reference-by-uuid uuid))
+  (get-genome-reference-by-uuid uuid))
 
 (defn insert-genome-reference
   "This function adds a genome-reference to the database taking a JSON object
