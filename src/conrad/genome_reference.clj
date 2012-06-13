@@ -80,7 +80,7 @@
   genome_reference table data, skipping 'deleted' records."
   []
   (json-str (format-json-output (select genome_reference
-                             (where {:deleted false})))))
+                                    (where {:deleted false})))))
 
 (defn get-genome-reference-by-uuid
   "This function returns a JSON representation of the genome_reference
@@ -120,7 +120,10 @@
         path (:path data)
           cb (get-or-create-id attrs)]
       (insert genome_reference
-          (values [{:uuid uuid :name name :path path :created_by cb}]))))
+          (values [{:uuid uuid
+                    :name name
+                    :path path
+                    :created_by cb}]))))
 
 (defn modify-genome-reference
   "This function modifies an existing genome-reference in the database. It
@@ -131,9 +134,9 @@
   (log/debug "JSON Object Passed=" data)
   (let [uuid (:uuid data)
         name (:name data)
-        path (:path data)]
-        lmb (get-or-create-id attrs)
-        lmo (.getTime (Date.))
+        path (:path data)
+         lmb (get-or-create-id attrs)
+         lmo (Timestamp. (.getTime (Date.)))]
       (update genome_reference
           (where {:uuid uuid})
           (set-fields {:name name
