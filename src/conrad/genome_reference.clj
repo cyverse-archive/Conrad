@@ -2,6 +2,7 @@
   (:use
     [conrad.kormadb]
     [conrad.config]
+    [conrad.common]
     [clojure.data.json :only (json-str)]
     [korma.core]
     [korma.db]
@@ -53,13 +54,13 @@
   values into empty strings, and Timestamp objects into epoch seconds into
   strings. For JSON encoding compliance."
   [data]
-  (json-str {:genomes
+  (success-response {:genomes
       (mapv
           #(assoc %
-              :created_by       (or (get-name (:created_by %)) "")
-              :last_modified_by (or (get-name (:last_modified_by %)) "")
-              :created_on       (str (.getTime (:created_on %)))
               :id               (str (:id %))
+              :created_by       (or (get-name (:created_by %)) "")
+              :created_on       (str (.getTime (:created_on %)))
+              :last_modified_by (or (get-name (:last_modified_by %)) "")
               :last_modified_on (if (:last_modified_on %)
                                     (str (.getTime (:last_modified_on %)))
                                     ""))
@@ -70,6 +71,14 @@
   a compliant Universal Unique ID."
   []
   (str (java.util.UUID/randomUUID)))
+
+(defn get-deleted
+  "This function returns a boolean value that represents the 'deleted' field of
+  the specified by uuid genome reference."
+  [uuid]
+  (:deleted (first
+                (select genome_reference
+                    (where {:uuid uuid})))))
 
 ;----------------------Conrad.core Called Functions----------------------------
 
@@ -90,7 +99,7 @@
 
 (defn get-genome-references-by-username
   "This function returns a JSON representation the genome_reference table data
-  in the DB that was created by the passed username, skips 'deleted' records."
+  in the DB that was created by the passed username. Skips 'deleted' records."
   [username]
   (log/debug "Username Passed =" username)
   (format-json-output
@@ -100,11 +109,11 @@
 
 (defn get-genome-reference-by-uuid
   "This function returns a JSON representation of the genome_reference
-  specified by the passed uuid, skips 'deleted' records."
+  specified by the passed uuid."
   [id]
   (format-json-output
       (select genome_reference
-          (where {:uuid id :deleted false}))))
+          (where {:uuid id}))))
 
 (defn delete-genome-reference-by-uuid
   "This function updates the deleted column of the genome_reference that
@@ -114,7 +123,8 @@
   (log/debug "UUID Passed =" uuid)
   (update genome_reference
       (set-fields {:deleted true})
-      (where {:uuid uuid})))
+      (where {:uuid uuid}))
+      (get-genome-reference-by-uuid uuid))
 
 (defn insert-genome-reference
   "This function adds a genome-reference to the database taking a JSON object
@@ -128,10 +138,12 @@
         created_by (get-or-create-id attrs)]
       (log/debug "JSON Object Passed=" data)
       (insert genome_reference
-          (values [{:uuid       uuid
-                    :name       name
-                    :path       path
-                    :created_by created_by}]))))
+          (values [{:uuid             uuid
+                    :name             name
+                    :path             path
+                    :created_by       created_by
+                    :last_modified_by created_by}]))
+      (get-genome-reference-by-uuid uuid)))
 
 (defn modify-genome-reference
   "This function modifies an existing genome-reference in the database. It
@@ -140,6 +152,7 @@
   [body attrs]
   (let [data             (cc-json/body->json body)
         uuid             (:uuid data)
+        deleted          (:deleted data (get-deleted uuid))
         name             (:name data)
         path             (:path data)
         last_modified_by (get-or-create-id attrs)
@@ -149,5 +162,7 @@
           (where {:uuid uuid})
           (set-fields {:name             name
                        :path             path
+                       :deleted          deleted
                        :last_modified_by last_modified_by
-                       :last_modified_on last_modified_on}))))
+                       :last_modified_on last_modified_on}))
+      (get-genome-reference-by-uuid uuid)))
