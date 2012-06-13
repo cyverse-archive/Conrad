@@ -32,6 +32,14 @@
                   (fields :id)
                   (where {:username username})))))
 
+(defn get-deleted
+  "This function returns a boolean value that represents the 'deleted' field of
+  the specified by uuid genome reference."
+  [uuid]
+  (:deleted (first
+                (select genome_reference
+                    (where {:uuid uuid})))))
+
 (defn get-full-username
   "this function appends the domain set in the config.clj to the request mapped
   username."
@@ -71,14 +79,6 @@
   a compliant Universal Unique ID."
   []
   (str (java.util.UUID/randomUUID)))
-
-(defn get-deleted
-  "This function returns a boolean value that represents the 'deleted' field of
-  the specified by uuid genome reference."
-  [uuid]
-  (:deleted (first
-                (select genome_reference
-                    (where {:uuid uuid})))))
 
 ;----------------------Conrad.core Called Functions----------------------------
 
