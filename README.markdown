@@ -752,7 +752,11 @@ This service will fail under the following circumstances:
 
 These services are endpoints that interface with the genome_references table of the Discovery Enviroment database. Genome references hold metadata about stored genomes. 
 
-Namely, a unique identifier of the reference, the path where the genome file is held, the user id of the creator of the genome file, the name of the genome being referenced, and whether or not the genome has been marked as deleted.
+The metadata they hold is namely a unique identifier of the reference called a uuid, the path where the genome file is held, the user id of the creator of the genome file, the name of the genome being referenced, whether or not the genome has been marked as deleted, when the reference was last modified, and who modified it last.
+
+All the genome reference endpoint will return a success body with a JSON representation of the serviced data. 
+
+500 errors are usually caught so they are rare. They will happen most commonly when passing incorrectly formed JSON data when creating and modifying genome references.
 
 #### Listing All Genome References
 
@@ -793,7 +797,8 @@ The output of this command looks like this:
             "path": "/data2/collections/genomeservices/0.2/Rattus_norvegicus.RGSC3.4/de_support/",
             "uuid": "080C3A4A-3566-4C62-9F4D-04F129915761"
         }
-    ]
+    ],
+    "success": true
 }
 ```
 
@@ -802,18 +807,18 @@ Note how there are both `"deleted": false` and `"deleted": true` entries returne
 There will probably be a LOT more data, try it yourself!
 
 
-#### Listing a Specific Genome Reference
+#### Listing Genome References by Username
 
-There's also functionality for retrieving specific genome references, there are two different endpoints.
+Endpoint: GET **genome-references-by-user/{username}** 
+    
+Returns all genome references created by the passed username, this skips deleted references however.
 
-1. GET **genome-references-by-user/{username}** gets all genome references created by the passed username.
-2. GET **genome-reference/{uuid}** gets the genome reference specified by the passed Universal Unique ID.
-
-These are all GET functions so an endpoint request for the user "kobain@iplantcollaborative.org" would look like this:
+#####Example
+If you want to search for genome references created_by the user "kobain@iplantcollaborative.org", the command looks like this:
 
 ```curl -v http://localhost:3000/secured/genome-references-by-user/kobain@iplantcollaborative.org | python -mjson.tool```
 
-The output of this command looks like this:
+The output of this command:
 
 ```
 {
@@ -832,7 +837,7 @@ The output of this command looks like this:
         {
             "created_by": "kobain@iplantcollaborative.org",
             "created_on": "1338503205918",
-            "deleted": true,
+            "deleted": false,
             "id": "02",
             "last_modified_by": "",
             "last_modified_on": "",
@@ -840,42 +845,112 @@ The output of this command looks like this:
             "path": "/data2/collections/genomeservices/0.2/Rattus_norvegicus.RGSC3.4/de_support/",
             "uuid": "080C3A4A-3566-4C62-9F4D-04F129915761"
         }
-    ]
+    ],
+    "success": true
 }
 ```
 **NOTE:** Usernames are CaSe sensitive!
 
 
+#### Listing a Specific Genome by its UUID
+
+Endpoint: GET **genome-reference/{uuid}** 
+
+This endpoint will return the genome reference specified by the passed Universal Unique ID. This will even return a reference marked as deleted.
+
+#####Example
+If you want to search for genome reference with the uuid 1CFEAAD6-F5F2-4B2A-BA85-A16A9E8EB35C, the command looks like this:
+
+```curl -v http://localhost:3000/secured/genome-reference/1CFEAAD6-F5F2-4B2A-BA85-A16A9E8EB35C | python -mjson.tool```
+
+The output of this command which searches by uuid looks something like this:
+
+```
+{
+    "genomes": [
+        {
+            "created_by": "<public>", 
+            "created_on": "1339626977481", 
+            "deleted": true, 
+            "id": "24", 
+            "last_modified_by": "<public>", 
+            "last_modified_on": "1339626977481", 
+            "name": "Selaginella moellendorffii ENA1 (Ensembl 13)", 
+            "path": "/data2/collections/genomeservices/0.2/Selaginella_moellendorffii.ENA1/de_support/", 
+            "uuid": "1CFEAAD6-F5F2-4B2A-BA85-A16A9E8EB35C"
+        }
+    ], 
+    "success": true
+}
+```
+
 #### Deleting a Genome Reference
 
 Endpoint: DELETE **/genome-reference/{uuid}**.
 
-An example command looks like this:
+Deleting a genome reference will mark the deleted field of the genome reference as true. It is important to understand that the genome_reference is still in the database and is not deleted, only the boolean field `deleted` is flagged from true to false.
+
+#####Example
+If you want to DELETE the genome reference identified as: 0CF5BA6C-9DE6-4D3D-A9B9-66FC19F6G4E8, the command looks like this:
 
 ```curl -vXDELETE http://localhost:3000/secured/genome-reference/0CF5BA6C-9DE6-4D3D-A9B9-66FC19F6G4E8```
 
 Now the genome reference specified by the uuid will be marked as deleted.
 
-**NOTE:** The genome_reference is still in the database and is not deleted, only the field `deleted` is updated from true to false.
+An incorrectly formed uuid will return a success body but with an empty array of genomes. 
+If it looks like this you did it wrong:
 
+```json
+{
+    "genomes": [], 
+    "success": true
+}
+```
+
+On successful 'deletion' the response will look something like this:
+
+```
+{
+    "genomes": [
+        {
+            "created_by": "<public>", 
+            "created_on": "1339626977481", 
+            "deleted": true, 
+            "id": "8", 
+            "last_modified_by": "ipctest@iplantcollaborative.org", 
+            "last_modified_on": "1339629596968", 
+            "name": "The JOHN species", 
+            "path": "/bacon/dennis", 
+            "uuid": "B7FE13D8-A9E0-408C-946F-5E3AFB922E7D"
+        }
+    ], 
+    "success": true
+}
+```
+There is an alternate way to delete the genome reference through the modify genome reference endpoint (POST /genome-reference/). Using the modify endpoint you can un-delete previously deleted endpoints as well.
 
 #### Modifying a Genome Reference
 
-The endpoint that modifies the reference is: POST **/genome-reference**.
+Endpoint: POST **/genome-reference**.
 
-To modify a current genome reference you need to form a JSON body with three parameters and pass it in with the request.
+To modify a current genome reference you need to form a JSON body and pass it in with the request.
 
-1. The new **name** of the genome.
-2. The new **path** to the directory of where the genome is located.
-3. The **uuid** referencing the reference. (This will not be modified)
+1. The new **name** of the genome. **required**
+2. The new **path** to the directory of where the genome is located. **required**
+3. The **deleted** field marked true/false. **optional**
+4. The **uuid** referencing the reference. **This will not be modified**
 
 ```json
 {
     "name": new-genome-name,
     "path": new-path-to-genome,
+    "deleted": true-false-optional,
     "uuid": uuid-referencing existing genome
 }
 ```
+
+If you want to only change one of the parameters, you will still need to pass the required parameters 'name', and 'path'. Just pass the name that was already in the database.
+
 Here is an example command:
 
 ```
@@ -888,9 +963,24 @@ Here is an example command:
     http://localhost:3000/secured/genome-reference
 ```
 
-When modifying a genome reference, the user and when it was modified will be updated.
+When modifying a genome reference, the user and when it was modified will be updated. 
 
-**NOTE:** If you want to only change one of the parameters, you will still need to pass all three params. Just pass the current value of the field that remains the same.
+You can use the modify endpoint to delete/un-delete genome references.
+
+Here is an example command which will also 'delete' the reference:
+
+```
+    curl -vXPOST -d
+    '{
+        "name": "New Species Name",
+        "path": "home/research/new",
+        "deleted": true,
+        "uuid": "970E8ED8-B65D-46FA-849E-03DB344367DC"
+    }'
+    http://localhost:3000/secured/genome-reference
+```
+
+Potential 500 errors: *Passing the uuid without the path or name fields in the JSON body.
 
 
 #### Creating a New Genome Reference
@@ -899,8 +989,8 @@ Endpoint: PUT **/genome-reference**.
 
 You will need to form a JSON body with two parameters and pass it in with the request.
 
-1. The **name** of the genome.
-2. The **path** to the directory where the genome is located.
+1. The **name** of the genome. **required**
+2. The **path** to the directory where the genome is located. **required**
 
 The uuid and the user info is all automatically generated.
 
@@ -938,3 +1028,6 @@ dennis$ curl -s http://by-tor:14444/secured/foo | python -mjson.tool
     "success": false
 }
 ```
+
+Potential 500 errors: *Not forming a JSON body with both the path and name.
+
