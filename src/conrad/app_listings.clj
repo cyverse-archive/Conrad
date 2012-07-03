@@ -27,7 +27,7 @@
 
 (defn- epoch-time [timestamp]
   (if-not (nil? timestamp)
-    (str (.getTime timestamp))
+    (.getTime timestamp)
     ""))
 
 (defn- normalize-app-listing [app]
