@@ -38,6 +38,9 @@
   (GET "/get-apps-in-group/:id" [id]
        (trap #(get-category-with-apps id)))
 
+  (GET "/get-components-in-app/:id" [id]
+       (trap #(get-components-in-app id)))
+
   (POST "/update-app" [:as {body :body}]
         (trap #(update-app body)))
 

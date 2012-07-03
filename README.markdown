@@ -163,7 +163,7 @@ Environment whether or not they're marked as deleted.)
 
 ### Listing Apps in a Category
 
-Endpoint: GET /secured/get-analyses-in-group/{group-id}
+Endpoint: GET /secured/get-apps-in-group/{group-id}
 
 The /get-apps-in-group/{group-id} endpoint is used to obtain a list of apps in
 an analysis group.  The output from this service is very similar to the output
@@ -183,17 +183,6 @@ dennis$ curl -s http://by-tor:14444/secured/get-apps-in-group/EAD6C97D-8D7D-4199
         {
             "disabled": false,
             "deleted": false,
-            "deployed_components": [
-                {
-                    "attribution": "",
-                    "description": "Scan for unique values",
-                    "id": "c4e6f548cc0ee431da7f2ddfdf3ace761",
-                    "location": "/usr/bin/",
-                    "name": "uniq",
-                    "type": "executable",
-                    "version": "1.00"
-                }
-            ],
             "description": "c...and t",
             "id": "D36D47B0-A82F-40AB-AB1F-037249944620",
             "integrator_email": "snowdog@iplantcollaborative.org",
@@ -222,6 +211,35 @@ dennis$ curl -s http://by-tor:14444/secured/get-apps-in-group/EAD6C97D-8D7D-4199
     "workspace_id": 0
 }
 ```
+
+### Listing Deployed Components in an App
+
+Endpoint: GET /secured/get-components-in-app/{app-id}
+
+This service lists all of the deployed components that are used in the app
+with the given identifier.  Here are some examples:
+
+```
+$ curl -s http://by-tor:14444/secured/get-components-in-app/81B7457C-3758-41AB-AEEC-6D9D3A0CD585 | python -mjson.tool
+{
+    "deployed_components": [
+        {
+            "attribution": "", 
+            "description": "Wrapper script to drive BEDtools in the iPlant DE", 
+            "id": "c9610d44f56064e39809656f0cdfe833c", 
+            "location": "/usr/local3/bin/bedtools-iplant-1.00", 
+            "name": "bedtools.pl", 
+            "type": "executable", 
+            "version": "1.00"
+        }
+    ]
+}
+```
+
+This service will fail under the following circumstances:
+
+* the application with the specified identifier can't be found;
+* a database error occurs.
 
 ### Updating an App
 
@@ -271,17 +289,6 @@ dennis$ curl -sd '
 {
     "application": {
         "deleted": false, 
-        "deployed_components": [
-            {
-                "attribution": "Nobody Inparticular", 
-                "description": "", 
-                "id": "C1D46AFE-02EC-4AB7-B6BE-D190A08B026E", 
-                "location": "/usr/local2/bin", 
-                "name": "run_muscle.pl", 
-                "type": "executable", 
-                "version": ""
-            }
-        ], 
         "description": "Reah, reah, reah, reah, reah!", 
         "disabled": false, 
         "id": "F50FE07D-91AA-AA36-1D47-BB2E7FDC7BB4", 
@@ -594,17 +601,6 @@ dennis$ curl -sd '
             {
                 "disabled": false,
                 "deleted": false,
-                "deployed_components": [
-                    {
-                        "attribution": "",
-                        "description": "Scan for unique values",
-                        "id": "c4e6f548cc0ee431da7f2ddfdf3ace761",
-                        "location": "/usr/bin/",
-                        "name": "uniq",
-                        "type": "executable",
-                        "version": "1.00"
-                    }
-                ],
                 "description": "Reah, reah, reah, reah, reah!",
                 "id": "D36D47B0-A82F-40AB-AB1F-037249944620",
                 "integrator_email": "scooby@iplantcollaborative.org",

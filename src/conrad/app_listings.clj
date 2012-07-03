@@ -37,7 +37,6 @@
    :wiki_url (:wikiurl app)
    :deleted (:deleted app)
    :disabled (:disabled app)
-   :deployed_components (app-deployed-component-listing app)
    :pipeline_eligibility (app-pipeline-eligibility app)
    :suggested_categories (load-suggested-categories-for-app (:hid app))})
 
@@ -46,3 +45,9 @@
 
 (defn load-deleted-and-orphaned-app-listings []
   (map #(normalize-app-listing %) (list-deleted-and-orphaned-apps)))
+
+(defn list-deployed-components-in-app [id]
+  (let [app (list-app-by-id id)]
+    (when (nil? app)
+      (throw (IllegalArgumentException. (str "app, " id ", not found"))))
+    {:deployed_components (app-deployed-component-listing app)}))

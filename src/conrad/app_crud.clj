@@ -24,6 +24,11 @@
     ["SELECT * FROM analysis_listing WHERE hid = ?" hid]
     (first rs)))
 
+(defn list-app-by-id [id]
+  (jdbc/with-query-results rs
+    ["SELECT * FROM analysis_listing WHERE id = ?" id]
+    (first rs)))
+
 (defn list-deleted-and-orphaned-apps []
   (jdbc/with-query-results rs
     ["SELECT * FROM analysis_listing a
