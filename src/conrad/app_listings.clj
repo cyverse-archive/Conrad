@@ -25,12 +25,18 @@
   (map #(normalize-deployed-component-listing %)
        (load-deployed-components-for-app (:hid app))))
 
+(defn- epoch-time [timestamp]
+  (if-not (nil? timestamp)
+    (str (.getTime timestamp))
+    ""))
+
 (defn- normalize-app-listing [app]
   {:id (:id app)
    :name (:name app)
    :description (:description app)
    :integrator_email (:integrator_email app)
    :integrator_name (:integrator_name app)
+   :integration_date (epoch-time (:integration_date app))
    :rating {:average (:average_rating app)}
    :is_public (:is_public app)
    :is_favorite false
