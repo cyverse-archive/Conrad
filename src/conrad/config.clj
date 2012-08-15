@@ -1,5 +1,5 @@
 (ns conrad.config
-  (:use [clojure.string :only (blank? split)])
+  (:use [clojure.string :only (blank? trim)])
   (:require [clojure-commons.props :as cc-props]
             [clojure.tools.logging :as log]))
 
@@ -68,11 +68,67 @@
     (catch NumberFormatException e
       (do (record-invalid-prop prop-name e) 0))))
 
+(defn- is-space
+  "Determines whether or not a character is whitespace."
+  [c]
+  (Character/isWhitespace (char c)))
+
+(declare escaped-char quoted-string elm leading-whitespace next-elm)
+
+(defn- escaped-char
+  "Retrieves a backslash-escaped character from a comma-delimited list.  Any
+   character can be escaped, including a comma.  If a comma is escaped then
+   it's treated as part of the current element rather than an element
+   separator.  If a single quote character is escaped then it's not treated as
+   the beginning or end of a quoted string.  The only way to include a literal
+   backslash in a list element is to escape it with another backslash."
+  [res [c & cs] prev-state]
+  (cond (nil? c) [res cs]
+        :else    #(prev-state (conj res c) cs)))
+
+(defn- quoted-string
+  "Extracts element values from a quoted string in a comma-delimited list."
+  [res [c & cs]]
+  (cond (nil? c) [res cs]
+        (= c \') #(elm res cs)
+        (= c \\) #(escaped-char res cs quoted-string)
+        :else    #(quoted-string (conj res c) cs)))
+
+(defn- elm
+  "Extracts an element from a comma-delimited list."
+  [res [c & cs]]
+  (cond (nil? c) [res cs]
+        (= c \,) [res cs]
+        (= c \\) #(escaped-char res cs elm)
+        (= c \') #(quoted-string res cs)
+        :else    #(elm (conj res c) cs)))
+
+(defn- leading-whitespace
+  "Skips leading whitespace in a comma-delimited list element."
+  [res [c & cs :as all]]
+  (cond (nil? c)     [res cs]
+        (is-space c) #(leading-whitespace res cs)
+        :else        #(elm res all)))
+
+(defn- next-elm
+  "Obtains the next element from a comma-delimited list."
+  [res cs]
+ #(leading-whitespace res cs))
+
+(defn parse-comma-delimited-list
+  "Parses a comma-delimited list that uses single quotes to quote list
+   elements."
+  [s]
+  (loop [res [] [elm s] (trampoline #(next-elm [] s))]
+    (if-not (empty? elm)
+      (recur (conj res (apply str elm)) (trampoline #(next-elm [] s)))
+      res)))
+
 (defn- get-vector
   "Gets a vector property from the properties that were loaded from
    Zookeeper."
   [prop-name]
-  (split (get-str prop-name) #",\s*"))
+  (parse-comma-delimited-list (get-str prop-name)))
 
 (defmacro defprop
   "Defines a property."
