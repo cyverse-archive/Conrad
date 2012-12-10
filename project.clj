@@ -20,7 +20,7 @@
   :profiles {:dev {:resource-paths ["conf/test"]}}
   :aot [conrad.core]
   :main conrad.core
-  :ring {:handler conrad.core/app :init conrad.core/load-configuration}
+  :ring {:handler conrad.core/app :init conrad.core/load-configuration-from-file}
   :iplant-rpm {:summary "iPlant Conrad"
                :provides "conrad"
                :dependencies ["iplant-service-config >= 0.1.0-5"]

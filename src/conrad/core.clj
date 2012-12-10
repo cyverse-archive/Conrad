@@ -12,10 +12,12 @@
         [conrad.config]
         [conrad.listings]
         [conrad.database]
-        [clojure.data.json :only (json-str)])
+        [clojure.data.json :only (json-str)]
+        [clojure.java.io :only (file)])
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
             [clojure-commons.clavin-client :as cl]
+            [clojure-commons.props :as cp]
             [clojure.tools.logging :as log]
             [ring.adapter.jetty :as jetty])
   (:import [java.sql SQLException]))
@@ -100,7 +102,37 @@
 
   (route/not-found (unrecognized-path-response)))
 
-(defn load-configuration
+(defn- log-props
+  "Logs the configuration settings."
+  []
+  (dorun (map (fn [[k v]] (log/warn k "=" (if (re-find #"password" k) "****" v)))
+              (sort-by key @props))))
+
+(defn- validate-props
+  "Validates the configuration settings."
+  []
+  (when (not (configuration-valid))
+    (log/warn "THE CONFIGURATION IS INVALID - EXITING NOW")
+    (System/exit 1)))
+
+(defn- init-service
+  "Initializes the service after the configuration settings have been loaded."
+  []
+  (log-props)
+  (validate-props)
+  (define-database))
+
+(defn load-configuration-from-file
+  "Loads the configuration settings from a properties file."
+  []
+  (let [filename "conrad.properties"
+        conf-dir (System/getenv "IPLANT_CONF_DIR")]
+    (if (nil? conf-dir)
+      (reset! props (cp/read-properties (file filename)))
+      (reset! props (cp/read-properties (file conf-dir filename)))))
+  (init-service))
+
+(defn load-configuration-from-zookeeper
   "Loads the configuration properties from Zookeeper."
   []
   (cl/with-zk
@@ -110,11 +142,7 @@
       (log/warn "THIS APPLICATION WILL NOT EXECUTE CORRECTLY.")
       (System/exit 1))
     (reset! props (cl/properties "conrad")))
-  (log/warn @props)
-  (when (not (configuration-valid))
-    (log/warn "THE CONFIGURATION IS INVALID - EXITING NOW")
-    (System/exit 1))
-  (define-database))
+  (init-service))
 
 (defn site-handler [routes]
   (-> routes
@@ -127,6 +155,6 @@
 
 (defn -main
   [& args]
-  (load-configuration)
+  (load-configuration-from-zookeeper)
   (log/warn "Listening on" (listen-port))
   (jetty/run-jetty app {:port (listen-port)}))
