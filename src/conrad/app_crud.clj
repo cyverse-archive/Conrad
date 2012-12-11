@@ -58,8 +58,21 @@
   (jdbc/update-values :transformation_activity ["id = ?" id]
                       (convert-integration-date app-update)))
 
-(defn update-integration-data [id integration-data-update]
-  (jdbc/update-values :integration_data ["id = ?" id] integration-data-update))
+(defn add-integration-datum [integrator-name integrator-email]
+  (jdbc/insert-values
+   :integration_data
+   [:integrator_name :integrator_email]
+   [integrator-name integrator-email]))
+
+(defn get-integration-data-id [integrator-name integrator-email]
+  (jdbc/with-query-results rs
+    ["SELECT * FROM integration_data
+      WHERE integrator_name = ?
+      AND integrator_email = ?"
+     integrator-name integrator-email]
+    (if (= (count rs) 0)
+      (:id (add-integration-datum integrator-name integrator-email))
+      (-> rs first :id))))
 
 (defn set-app-deleted-flag [id flag]
   (log/debug (str "setting the deleted flag for app, " id " to " flag))
