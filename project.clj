@@ -14,7 +14,7 @@
                  [korma/korma "0.3.0-beta10"]
                  [ring/ring-jetty-adapter "1.0.1"]
                  [postgresql/postgresql "9.0-801.jdbc4"]]
-  :plugins [[org.iplantc/lein-iplant-rpm "1.3.0-SNAPSHOT"]
+  :plugins [[org.iplantc/lein-iplant-rpm "1.4.0-SNAPSHOT"]
             [lein-ring "0.7.1"]
             [swank-clojure "1.4.2"]]
   :profiles {:dev {:resource-paths ["conf/test"]}}
