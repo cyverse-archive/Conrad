@@ -14,9 +14,13 @@
       (throw (IllegalArgumentException. (str "app, " id ", not found"))))
     transformation-activity))
 
-(defn- app-info->integration-data-update [app-info]
-  {:integrator_name (:integrator_name app-info)
-   :integrator_email (:integrator_email app-info)})
+(defn- app-info->app-update [app-info integration-data-id]
+  {:name (:name app-info)
+   :description (:description app-info)
+   :integration_date (:integration_date app-info)
+   :integration_data_id integration-data-id
+   :wikiurl (:wiki_url app-info)
+   :disabled (:disabled app-info)})
 
 (defn- app-info->integration-data-id [{:keys [integrator_name integrator_email]}]
   (get-integration-data-id integrator_name integrator_email))
