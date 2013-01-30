@@ -3,7 +3,6 @@
     [conrad.kormadb]
     [conrad.config]
     [conrad.common]
-    [clojure.data.json :only (json-str)]
     [korma.core]
     [korma.db]
     [kameleon.entities])

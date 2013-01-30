@@ -12,7 +12,6 @@
         [conrad.config]
         [conrad.listings]
         [conrad.database]
-        [clojure.data.json :only (json-str)]
         [clojure.java.io :only (file)])
   (:require [compojure.route :as route]
             [compojure.handler :as handler]

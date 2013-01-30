@@ -1,12 +1,12 @@
 (defproject conrad "1.3.0-SNAPSHOT"
   :description "Back-End Services for the iPlant Administrative Console"
   :dependencies [[org.clojure/clojure "1.4.0"]
-                 [org.clojure/data.json "0.1.2"]
                  [org.clojure/tools.logging "0.2.3"]
                  [org.clojure/java.jdbc "0.2.3"]
                  [org.iplantc/clj-cas "1.0.0-SNAPSHOT"]
                  [org.iplantc/kameleon "0.1.0-SNAPSHOT"]
-                 [org.iplantc/clojure-commons "1.1.0-SNAPSHOT"]
+                 [org.iplantc/clojure-commons "1.4.0-SNAPSHOT"]
+                 [cheshire "5.0.1"]
                  [compojure "1.0.1"]
                  [swank-clojure "1.4.0-SNAPSHOT"]
                  [log4j/log4j "1.2.16"]
