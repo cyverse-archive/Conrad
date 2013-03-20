@@ -8,7 +8,7 @@
                  [org.iplantc/clojure-commons "1.4.1-SNAPSHOT"]
                  [cheshire "5.0.2"]
                  [compojure "1.1.5"]
-                 [swank-clojure "1.4.5"]
+                 [swank-clojure "1.4.3"]
                  [log4j/log4j "1.2.17"]
                  [c3p0/c3p0 "0.9.1.2"]
                  [korma/korma "0.3.0-RC2"]
@@ -16,7 +16,7 @@
                  [postgresql/postgresql "9.0-801.jdbc4"]]
   :plugins [[org.iplantc/lein-iplant-rpm "1.4.1-SNAPSHOT"]
             [lein-ring "0.8.3"]
-            [swank-clojure "1.4.5"]]
+            [lein-swank "1.4.5"]]
   :profiles {:dev {:resource-paths ["conf/test"]}}
   :aot [conrad.core]
   :main conrad.core
