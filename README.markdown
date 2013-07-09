@@ -125,8 +125,9 @@ some time in the future if it proves to be helpful.  Here's an example:
 Endpoint: GET /secured/get-app-groups
 
 The /get-app-groups endpoint is used to obtain a hierarchical list of public app
-categories.  The output from this service is very similar to the output from the
-Discovery Environment's /get-only-analysis-groups/{workspace-id} endpoint.
+categories.  The output from this service is very similar to the output from
+Donkey's /secured/app-groups endpoint.
+
 Here's an example:
 
 ```
@@ -187,7 +188,7 @@ dennis$ curl -s http://by-tor:14444/secured/get-apps-in-group/EAD6C97D-8D7D-4199
             "id": "D36D47B0-A82F-40AB-AB1F-037249944620",
             "integrator_email": "snowdog@iplantcollaborative.org",
             "integrator_name": "Snow Dog",
-            "integration_date": 1341265753338, 
+            "integration_date": 1341265753338,
             "is_favorite": false,
             "is_public": true,
             "name": "c and t",
@@ -225,12 +226,12 @@ $ curl -s http://by-tor:14444/secured/get-components-in-app/81B7457C-3758-41AB-A
 {
     "deployed_components": [
         {
-            "attribution": "", 
-            "description": "Wrapper script to drive BEDtools in the iPlant DE", 
-            "id": "c9610d44f56064e39809656f0cdfe833c", 
-            "location": "/usr/local3/bin/bedtools-iplant-1.00", 
-            "name": "bedtools.pl", 
-            "type": "executable", 
+            "attribution": "",
+            "description": "Wrapper script to drive BEDtools in the iPlant DE",
+            "id": "c9610d44f56064e39809656f0cdfe833c",
+            "location": "/usr/local3/bin/bedtools-iplant-1.00",
+            "name": "bedtools.pl",
+            "type": "executable",
             "version": "1.00"
         }
     ]
@@ -289,26 +290,26 @@ dennis$ curl -sd '
 ' http://by-tor:14444/secured/update-app | python -mjson.tool
 {
     "application": {
-        "deleted": false, 
-        "description": "Reah, reah, reah, reah, reah!", 
-        "disabled": false, 
-        "id": "F50FE07D-91AA-AA36-1D47-BB2E7FDC7BB4", 
-        "integrator_email": "scooby@iplantcollaborative.org", 
+        "deleted": false,
+        "description": "Reah, reah, reah, reah, reah!",
+        "disabled": false,
+        "id": "F50FE07D-91AA-AA36-1D47-BB2E7FDC7BB4",
+        "integrator_email": "scooby@iplantcollaborative.org",
         "integrator_name": "Scooby Dooby Doo",
-        "integration_date": 1341265753338, 
-        "is_favorite": false, 
-        "is_public": true, 
-        "name": "Scooby Snacks!", 
+        "integration_date": 1341265753338,
+        "is_favorite": false,
+        "is_public": true,
+        "name": "Scooby Snacks!",
         "pipeline_eligibility": {
-            "is_valid": true, 
+            "is_valid": true,
             "reason": ""
-        }, 
+        },
         "rating": {
             "average": 0.0
-        }, 
-        "suggested_categories": [], 
+        },
+        "suggested_categories": [],
         "wiki_url": "https://pods.iplantcollaborative.org/wiki/display/DEapps/Rummy"
-    }, 
+    },
     "success": true
 }
 
@@ -539,13 +540,13 @@ dennis$ curl -s http://by-tor:14444/secured/undelete-app/8E25FB08-E11E-476A-95A9
 {
     "categories": [
         {
-            "description": null, 
-            "id": "7A0B68B2-6534-4CAD-8439-E0FAA3FD82B3", 
-            "name": "ChIPseq Analysis", 
+            "description": null,
+            "id": "7A0B68B2-6534-4CAD-8439-E0FAA3FD82B3",
+            "name": "ChIPseq Analysis",
             "workspace_id": 0
         }
-    ], 
-    "id": "8E25FB08-E11E-476A-95A9-0D06563F261A", 
+    ],
+    "id": "8E25FB08-E11E-476A-95A9-0D06563F261A",
     "success": true
 }
 
@@ -607,7 +608,7 @@ dennis$ curl -sd '
                 "id": "D36D47B0-A82F-40AB-AB1F-037249944620",
                 "integrator_email": "scooby@iplantcollaborative.org",
                 "integrator_name": "Scooby Dooby Doo",
-                "integration_date": 1341265753338, 
+                "integration_date": 1341265753338,
                 "is_favorite": false,
                 "is_public": true,
                 "name": "Scooby Snacks!",
@@ -749,11 +750,11 @@ This service will fail under the following circumstances:
 
 ### Genome References
 
-These services are endpoints that interface with the genome_references table of the Discovery Enviroment database. Genome references hold metadata about stored genomes. 
+These services are endpoints that interface with the genome_references table of the Discovery Enviroment database. Genome references hold metadata about stored genomes.
 
 The metadata they hold is namely a unique identifier of the reference called a uuid, the path where the genome file is held, the user id of the creator of the genome file, the name of the genome being referenced, whether or not the genome has been marked as deleted, when the reference was last modified, and who modified it last.
 
-All the genome reference endpoint will return a success body with a JSON representation of the serviced data. 
+All the genome reference endpoint will return a success body with a JSON representation of the serviced data.
 
 500 errors are usually caught so they are rare. They will happen most commonly when passing incorrectly formed JSON data when creating and modifying genome references.
 
@@ -808,8 +809,8 @@ There will probably be a LOT more data, try it yourself!
 
 #### Listing Genome References by Username
 
-Endpoint: GET **genome-references-by-user/{username}** 
-    
+Endpoint: GET **genome-references-by-user/{username}**
+
 Returns all genome references created by the passed username, this skips deleted references however.
 
 #####Example
@@ -853,7 +854,7 @@ The output of this command:
 
 #### Listing a Specific Genome by its UUID
 
-Endpoint: GET **genome-reference/{uuid}** 
+Endpoint: GET **genome-reference/{uuid}**
 
 This endpoint will return the genome reference specified by the passed Universal Unique ID. This will even return a reference marked as deleted.
 
@@ -868,17 +869,17 @@ The output of this command which searches by uuid looks something like this:
 {
     "genomes": [
         {
-            "created_by": "<public>", 
-            "created_on": "1339626977481", 
-            "deleted": true, 
-            "id": "24", 
-            "last_modified_by": "<public>", 
-            "last_modified_on": "1339626977481", 
-            "name": "Selaginella moellendorffii ENA1 (Ensembl 13)", 
-            "path": "/data2/collections/genomeservices/0.2/Selaginella_moellendorffii.ENA1/de_support/", 
+            "created_by": "<public>",
+            "created_on": "1339626977481",
+            "deleted": true,
+            "id": "24",
+            "last_modified_by": "<public>",
+            "last_modified_on": "1339626977481",
+            "name": "Selaginella moellendorffii ENA1 (Ensembl 13)",
+            "path": "/data2/collections/genomeservices/0.2/Selaginella_moellendorffii.ENA1/de_support/",
             "uuid": "1CFEAAD6-F5F2-4B2A-BA85-A16A9E8EB35C"
         }
-    ], 
+    ],
     "success": true
 }
 ```
@@ -896,12 +897,12 @@ If you want to DELETE the genome reference identified as: 0CF5BA6C-9DE6-4D3D-A9B
 
 Now the genome reference specified by the uuid will be marked as deleted.
 
-An incorrectly formed uuid will return a success body but with an empty array of genomes. 
+An incorrectly formed uuid will return a success body but with an empty array of genomes.
 If it looks like this you did it wrong:
 
 ```json
 {
-    "genomes": [], 
+    "genomes": [],
     "success": true
 }
 ```
@@ -912,17 +913,17 @@ On successful 'deletion' the response will look something like this:
 {
     "genomes": [
         {
-            "created_by": "<public>", 
-            "created_on": "1339626977481", 
-            "deleted": true, 
-            "id": "8", 
-            "last_modified_by": "ipctest@iplantcollaborative.org", 
-            "last_modified_on": "1339629596968", 
-            "name": "The JOHN species", 
-            "path": "/bacon/dennis", 
+            "created_by": "<public>",
+            "created_on": "1339626977481",
+            "deleted": true,
+            "id": "8",
+            "last_modified_by": "ipctest@iplantcollaborative.org",
+            "last_modified_on": "1339629596968",
+            "name": "The JOHN species",
+            "path": "/bacon/dennis",
             "uuid": "B7FE13D8-A9E0-408C-946F-5E3AFB922E7D"
         }
-    ], 
+    ],
     "success": true
 }
 ```
@@ -962,7 +963,7 @@ Here is an example command:
     http://localhost:3000/secured/genome-reference
 ```
 
-When modifying a genome reference, the user and when it was modified will be updated. 
+When modifying a genome reference, the user and when it was modified will be updated.
 
 You can use the modify endpoint to delete/un-delete genome references.
 
@@ -1029,4 +1030,3 @@ dennis$ curl -s http://by-tor:14444/secured/foo | python -mjson.tool
 ```
 
 Potential 500 errors: *Not forming a JSON body with both the path and name.
-
