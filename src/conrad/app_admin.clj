@@ -20,7 +20,7 @@
    :integration_date (Long/parseLong (str (:integration_date app-info)))
    :integration_data_id integration-data-id
    :wikiurl (:wiki_url app-info)
-   :disabled (:disabled app-info)})
+   :disabled (:disabled app-info false)})
 
 (defn- app-info->integration-data-id [{:keys [integrator_name integrator_email]}]
   (get-integration-data-id integrator_name integrator_email))
