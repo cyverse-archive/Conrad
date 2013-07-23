@@ -1,5 +1,5 @@
 (ns conrad.common
-  (:use [clojure.string :only (upper-case)])
+  (:use [clojure.string :only (blank? upper-case)])
   (:require [cheshire.core :as cheshire]
             [clojure.tools.logging :as log])
   (:import [java.util UUID]))
@@ -41,3 +41,11 @@
 
 (defn uuid []
   (upper-case (str (java.util.UUID/randomUUID))))
+
+(defn force-long [value field]
+  (when-not (blank? value)
+    (try
+      (Long/parseLong (str value))
+      (catch NumberFormatException e
+        (throw (IllegalArgumentException.
+                (str "invalid integer value, " value ", in field, " (name field))))))))

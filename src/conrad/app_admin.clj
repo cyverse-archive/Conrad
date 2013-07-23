@@ -17,7 +17,7 @@
 (defn- app-info->app-update [app-info integration-data-id]
   {:name (:name app-info)
    :description (:description app-info)
-   :integration_date (Long/parseLong (str (:integration_date app-info)))
+   :integration_date (force-long (:integration_date app-info) :integration_date)
    :integration_data_id integration-data-id
    :wikiurl (:wiki_url app-info)
    :disabled (:disabled app-info false)})
