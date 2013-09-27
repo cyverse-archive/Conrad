@@ -2,7 +2,8 @@
   (:use [clojure.string :only (blank? upper-case)])
   (:require [cheshire.core :as cheshire]
             [clojure.tools.logging :as log])
-  (:import [java.util UUID]))
+  (:import [java.sql SQLException]
+           [java.util UUID]))
 
 (def json-content-type "application/json")
 
@@ -16,6 +17,11 @@
   {:status 400
    :body (cheshire/encode {:success false :reason (.getMessage e)})
    :content-type json-content-type})
+
+(defn log-next-exception [e]
+  (if (and (instance? SQLException e) (.getNextException e))
+    (log/error (.getNextException e) "Next exception.")
+    (recur (.getNextException e))))
 
 (defn error-response [e]
   (log/error e "bad request")

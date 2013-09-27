@@ -56,6 +56,29 @@
               (get-id username))
           id)))
 
+(defn invalid-field-exception
+  "Throws an exception indicating that a request field is invalid."
+  [k v]
+  (IllegalArgumentException. (str "invalid value for field '" (name k) "': " v)))
+
+(defn extract-str
+  "Extracts a string value from a decoded request body, ensuring that the value
+   is a string."
+  [m k]
+  (let [v (m k)]
+    (when-not (string? v)
+      (throw (invalid-field-exception k v)))
+    v))
+
+(defn extract-boolean
+  "Extracts a Boolean value from a decoded request body, ensuring that the value
+   is a Boolean value."
+  [m k d]
+  (let [v (m k)]
+    (cond (nil? v)              d
+          (instance? Boolean v) v
+          :else                 (throw (invalid-field-exception k v)))))
+
 (defn format-json-output
   "This function takes in a sequence and parses numbers into strings, nil
   values into empty strings, and Timestamp objects into epoch seconds into
@@ -132,16 +155,16 @@
   [body attrs]
   (let [data       (cc-json/body->json body)
         uuid       (uuid-gen)
-        name       (:name data)
-        path       (:path data)
+        name       (extract-str data :name)
+        path       (extract-str data :path)
         created_by (get-or-create-id attrs)]
       (log/debug "JSON Object Passed=" data)
       (insert genome_reference
-          (values [{:uuid             uuid
-                    :name             name
-                    :path             path
-                    :created_by       created_by
-                    :last_modified_by created_by}]))
+              (values {:uuid             uuid
+                       :name             name
+                       :path             path
+                       :created_by       created_by
+                       :last_modified_by created_by}))
       (get-genome-reference-by-uuid uuid)))
 
 (defn modify-genome-reference
@@ -150,10 +173,10 @@
   UUID to identify it."
   [body attrs]
   (let [data             (cc-json/body->json body)
-        uuid             (:uuid data)
+        uuid             (extract-str data :uuid)
         deleted          (:deleted data (get-deleted uuid))
-        name             (:name data)
-        path             (:path data)
+        name             (extract-str data :name)
+        path             (extract-str data :path)
         last_modified_by (get-or-create-id attrs)
         last_modified_on (Timestamp. (.getTime (Date.)))]
       (log/debug "JSON Object Passed=" data)

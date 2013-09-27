@@ -28,7 +28,7 @@
     (f)
     (catch IllegalArgumentException e (failure-response e))
     (catch IllegalStateException e (failure-response e))
-    (catch SQLException e (error-response (.getNextException e)))
+    (catch SQLException e (do (log-next-exception e) (error-response e)))
     (catch Throwable t (error-response t))))
 
 ;; Secured routes.
