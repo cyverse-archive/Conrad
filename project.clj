@@ -1,4 +1,4 @@
-(defproject org.iplantc/conrad "1.3.2-SNAPSHOT"
+(defproject org.iplantc/conrad "1.3.2"
   :description "Back-End Services for the iPlant Administrative Console"
   :url "http://www.iplantcollaborative.org"
   :license {:name "BSD"
@@ -12,9 +12,9 @@
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [org.clojure/tools.logging "0.2.6"]
                  [org.clojure/java.jdbc "0.2.3"]
-                 [org.iplantc/clj-cas "1.8.4-SNAPSHOT"]
-                 [org.iplantc/kameleon "1.8.4-SNAPSHOT"]
-                 [org.iplantc/clojure-commons "1.4.8-SNAPSHOT"]
+                 [org.iplantc/clj-cas "1.8.4"]
+                 [org.iplantc/kameleon "1.8.4"]
+                 [org.iplantc/clojure-commons "1.4.8"]
                  [cheshire "5.0.2"]
                  [compojure "1.1.5"]
                  [swank-clojure "1.4.3"]
@@ -23,7 +23,7 @@
                  [korma/korma "0.3.0-RC4"]
                  [ring/ring-jetty-adapter "1.1.0"]
                  [postgresql/postgresql "9.0-801.jdbc4"]]
-  :plugins [[org.iplantc/lein-iplant-rpm "1.4.3-SNAPSHOT"]
+  :plugins [[org.iplantc/lein-iplant-rpm "1.4.3"]
             [lein-ring "0.8.3"]
             [lein-swank "1.4.5"]]
   :profiles {:dev {:resource-paths ["conf/test"]}}
