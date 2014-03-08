@@ -131,7 +131,7 @@ Donkey's /secured/app-groups endpoint.
 Here's an example:
 
 ```
-dennis$ curl -s http://by-tor:14444/secured/secured/get-app-groups | python -mjson.tool
+dennis$ curl -s http://by-tor:14444/secured/get-app-groups | python -mjson.tool
 {
     "groups": [
         {
