@@ -1,4 +1,4 @@
-(defproject org.iplantc/conrad "1.3.2"
+(defproject org.iplantc/conrad "1.3.3"
   :description "Back-End Services for the iPlant Administrative Console"
   :url "http://www.iplantcollaborative.org"
   :license {:name "BSD"
@@ -15,8 +15,8 @@
                  [org.clojure/tools.logging "0.2.6"]
                  [org.clojure/java.jdbc "0.2.3"]
                  [org.iplantc/clj-cas "1.8.4"]
-                 [org.iplantc/kameleon "1.8.4"]
-                 [org.iplantc/clojure-commons "1.4.8"]
+                 [org.iplantc/kameleon "1.8.6"]
+                 [org.iplantc/clojure-commons "1.4.9"]
                  [cheshire "5.0.2"]
                  [compojure "1.1.5"]
                  [swank-clojure "1.4.3"]
